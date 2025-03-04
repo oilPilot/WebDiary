@@ -39,7 +39,7 @@ app.Run();
     Major tasks:
         Make users;
     Med tasks:
-        Make github page of this shit;
+        Nothing;
     Little tasks:
         Nothing;
 

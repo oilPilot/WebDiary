@@ -1,0 +1,24 @@
+GET http://localhost:5281
+
+
+###
+GET http://localhost:5281/diaries
+###
+GET http://localhost:5281/diaries/1
+###
+POST http://localhost:5281/diaries
+Content-Type: application/json
+
+{
+    "Text": "Ne Rabotaet",
+    "GroupId": 2
+}
+
+###
+PUT http://localhost:5281/diaries/3
+###
+DELETE http://localhost:5281/diaries/2
+###
+###
+###
+

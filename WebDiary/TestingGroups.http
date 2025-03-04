@@ -1,0 +1,29 @@
+GET http://localhost:5281
+
+
+###
+GET http://localhost:5281/groups
+###
+GET http://localhost:5281/groups/1
+###
+POST http://localhost:5281/groups
+Content-Type: application/json
+
+{
+    "Name": "Nu da"
+}
+
+###
+PUT http://localhost:5281/groups/3
+Content-Type: application/json
+
+{
+    "Name": "Krutoi dnevnik"
+}
+
+###
+DELETE http://localhost:5281/groups/10
+###
+###
+###
+

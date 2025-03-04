@@ -1,0 +1,78 @@
+﻿@page "/Diary"
+@page "/Diary/{id:int}"
+
+@rendermode InteractiveServer
+@inject DiaryClient DiaryClient
+@inject DiaryGroupClient DiaryGroupClient
+@inject NavigationManager NavigationManager
+
+<PageTitle>Diary - @PageTitle</PageTitle>
+
+<h1>@PageTitle</h1>
+
+@if(diaries is null) {
+    <a>Await...</a>
+} else {
+    <div>
+        @foreach(var date in diaries.GroupBy(diary => diary.Date).Select(diary => diary.First().Date)) {
+            <ol>
+                <p>@date
+                <button class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#@date">Collapse</button>
+                </p>
+            @foreach(var diary in diaries.Where(diary => diary.Date == date)) {
+                <li class="ms-2 collapse nonumeration" id="@date">
+                    <ol>
+                        <p>@diary.Time
+                        <button class="btn btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#@diary.Id">Collapse</button>
+                        </p>
+                        <li class="ms-4 nonumeration collapse" id="@diary.Id">
+                            <p class="new-line-work">@diary.Text</p>
+                        </li>
+                    </ol>
+                </li>
+            }
+            </ol>
+        }
+    </div>
+    <EditForm Model="diary" OnValidSubmit="AddDiaryAsync" FormName="SendDiary" class="footer">
+        <div class="d-flex mb-2 me-2 ms-2" style="height: 60px;">
+            <InputTextArea @bind-value="diary!.Text" class="form-control bg-secondary no-resize" style="--bs-bg-opacity: .33;" />
+            <button class="btn btn-secondary" type="submit">Send</button>
+        </div>
+        <AddGroupDialogue></AddGroupDialogue>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public int? id { get; set; }
+
+    public List<Diary>? diaries;
+    public Diary? diary;
+    public string? PageTitle;
+
+    protected override async Task OnInitializedAsync() {
+        if(id is null)
+            throw new Exception("id in Diaries page is null.");
+        diaries = await DiaryClient.GetDiariesAsync();
+        diary ??= new() {
+            Text = "",
+            GroupId = id!.Value
+        };
+        base.OnInitialized();
+    }
+
+    protected override async Task OnParametersSetAsync() {
+        if(id is null)
+            throw new Exception("id in Diaries page is null.");
+        PageTitle = ( await DiaryGroupClient.GetGroupAsync(id.Value) ).Name;
+        diaries = diaries!.Where(diary => diary.GroupId == id).ToList();
+        await base.OnParametersSetAsync();
+    }
+
+    async Task AddDiaryAsync() {
+        await DiaryClient.AddDiaryAsync(diary!);
+        NavigationManager.Refresh(true);
+    }
+}
+

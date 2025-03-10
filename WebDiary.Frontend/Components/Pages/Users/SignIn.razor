@@ -1,0 +1,35 @@
+﻿@page "/Sign"
+@using System.Security.Claims
+@using System.IdentityModel.Tokens.Jwt
+@using Microsoft.IdentityModel.Tokens
+
+<PageTitle>Sign in</PageTitle>
+
+<h3>Sign in</h3>
+
+<textarea @bind="text"></textarea>
+<p>@ExtraText</p>
+
+<button @onclick="NewUserTest">Click me!</button>
+
+<AuthorizeView>
+    <p>Master of Europe</p>
+</AuthorizeView>
+
+@code {
+    string text = "tst";
+    string? ExtraText;
+
+    private void NewUserTest() {
+        List<Claim> claims = new List<Claim> {new Claim("UsersData", text)};
+        JwtSecurityToken securityToken = new JwtSecurityToken(
+            issuer: AuthOptions.issuer,
+            audience: AuthOptions.audience,
+            claims: claims,
+            expires: DateTime.UtcNow.AddDays(1),
+            signingCredentials: new Microsoft.IdentityModel.Tokens.SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256)
+        );
+        ExtraText = new JwtSecurityTokenHandler().WriteToken(securityToken);
+    }
+
+}

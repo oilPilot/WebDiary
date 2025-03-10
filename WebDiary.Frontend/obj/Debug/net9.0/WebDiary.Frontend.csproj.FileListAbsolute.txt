@@ -219,3 +219,11 @@ A:\Projects\WebDiary\webdiary.frontend\obj\Debug\net9.0\WebDiary.EA29A9A1.Up2Dat
 A:\Projects\WebDiary\webdiary.frontend\obj\Debug\net9.0\compressed\taltu9sd1b-g2x88nwy0i.gz
 A:\Projects\WebDiary\webdiary.frontend\obj\Debug\net9.0\compressed\s955vqrhnx-g2x88nwy0i.gz
 A:\Projects\WebDiary\webdiary.frontend\obj\Debug\net9.0\compressed\0xf8g64pek-t9s22msevm.gz
+A:\Projects\WebDiary\webdiary.frontend\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+A:\Projects\WebDiary\webdiary.frontend\bin\Debug\net9.0\Microsoft.IdentityModel.Abstractions.dll
+A:\Projects\WebDiary\webdiary.frontend\bin\Debug\net9.0\Microsoft.IdentityModel.JsonWebTokens.dll
+A:\Projects\WebDiary\webdiary.frontend\bin\Debug\net9.0\Microsoft.IdentityModel.Logging.dll
+A:\Projects\WebDiary\webdiary.frontend\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.dll
+A:\Projects\WebDiary\webdiary.frontend\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+A:\Projects\WebDiary\webdiary.frontend\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
+A:\Projects\WebDiary\webdiary.frontend\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll

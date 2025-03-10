@@ -1,0 +1,30 @@
+GET http://localhost:5281
+
+
+###
+GET http://localhost:5281/users
+###
+GET http://localhost:5281/users/4
+###
+POST http://localhost:5281/users
+Content-Type: application/json
+
+{
+    "UserName": "Geniy",
+    "Password": "Izi"
+}
+
+###
+PUT http://localhost:5281/users/4
+Content-Type: application/json
+
+{
+    "UserName": "Debil"
+}
+
+###
+DELETE http://localhost:5281/users/5
+###
+###
+###
+

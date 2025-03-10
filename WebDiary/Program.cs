@@ -16,6 +16,7 @@ app.MapGet("/", () => "Hello World!");
 
 app.AddDiariesEndpoints();
 app.AddGroupsEndpoints();
+app.AddUsersEndpoint();
 
 await app.MigrateDbAsync();
 

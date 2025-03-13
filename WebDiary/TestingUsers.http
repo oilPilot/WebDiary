@@ -4,7 +4,7 @@ GET http://localhost:5281
 ###
 GET http://localhost:5281/users
 ###
-GET http://localhost:5281/users/4
+GET http://localhost:5281/users/1
 ###
 POST http://localhost:5281/users
 Content-Type: application/json

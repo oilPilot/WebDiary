@@ -27,7 +27,8 @@ public static class Users
         return new UserDTO {
             Id = user.Id,
             UserName = user.UserName,
-            Role = user.Role
+            Role = user.Role,
+            password = user.Password
         };
     }
 }

@@ -7,6 +7,7 @@ public record class UserDTO
     public int Id { get; set; }
     public required string UserName { get; set; }
     public required string Role { get; set; }
+    public required string password { get; set; }
 }
 
 public record class CreateUserDTO

@@ -2,6 +2,18 @@
   "version": 3,
   "targets": {
     "net9.0": {
+      "Blazored.SessionStorage/2.4.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNetCore.Components.Web": "7.0.1"
+        },
+        "compile": {
+          "lib/net7.0/Blazored.SessionStorage.dll": {}
+        },
+        "runtime": {
+          "lib/net7.0/Blazored.SessionStorage.dll": {}
+        }
+      },
       "BootstrapBlazor/9.4.2": {
         "type": "package",
         "dependencies": {
@@ -714,6 +726,20 @@
     }
   },
   "libraries": {
+    "Blazored.SessionStorage/2.4.0": {
+      "sha512": "e3XXH+zGGxDq1zC7YzLDD8mfvtoC6ESwTWOGD25H+FbPJlB7yQeL72hDY76tqkcrh98fh+y12r4BNhyQVV9YKw==",
+      "type": "package",
+      "path": "blazored.sessionstorage/2.4.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "blazored.sessionstorage.2.4.0.nupkg.sha512",
+        "blazored.sessionstorage.nuspec",
+        "icon.png",
+        "lib/net6.0/Blazored.SessionStorage.dll",
+        "lib/net7.0/Blazored.SessionStorage.dll"
+      ]
+    },
     "BootstrapBlazor/9.4.2": {
       "sha512": "OcJSupTY0zaxitUdbo25053at4gaCUzNvImJlXVVF1sRyfrxQ8wVIKyg3iADDbQqG92mnUJdAdaIgPczTum8Cg==",
       "type": "package",
@@ -1834,6 +1860,7 @@
   },
   "projectFileDependencyGroups": {
     "net9.0": [
+      "Blazored.SessionStorage >= 2.4.0",
       "BootstrapBlazor >= 9.4.2",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 9.0.2"
     ]
@@ -1888,6 +1915,10 @@
       "net9.0": {
         "targetAlias": "net9.0",
         "dependencies": {
+          "Blazored.SessionStorage": {
+            "target": "Package",
+            "version": "[2.4.0, )"
+          },
           "BootstrapBlazor": {
             "target": "Package",
             "version": "[9.4.2, )"

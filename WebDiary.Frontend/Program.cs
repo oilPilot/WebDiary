@@ -1,5 +1,9 @@
 using WebDiary.Frontend.Clients;
 using WebDiary.Frontend.Components;
+using WebDiary.Frontend;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Blazored.SessionStorage;
+using WebDiary.Frontend.Models.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +16,25 @@ builder.Services.AddHttpClient<DiaryClient>(
 builder.Services.AddHttpClient<DiaryGroupClient>(
     client => client.BaseAddress = new Uri(builder.Configuration["ApiConnection"] ?? throw new Exception ("Api wasn't in ApiConnection."))
 );
+builder.Services.AddHttpClient<UserClient>(
+    client => client.BaseAddress = new Uri(builder.Configuration["ApiConnection"] ?? throw new Exception ("Api wasn't in ApiConnection."))
+);
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options => 
+        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters() {
+            ValidIssuer = AuthOptions.issuer,
+            ValidateIssuer = true,
+            ValidateLifetime = true,
+            IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+            ValidateIssuerSigningKey = true,
+            ValidAudience = AuthOptions.audience,
+            ValidateAudience = true
+        });
+builder.Services.AddAuthorization();
+builder.Services.AddAuthorizationCore();
+builder.Services.AddScoped<CustomAuthenticationStateProvider>();
+builder.Services.AddCascadingAuthenticationState();
+builder.Services.AddBlazoredSessionStorage();
 
 
 var app = builder.Build();
@@ -24,8 +47,10 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 
+app.UseHttpsRedirection();
 
 app.UseAntiforgery();
 

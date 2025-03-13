@@ -227,3 +227,4 @@ A:\Projects\WebDiary\webdiary.frontend\bin\Debug\net9.0\Microsoft.IdentityModel.
 A:\Projects\WebDiary\webdiary.frontend\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 A:\Projects\WebDiary\webdiary.frontend\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
 A:\Projects\WebDiary\webdiary.frontend\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll
+A:\Projects\WebDiary\webdiary.frontend\bin\Debug\net9.0\Blazored.SessionStorage.dll

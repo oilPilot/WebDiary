@@ -1,0 +1,64 @@
+﻿@page "/Login"
+@using System.IdentityModel.Tokens.Jwt
+@using System.Security.Claims
+@using Microsoft.IdentityModel.Tokens
+@using Blazored.SessionStorage;
+@using WebDiary.Frontend.Models.Auth
+@rendermode InteractiveServer
+
+@inject NavigationManager NavigationManager
+@inject UserClient UserClient
+@inject ISessionStorageService SessionStorage
+@inject CustomAuthenticationStateProvider AuthStateProvider
+
+<PageTitle>Diary - Login</PageTitle>
+
+<h3>Login</h3>
+
+<EditForm Model="user" OnValidSubmit="TryLogin">
+    <ValidationSummary />
+    <div class="d-flex">
+        <InputText @bind-value="user!.UserName" />
+        <ValidationMessage For="() => user.UserName" />
+        <InputText @bind-value="user.Password" />
+        <ValidationMessage For="() => user.Password" />
+        <button type="submit" class="btn btn-primary">Login</button>
+    </div>
+</EditForm>
+
+@code {
+    public User? user;
+    string? JwtToken;
+
+    public async Task TryLogin() {
+        User? userLogin = (await UserClient.GetUsersAsync()).FirstOrDefault(dbUser => dbUser.UserName == user!.UserName && dbUser.Password == user.Password);
+
+        if(userLogin == null) {
+            return;
+        }
+
+        List<Claim> claims = new List<Claim> {new Claim(ClaimTypes.Name , userLogin!.UserName)};
+        JwtSecurityToken securityToken = new JwtSecurityToken(
+            issuer: AuthOptions.issuer,
+            audience: AuthOptions.audience,
+            claims: claims,
+            expires: DateTime.UtcNow.AddDays(1),
+            signingCredentials: new Microsoft.IdentityModel.Tokens.SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256)
+        );
+        JwtToken = new JwtSecurityTokenHandler().WriteToken(securityToken);
+
+        await SessionStorage.SetItemAsync("token", JwtToken);
+        AuthStateProvider.AuthenticateUser(JwtToken);
+//        ((CustomAuthenticationStateProvider)AuthStateProvider).AuthenticateUser(JwtToken);
+        NavigationManager.NavigateTo("/Sign");
+    }
+
+    protected override async Task OnInitializedAsync() {
+        await base.OnInitializedAsync();
+        user = new User() {
+            UserName = "Enter username",
+            Password = "Enter password"
+        };
+    }
+
+}

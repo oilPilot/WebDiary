@@ -2,6 +2,7 @@
 @using System.Security.Claims
 @using System.IdentityModel.Tokens.Jwt
 @using Microsoft.IdentityModel.Tokens
+@rendermode InteractiveServer
 
 <PageTitle>Sign in</PageTitle>
 
@@ -10,10 +11,15 @@
 <textarea @bind="text"></textarea>
 <p>@ExtraText</p>
 
-<button @onclick="NewUserTest">Click me!</button>
+<button type="button" class="btn btn-secondary" @onclick="NewUserTest">Click me!</button>
 
 <AuthorizeView>
-    <p>Master of Europe</p>
+    <NotAuthorized>
+        <p>Who are you?</p>
+    </NotAuthorized>
+    <Authorized>
+        <p>Master of Europe</p>
+    </Authorized>
 </AuthorizeView>
 
 @code {

@@ -13,6 +13,14 @@ Content-Type: application/json
     "UserName": "Geniy",
     "Password": "Izi"
 }
+###
+POST http://localhost:5281/auth/jwttoken/login
+Content-Type: application/json
+
+{
+    "UserName": "Geniy",
+    "Password": "Izi"
+}
 
 ###
 PUT http://localhost:5281/users/4

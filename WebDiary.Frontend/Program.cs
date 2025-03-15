@@ -1,40 +1,38 @@
 using WebDiary.Frontend.Clients;
 using WebDiary.Frontend.Components;
-using WebDiary.Frontend;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Blazored.SessionStorage;
 using WebDiary.Frontend.Models.Auth;
+using Blazored.LocalStorage;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
-builder.Services.AddHttpClient<DiaryClient>(
-    client => client.BaseAddress = new Uri(builder.Configuration["ApiConnection"] ?? throw new Exception ("Api wasn't in ApiConnection."))
-);
-builder.Services.AddHttpClient<DiaryGroupClient>(
-    client => client.BaseAddress = new Uri(builder.Configuration["ApiConnection"] ?? throw new Exception ("Api wasn't in ApiConnection."))
-);
-builder.Services.AddHttpClient<UserClient>(
-    client => client.BaseAddress = new Uri(builder.Configuration["ApiConnection"] ?? throw new Exception ("Api wasn't in ApiConnection."))
-);
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration["ApiConnection"] ?? throw new Exception ("Api wasn't in ApiConnection."))});
+builder.Services.AddScoped<DiaryGroupClient>();
+builder.Services.AddScoped<DiaryClient>();
+builder.Services.AddScoped<UserClient>();
+builder.Services.AddBlazoredLocalStorage();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options => 
         options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters() {
-            ValidIssuer = AuthOptions.issuer,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidateIssuer = true,
             ValidateLifetime = true,
-            IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)),
             ValidateIssuerSigningKey = true,
-            ValidAudience = AuthOptions.audience,
+            ValidAudience = builder.Configuration["Jwt:Audience"],
             ValidateAudience = true
         });
 builder.Services.AddAuthorization();
-builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<CustomAuthenticationStateProvider>();
 builder.Services.AddCascadingAuthenticationState();
-builder.Services.AddBlazoredSessionStorage();
+
 
 
 var app = builder.Build();

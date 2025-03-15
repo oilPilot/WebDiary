@@ -1,7 +1,37 @@
 ﻿@page "/"
+@using WebDiary.Frontend.Models.Auth
+@inject CustomAuthenticationStateProvider AuthStateProvider
+@rendermode InteractiveServer
 
 <PageTitle>Home</PageTitle>
 
 <h1>Hello, to web-diary!</h1>
 
 Enter in as user to use app.
+
+<AuthorizeView>
+    <Authorized>
+        <p>Welcome, @context.User.Identity!.Name!</p>
+        <p>@tst</p>
+    </Authorized>
+    <NotAuthorized>
+        <p>You are not logged in.</p>
+        <p>@tst a @context.User.Identity!.Name AuthState @context.User.Identity!.IsAuthenticated</p>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    string? tst;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender) {
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            Console.WriteLine("First render!");
+            if (authState.User.Identity!.IsAuthenticated)
+            {
+                tst = $"Don't know {authState.User.Identity!.Name}!";
+            }
+            StateHasChanged();
+        }
+    }
+}

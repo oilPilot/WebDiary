@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "A:\\Projects\\WebDiary\\WebDiary\\WebDiary.csproj": {}
+    "A:\\Projects\\WebDiary\\webdiary\\WebDiary.csproj": {}
   },
   "projects": {
-    "A:\\Projects\\WebDiary\\WebDiary\\WebDiary.csproj": {
+    "A:\\Projects\\WebDiary\\webdiary\\WebDiary.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "A:\\Projects\\WebDiary\\WebDiary\\WebDiary.csproj",
+        "projectUniqueName": "A:\\Projects\\WebDiary\\webdiary\\WebDiary.csproj",
         "projectName": "WebDiary",
-        "projectPath": "A:\\Projects\\WebDiary\\WebDiary\\WebDiary.csproj",
+        "projectPath": "A:\\Projects\\WebDiary\\webdiary\\WebDiary.csproj",
         "packagesPath": "C:\\Users\\Dock\\.nuget\\packages\\",
-        "outputPath": "A:\\Projects\\WebDiary\\WebDiary\\obj\\",
+        "outputPath": "A:\\Projects\\WebDiary\\webdiary\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -50,6 +50,10 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[9.0.3, )"
+            },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",

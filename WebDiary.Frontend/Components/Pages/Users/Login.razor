@@ -8,7 +8,7 @@
 
 @inject NavigationManager NavigationManager
 @inject UserClient UserClient
-@inject CustomAuthenticationStateProvider AuthStateProvider
+@inject AuthenticationStateProvider AuthStateProvider
 @inject HttpClient HttpClient
 
 <PageTitle>Diary - Login</PageTitle>
@@ -34,7 +34,7 @@
         if(response.IsSuccessStatusCode) {
             System.Text.Json.JsonElement result = await response.Content.ReadFromJsonAsync<dynamic>();
             var token = result.GetProperty("token").GetString();
-            await AuthStateProvider.LoginUserAsync(token!);
+            await ((CustomAuthenticationStateProvider)AuthStateProvider).LoginUserAsync(token!);
             NavigationManager.NavigateTo("/");
         }
     }

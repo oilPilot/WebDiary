@@ -22,16 +22,23 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
-        var token = await _localStorage.GetItemAsync<string>("token");
-
         var identity = new ClaimsIdentity();
-        _httpClient.DefaultRequestHeaders.Authorization = null;
+        
+        try {
+            if(_localStorage is null)
+                return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
+            
+            var token = await _localStorage.GetItemAsync<string>("token");
+            _httpClient.DefaultRequestHeaders.Authorization = null;
 
-        if(token != null) {
-            var handler = new JwtSecurityTokenHandler();
-            var jwtToken = handler.ReadJwtToken(token);
-            identity = new ClaimsIdentity(jwtToken.Claims, "jwt");
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            if(token != null) {
+                var handler = new JwtSecurityTokenHandler();
+                var jwtToken = handler.ReadJwtToken(token);
+                identity = new ClaimsIdentity(jwtToken.Claims, "jwt");
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
+        } catch(Exception ex) {
+            Console.WriteLine($"Token exception message: {ex}");
         }
 
         var user = new ClaimsPrincipal(identity);

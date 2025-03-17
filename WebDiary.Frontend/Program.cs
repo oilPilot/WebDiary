@@ -13,22 +13,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration["ApiConnection"] ?? throw new Exception ("Api wasn't in ApiConnection."))});
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<DiaryGroupClient>();
 builder.Services.AddScoped<DiaryClient>();
 builder.Services.AddScoped<UserClient>();
 builder.Services.AddBlazoredLocalStorage();
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options => 
-        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters() {
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidateIssuer = true,
-            ValidateLifetime = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)),
-            ValidateIssuerSigningKey = true,
-            ValidAudience = builder.Configuration["Jwt:Audience"],
-            ValidateAudience = true
-        });
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 builder.Services.AddCascadingAuthenticationState();
@@ -60,10 +51,11 @@ app.Run();
 
 /* TODO:
     Major tasks:
-        Make users;
+        Make managing account;
     Med tasks:
-        Nothing;
+        Make diaries pinned to users;
+        Make more beatiful design for Users pages;
     Little tasks:
-        Nothing;
+        Make "JWT:key" from config a User Secret;
 
 */

@@ -1,16 +1,15 @@
-﻿@page "/Users/Login"
-@using WebDiary.Frontend.Models.Auth
+﻿@page "/Users/Signin"
 @rendermode InteractiveServer
 
 @inject NavigationManager NavigationManager
+@inject UserClient UserClient
 @inject AuthenticationStateProvider AuthStateProvider
-@inject HttpClient HttpClient
 
-<PageTitle>Diary - Login</PageTitle>
+<PageTitle>Diary - Signin</PageTitle>
 
-<h3>Login</h3>
+<h3>Signin</h3>
 
-<EditForm Model="user" OnValidSubmit="TryLogin" FormName="LoginForm">
+<EditForm Model="user" OnValidSubmit="SignIn" FormName="SigninForm">
     <DataAnnotationsValidator />
     <ValidationSummary />
     <div class="mt-3">
@@ -23,14 +22,14 @@
         </div>
         <div class="mt-3">
             <label>
-                Password:
+                New password:
                 <InputText @bind-value="user.Password" />
                 <ValidationMessage For="() => user.Password" />
             </label>
         </div>
         <div class="mt-3">
             <label>
-                <button type="submit" class="btn btn-primary">Login</button>
+                <button type="submit" class="btn btn-primary">Signin</button>
             </label>
         </div>
         <div>
@@ -40,25 +39,20 @@
         </div>
     </div>
 </EditForm>
-<p>Have no account? You can signin <a href="/Users/Signin">here</a></p>
 
 @code {
     [SupplyParameterFromForm]
     public User? user { get; set; }
     private string ErrorMessage = "";
     
-    public async Task TryLogin() {
+    public async Task SignIn() {
         ErrorMessage = "";
-        var response = await HttpClient.PostAsJsonAsync("/auth/jwttoken/login", new { Username = user!.UserName, Password = user.Password });
-        if(response.IsSuccessStatusCode) {
-            System.Text.Json.JsonElement result = await response.Content.ReadFromJsonAsync<dynamic>();
-            var token = result.GetProperty("token").GetString();
-            await ((CustomAuthenticationStateProvider)AuthStateProvider).LoginUserAsync(token!);
-            NavigationManager.NavigateTo("/", true);
+        if( (await UserClient.GetUsersAsync()).Any(userDb => userDb.UserName == user!.UserName)) {
+            ErrorMessage = "Your username is already used by another user. Please try another username.";
+            return;
         }
-        else {
-            ErrorMessage = "Something went wrong. Check if username and password is correct.";
-        }
+        await UserClient.AddUserAsync(user!);
+        NavigationManager.NavigateTo("/Users/Login");
     }
 
     protected override async Task OnInitializedAsync() {

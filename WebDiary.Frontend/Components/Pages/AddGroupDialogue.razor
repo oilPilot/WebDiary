@@ -1,5 +1,7 @@
-﻿@inject DiaryGroupClient DiaryGroupClient
+﻿@using System.Security.Claims
+@inject DiaryGroupClient DiaryGroupClient
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @rendermode InteractiveServer
 
 <div class="modal" tabindex="-1" style="display: @ModalDisplay;">
@@ -19,7 +21,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="() => Close()">Cancel</button>
-                    <button type="button" class="btn btn-primary" @onclick="SaveAsync">@(isDeleting ? "Delete" : "Save")</button>
+                <button type="button" class="btn btn-primary" @onclick="SaveAsync">@(isDeleting ? "Delete" : "Save")</button>
             </div>
         </div>
     </div>
@@ -37,10 +39,13 @@
     public bool ShowBackdrop = false;
     private string? HeaderName;
     private bool isDeleting;
+    private int loggedUserId;
 
     protected async override Task OnInitializedAsync() {
         group = new() {
-            Name = ""
+            Name = "",
+            UserId = 1  // OnAfterRender is happenning later, so we have no loggedUser and can't get their Id.
+                        // It's more effective to don't again calculate this, and just pass parameter from Navbar.
         };
         isDeleting = false;
 
@@ -60,12 +65,13 @@
         NavigationManager.Refresh(true);
     }
 
-    public void Open() {
+    public void Open(int loggedUserId) {
         ModalDisplay = "block;";
         ShowBackdrop = true;
         HeaderName = "Add thematic group";
         group = new() {
-            Name = ""
+            Name = "",
+            UserId = loggedUserId
         };
         StateHasChanged();
     }

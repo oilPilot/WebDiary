@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "a:\\Projects\\WebDiary\\WebDiary.Frontend\\WebDiary.Frontend.csproj": {}
+    "A:\\Projects\\WebDiary\\webdiary.frontend\\WebDiary.Frontend.csproj": {}
   },
   "projects": {
-    "a:\\Projects\\WebDiary\\WebDiary.Frontend\\WebDiary.Frontend.csproj": {
+    "A:\\Projects\\WebDiary\\webdiary.frontend\\WebDiary.Frontend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "a:\\Projects\\WebDiary\\WebDiary.Frontend\\WebDiary.Frontend.csproj",
+        "projectUniqueName": "A:\\Projects\\WebDiary\\webdiary.frontend\\WebDiary.Frontend.csproj",
         "projectName": "WebDiary.Frontend",
-        "projectPath": "a:\\Projects\\WebDiary\\WebDiary.Frontend\\WebDiary.Frontend.csproj",
+        "projectPath": "A:\\Projects\\WebDiary\\webdiary.frontend\\WebDiary.Frontend.csproj",
         "packagesPath": "C:\\Users\\Dock\\.nuget\\packages\\",
-        "outputPath": "a:\\Projects\\WebDiary\\WebDiary.Frontend\\obj\\",
+        "outputPath": "A:\\Projects\\WebDiary\\webdiary.frontend\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

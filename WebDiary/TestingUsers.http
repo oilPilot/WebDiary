@@ -23,11 +23,12 @@ Content-Type: application/json
 }
 
 ###
-PUT http://localhost:5281/users/4
+PUT http://localhost:5281/users/1
 Content-Type: application/json
 
 {
-    "UserName": "Debil"
+    "UserName": "Admin",
+    "Password": "SuperSecretPassword"
 }
 
 ###

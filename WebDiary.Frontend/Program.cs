@@ -13,7 +13,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration["ApiConnection"] ?? throw new Exception ("Api wasn't in ApiConnection."))});
-builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<DiaryGroupClient>();
 builder.Services.AddScoped<DiaryClient>();
 builder.Services.AddScoped<UserClient>();
@@ -51,11 +50,16 @@ app.Run();
 
 /* TODO:
     Major tasks:
-        Make managing account;
+        Make managing account:
+            Double Auth
+            Authorization roles
+            Logout(in managing)
+            Delete acc
+            Change acc
+            Add self-description (creates timestamps?);
     Med tasks:
-        Make diaries pinned to users;
         Make more beatiful design for Users pages;
     Little tasks:
-        Make "JWT:key" from config a User Secret;
+        Nothing;
 
 */

@@ -10,7 +10,8 @@ public static class Users
         return new User {
             UserName = user.UserName,
             Password = user.Password,
-            Role = "Default"
+            Role = "Default",
+            Description = user.Description is null ? "" : user.Description
         };
     }
 
@@ -19,7 +20,8 @@ public static class Users
             Id = currentUser.Id,
             UserName = user.UserName != null ? user.UserName : currentUser.UserName,
             Password = user.Password != null ? user.Password : currentUser.Password,
-            Role = currentUser.Role
+            Role = currentUser.Role,
+            Description = user.Description is null ? "" : currentUser.Description
         };
     }
 
@@ -28,7 +30,8 @@ public static class Users
             Id = user.Id,
             UserName = user.UserName,
             Role = user.Role,
-            password = user.Password
+            password = user.Password,
+            Description = user.Description
         };
     }
 }

@@ -2,7 +2,6 @@
 @inject DiaryGroupClient DiaryGroupClient
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@rendermode InteractiveServer
 
 <div class="modal" tabindex="-1" style="display: @ModalDisplay;">
     <div class="modal-dialogue" role="document">
@@ -39,7 +38,6 @@
     public bool ShowBackdrop = false;
     private string? HeaderName;
     private bool isDeleting;
-    private int loggedUserId;
 
     protected async override Task OnInitializedAsync() {
         group = new() {

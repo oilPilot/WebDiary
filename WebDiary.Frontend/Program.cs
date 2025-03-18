@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using WebDiary.Frontend.Models.Auth;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,11 +50,10 @@ app.Run();
     Major tasks:
         Make managing account:
             Double Auth
-            Authorization roles
-            Logout(in managing)
+            @attribute [Authorize] - by somewhat reason don't get over that
             Delete acc
-            Change acc
-            Add self-description (creates timestamps?);
+            Change acc;
+        Make more languages: Russian, Ukrainish, Deutsch;
     Med tasks:
         Make more beatiful design for Users pages;
     Little tasks:

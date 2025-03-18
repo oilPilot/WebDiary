@@ -1,0 +1,54 @@
+﻿@page "/Users"
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Authorization
+@using WebDiary.Frontend.Models.Auth
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+
+
+<h3>Manage account</h3>
+
+<AuthorizeView>
+    <Authorized>
+        <PageTitle>Diary - @context.User.Identity!.Name</PageTitle>
+        <p>Name:        @context.User.Identity!.Name</p>
+        <p>Role:        @context.User.FindFirstValue(ClaimTypes.Role)</p>
+        <p>Description: @context.User.FindFirstValue(ClaimTypes.UserData)</p>
+        <button type="button" class="btn btn-outline-danger" @onclick="Logout">Logout</button>
+        <button type="button" class="btn btn-outline-secondary" @onclick="Login">Login into another account</button>
+        <AuthorizeView Roles="Admin" Context="AdminContext">
+            <Authorized>
+                Debug TODO!
+                <button type="button" class="btn btn-outline-danger" @onclick="Logout">Delete account</button>
+                <button type="button" class="btn btn-outline-danger" @onclick="Logout">Modify account</button>
+            </Authorized>
+        </AuthorizeView>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    private int loggedUserId;
+    
+    private async Task Logout() {
+        await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).LogoutUserAsync();
+        NavigationManager.NavigateTo("/", true);
+    }
+    private void Login() {
+        NavigationManager.NavigateTo("/", true);
+    }
+
+    protected async override Task OnAfterRenderAsync(bool firstRender) {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if(firstRender) {
+
+            var loggedUser = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
+
+            if(loggedUser.Identity != null && loggedUser.Identity.IsAuthenticated) {
+                loggedUserId = Convert.ToInt32(loggedUser.FindFirstValue("userId"));
+            }
+
+            StateHasChanged();
+        }
+    }
+}

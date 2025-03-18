@@ -28,7 +28,9 @@ public class AuthController (DiariesContext dbContext, IConfiguration config) : 
     private string GenerateJwtToken(User user) {
         List<Claim> claims = new List<Claim> {
             new Claim(ClaimTypes.Name, user.UserName),
-            new Claim("userId", user.Id.ToString())
+            new Claim("userId", user.Id.ToString()),
+            new Claim(ClaimTypes.Role, user.Role),
+            new Claim(ClaimTypes.UserData, user.Description)
             };
         JwtSecurityToken securityToken = new JwtSecurityToken(
             issuer: config["Jwt:Issuer"],

@@ -1,6 +1,5 @@
 ﻿@page "/Users/Login"
 @using WebDiary.Frontend.Models.Auth
-@rendermode InteractiveServer
 
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthStateProvider
@@ -65,7 +64,8 @@
         await base.OnInitializedAsync();
         user = new User() {
             UserName = "",
-            Password = ""
+            Password = "",
+            Description = ""
         };
     }
 

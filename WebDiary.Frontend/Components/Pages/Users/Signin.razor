@@ -1,5 +1,4 @@
 ﻿@page "/Users/Signin"
-@rendermode InteractiveServer
 
 @inject NavigationManager NavigationManager
 @inject UserClient UserClient
@@ -25,6 +24,13 @@
                 New password:
                 <InputText @bind-value="user.Password" />
                 <ValidationMessage For="() => user.Password" />
+            </label>
+        </div>
+        <div class="mt-3">
+            <label>
+                Self-image (optional):
+                <InputTextArea @bind-value="user.Description" class="no-resize" />
+                <ValidationMessage For="() => user.Description" />
             </label>
         </div>
         <div class="mt-3">
@@ -59,7 +65,8 @@
         await base.OnInitializedAsync();
         user = new User() {
             UserName = "",
-            Password = ""
+            Password = "",
+            Description = ""
         };
     }
 

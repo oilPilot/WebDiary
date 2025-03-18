@@ -10,5 +10,6 @@ public class User {
     public required string UserName { get; set; }
     [MinLength(8)]
     public required string Password { get; set; }
+    public required string Description { get; set; }
 }
 

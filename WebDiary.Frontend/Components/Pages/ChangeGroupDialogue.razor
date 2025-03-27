@@ -20,7 +20,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="() => Close()">Cancel</button>
-                <button type="button" class="btn btn-primary" @onclick="SaveAsync">@(isDeleting ? "Delete" : "Save")</button>
+                <button type="button" class="btn btn-@(isDeleting ? "danger" : "primary")" @onclick="SaveAsync">@(isDeleting ? "Delete" : "Save")</button>
             </div>
         </div>
     </div>
@@ -54,13 +54,14 @@
         ArgumentNullException.ThrowIfNull(group);
         if(HeaderName == "Add thematic group") {
             await DiaryGroupClient.AddGroupAsync(group);
+            NavigationManager.NavigateTo("/", true);
         } else if(isDeleting) {
             await DiaryGroupClient.DeleteGroupAsync(group.Id);
-            NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateTo("/", true);
         } else {
             await DiaryGroupClient.UpdateGroupAsync(group);
+            NavigationManager.Refresh(true);
         }
-        NavigationManager.Refresh(true);
     }
 
     public void Open(int loggedUserId) {

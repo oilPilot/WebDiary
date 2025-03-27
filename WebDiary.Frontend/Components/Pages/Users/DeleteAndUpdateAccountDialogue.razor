@@ -1,0 +1,167 @@
+﻿@using System.ComponentModel.DataAnnotations
+@using WebDiary.Frontend.Models.Auth
+@inject UserClient UserClient
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject HttpClient HttpClient
+
+<div class="modal" tabindex="-1" style="display: @ModalDisplay;">
+    <div class="modal-dialogue" role="document">
+        <div class="modal-placement modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">@HeaderName</h4>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" @onclick="() => Close()" />
+            </div>
+            <div class="modal-body">
+                @if(!isDeleting) {
+                    <div class="mt-3">
+                        <div class="mt-3">
+                            <label>
+                                Username:
+                                <InputText class="full-width" @bind-value="newUser!.UserName"></InputText>
+                            </label>
+                        </div>
+                        <div class="mt-3">
+                            <label>
+                                Self-image:
+                                <InputTextArea @bind-value="newUser.Description" class="no-resize full-width"></InputTextArea>
+                            </label>
+                        </div>
+                        <div class="mt-3">
+                            <label>
+                                Email:
+                                <InputText class="full-width" @bind-value="newUser.Email"></InputText>
+                            </label>
+                        </div>
+                        <div class="mt-3">
+                            <label>
+                                Old password for verification:
+                                <InputText class="full-width" @bind-value="newUser.Password"></InputText>
+                            </label>
+                        </div>
+                        <div class="mt-3">
+                            <label>
+                                New password:
+                                <InputText class="full-width" @bind-value="newPassword"></InputText>
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                <p>@ErrorMessage</p>
+                                @if(passwordForgot) {
+                                    <p>Password is incorrect, do you forgot your password? If you have entered Email you can restore it <a href="/Users/RestorePassword">here</a></p>
+                                }
+                            </label>
+                        </div>
+                    </div>
+                } else {
+                    <p>Are you sure wanna delete your account? This will delete all diaries that you wrote. You can't undo this action.</p>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="() => Close()">Cancel</button>
+                <button type="button" class="btn btn-@(isDeleting ? "danger" : "primary")" data-dismiss="modal" @onclick="SaveAsync">@(isDeleting ? "Delete" : "Save")</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if(showBackdrop) {
+    <div class="modal-backdrop fade show" />
+}
+
+
+@code {
+    private string? HeaderName;
+    public string ModalDisplay = "none;";
+    private bool isDeleting = false;
+    private bool showBackdrop = false;
+    private bool passwordForgot = false;
+    private string ErrorMessage = "";
+    private User? user;
+    private User? newUser;
+    private int _loggedUserId;
+    private string? newPassword;
+
+    protected override async Task OnInitializedAsync() {
+        HeaderName = "Delete account?";
+        user = new User() {
+            UserName = "",
+            Password = ""
+        };
+        newUser = user;
+        await base.OnInitializedAsync();
+    }
+
+    public async Task OpenForUpdatingAsync(int loggedUserId) {
+        ModalDisplay = "block";
+        showBackdrop = true;
+        isDeleting = false;
+        user = await UserClient.GetUserAsync(loggedUserId);
+        newUser = user;
+        newUser.Password = "";
+        HeaderName = "Change account";
+        StateHasChanged();
+    }
+    public void OpenForDelete(int loggedUserId) {
+        ModalDisplay = "block";
+        showBackdrop = true;
+        isDeleting = true;
+        _loggedUserId = loggedUserId;
+        HeaderName = "Delete account";
+        StateHasChanged();
+    }
+
+    public void Close() {
+        ModalDisplay = "none";
+        showBackdrop = false;
+        StateHasChanged();
+    }
+    
+    private async Task ReLogin() {
+        var response = await HttpClient.PostAsJsonAsync("/auth/jwttoken/login", new { Username = newUser!.UserName, Password = newUser.Password });
+        if(response.IsSuccessStatusCode) {
+            System.Text.Json.JsonElement result = await response.Content.ReadFromJsonAsync<dynamic>();
+            var token = result.GetProperty("token").GetString();
+            await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).LoginUserAsync(token!);
+        }
+    }
+
+    private async Task SaveAsync() {
+        if(isDeleting) {
+            await UserClient.DeleteUserAsync(_loggedUserId);
+            await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).LogoutUserAsync();
+            NavigationManager.NavigateTo("/", true);
+        } else {
+            ErrorMessage = "";
+            var response = (await HttpClient.GetAsync($"/auth/password/isequal/{newUser!.Password}/{user!.Id}"));
+            if( response.IsSuccessStatusCode && response.Content.Headers.ContentLength == 4 ? true : false ) {
+                if(newUser.UserName.Length < 3) {
+                    ErrorMessage += "Username should be at least 3 symbols length.";
+                    return;
+                }
+                if(!String.IsNullOrEmpty(newUser.Email)) {
+                    var index = newUser.Email.IndexOf('@');
+                    if(index == 0 || index == newUser.Email.Length-1 || index != newUser.Email.LastIndexOf('@')) {
+                        ErrorMessage += "This is not correct Email address.";
+                        return;
+                    }
+                }
+                if(!String.IsNullOrEmpty(newPassword) && newPassword.Length >= 8) {
+                    newUser.Password = newPassword;
+                } else if(!String.IsNullOrEmpty(newPassword) && newPassword.Length < 8) {
+                    ErrorMessage += "Your new password is too short.\n";
+                    return;
+                }
+                await UserClient.UpdateUserAsync(newUser);
+                await ReLogin();
+                StateHasChanged();
+                Close();
+            } else {
+                ErrorMessage += "Password isn't correct. Do you forget your password?";
+                passwordForgot = true;
+            }
+        }
+    }
+
+}

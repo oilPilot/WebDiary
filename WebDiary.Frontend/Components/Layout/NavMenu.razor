@@ -6,7 +6,7 @@
 
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">Web-diary</a>
+        <a class="navbar-brand" href="">@topName</a>
     </div>
 </div>
 
@@ -20,7 +20,7 @@
             </NavLink>
         </div>
 
-        <AuthorizeView>
+        <AuthorizeView Context="navbarContext">
             <Authorized>
                 <div class="nav-item px-3 d-flex">
                     <NavLink class="nav-link" href="/Users" Match="NavLinkMatch.All">
@@ -54,7 +54,7 @@
             }
             <div class="nav-item px-3 d-flex">
                 <button class="btn btn-primary transparent-color" type="button" @onclick="() => modal!.Open(loggedUserId)">
-                    <span class="bi bi-pencil-square-nav-menu" aria-hidden="true" /> Create new thematic group
+                    <span class="bi bi-pencil-square-nav-menu" aria-hidden="true" /> Create new diary group
                 </button>
             </div>
             </Authorized>
@@ -72,7 +72,7 @@
             </NotAuthorized>
         </AuthorizeView>
         
-        <WebDiary.Frontend.Components.Pages.AddGroupDialogue @ref="modal" />
+        <WebDiary.Frontend.Components.Pages.ChangeGroupDialogue @ref="modal" />
         <WebDiary.Frontend.Components.Pages.Users.LogoutDialogue @ref="modalLogout" />
 
         
@@ -82,10 +82,12 @@
 @code {
     List<DiaryGroup>? groups;
     int loggedUserId;
-    private WebDiary.Frontend.Components.Pages.AddGroupDialogue? modal;
+    private string? topName;
+    private WebDiary.Frontend.Components.Pages.ChangeGroupDialogue? modal;
     private WebDiary.Frontend.Components.Pages.Users.LogoutDialogue? modalLogout;
 
     protected async override Task OnInitializedAsync() {
+        topName = "Web-diary";
         await base.OnInitializedAsync();
     }
 
@@ -99,6 +101,7 @@
             if(loggedUser.Identity != null && loggedUser.Identity.IsAuthenticated) {
                 loggedUserId = Convert.ToInt32(loggedUser.FindFirstValue("userId"));
                 groups = (await DiaryGroupClient.GetGroupsAsync()).Where(group => group.UserId == loggedUserId).ToList();
+                topName = loggedUser.Identity.Name;
             }
 
             StateHasChanged();

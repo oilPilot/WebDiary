@@ -11,6 +11,7 @@ public static class Users
             UserName = user.UserName,
             Password = user.Password,
             Role = "Default",
+            Email = user.Email is null ? "" : user.Email,
             Description = user.Description is null ? "" : user.Description
         };
     }
@@ -20,8 +21,9 @@ public static class Users
             Id = currentUser.Id,
             UserName = user.UserName != null ? user.UserName : currentUser.UserName,
             Password = user.Password != null ? user.Password : currentUser.Password,
-            Role = currentUser.Role,
-            Description = user.Description is null ? "" : currentUser.Description
+            Description = user.Description != null ? user.Description : currentUser.Description,
+            Email = user.Email != null ? user.Email : currentUser.Email,
+            Role = currentUser.Role
         };
     }
 
@@ -30,7 +32,7 @@ public static class Users
             Id = user.Id,
             UserName = user.UserName,
             Role = user.Role,
-            password = user.Password,
+            Email = user.Email,
             Description = user.Description
         };
     }

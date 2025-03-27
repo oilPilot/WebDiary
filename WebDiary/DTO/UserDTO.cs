@@ -7,8 +7,8 @@ public record class UserDTO
     public int Id { get; set; }
     public required string UserName { get; set; }
     public required string Role { get; set; }
-    public required string password { get; set; }
     public required string Description { get; set; }
+    public required string Email { get; set; }
 }
 
 public record class CreateUserDTO
@@ -18,6 +18,7 @@ public record class CreateUserDTO
     [Required]
     public required string Password { get; set; }
     public string? Description { get; set; }
+    public string? Email { get; set; }
 }
 
 public record class UpdateUserDTO
@@ -25,4 +26,5 @@ public record class UpdateUserDTO
     public string? UserName { get; set; }
     public string? Password { get; set; }
     public string? Description { get; set; }
+    public string? Email { get; set; }
 }

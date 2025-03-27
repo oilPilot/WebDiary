@@ -1,57 +1,76 @@
 ﻿@page "/Diary/{id:int}"
+@using System.Security.Claims
 
 @inject DiaryClient DiaryClient
 @inject DiaryGroupClient DiaryGroupClient
 @inject NavigationManager NavigationManager
 
-<PageTitle>Diary - @PageTitle</PageTitle>
 
-<h1>@PageTitle</h1>
+<AuthorizeView Context="diaryContext">
+    <Authorized>
 
-@if(diaries is null) {
-    <a>Await...</a>
-} else {
-    <div>
-        @foreach(var date in diaries.GroupBy(diary => diary.Date).Select(diary => diary.First().Date)) {
-            <ol>
-                <p>@date
-                <button class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#@date">Collapse</button>
-                </p>
-            @foreach(var diary in diaries.Where(diary => diary.Date == date)) {
-                <li class="ms-2 collapse nonumeration" id="@date">
+        @if(diaries is null) {
+            <p>Await, diaries and groups are loading...</p>
+        } else if(Convert.ToInt32(@diaryContext.User.FindFirstValue("userId")) == group!.UserId) {
+            <PageTitle>Diary - @PageTitle</PageTitle>
+            <h1>@PageTitle</h1>
+            <div>
+                @foreach(var date in diaries.GroupBy(diary => diary.Date).Select(diary => diary.First().Date)) {
                     <ol>
-                        <p>@diary.Time
-                        <button class="btn btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#@diary.Id">Collapse</button>
+                        <p>@date
+                        <button class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#@date">Collapse</button>
                         </p>
-                        <li class="ms-4 nonumeration collapse" id="@diary.Id">
-                            <p class="new-line-work">@diary.Text</p>
+                    @foreach(var diary in diaries.Where(diary => diary.Date == date)) {
+                        <li class="ms-2 collapse nonumeration" id="@date">
+                            <ol>
+                                <p>@diary.Time
+                                <button class="btn btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#@diary.Id">Collapse</button>
+                                </p>
+                                <li class="ms-4 nonumeration collapse" id="@diary.Id">
+                                    <p class="new-line-work">@diary.Text</p>
+                                </li>
+                            </ol>
                         </li>
+                    }
                     </ol>
-                </li>
-            }
-            </ol>
+                }
+            </div>
+            <EditForm Model="diary" OnValidSubmit="AddDiaryAsync" FormName="SendDiary" class="footer">
+                <div class="d-flex mb-2 me-2 ms-2" style="height: 60px;">
+                    <InputTextArea @bind-value="diary!.Text" class="form-control bg-secondary no-resize" style="--bs-bg-opacity: .33;" />
+                    <button class="btn btn-secondary" type="submit">Send</button>
+                </div>
+                <AddGroupDialogue></AddGroupDialogue>
+            </EditForm>
+        } else {
+            <PageTitle>Diary - Unathorized</PageTitle>
+            <h1>Unathorized</h1>
+            <p>This group belongs to another user.</p>
         }
-    </div>
-    <EditForm Model="diary" OnValidSubmit="AddDiaryAsync" FormName="SendDiary" class="footer">
-        <div class="d-flex mb-2 me-2 ms-2" style="height: 60px;">
-            <InputTextArea @bind-value="diary!.Text" class="form-control bg-secondary no-resize" style="--bs-bg-opacity: .33;" />
-            <button class="btn btn-secondary" type="submit">Send</button>
-        </div>
-        <AddGroupDialogue></AddGroupDialogue>
-    </EditForm>
-}
+    </Authorized>
+    <NotAuthorized>
+        <PageTitle>Diary - Unathorized</PageTitle>
+        <h1>Unathorized</h1>
+        <p>You need to login to see this page.</p>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     [Parameter]
     public int? id { get; set; }
 
-    public List<Diary>? diaries;
-    public Diary? diary;
+    private List<Diary>? diaries;
+    private Diary? diary;
+    private DiaryGroup? group;
     public string? PageTitle;
 
     protected override async Task OnInitializedAsync() {
         if(id is null)
             throw new Exception("id in Diaries page is null.");
+        group = new DiaryGroup() {
+            Name = "",
+            UserId = 1
+        };
         diaries = await DiaryClient.GetDiariesAsync();
         diary ??= new() {
             Text = "",
@@ -63,14 +82,23 @@
     protected override async Task OnParametersSetAsync() {
         if(id is null)
             throw new Exception("id in Diaries page is null.");
-        PageTitle = ( await DiaryGroupClient.GetGroupAsync(id.Value) ).Name;
-        diaries = diaries!.Where(diary => diary.GroupId == id).ToList();
+        try {
+            group = await DiaryGroupClient.GetGroupAsync(id.Value);
+            PageTitle = group.Name;
+            diary = new() {
+                Text = "",
+                GroupId = id!.Value
+            };
+            diaries = diaries!.Where(diary => diary.GroupId == id).ToList();
+        } catch (Exception Exception) {
+            Console.WriteLine(Exception);
+        }
         await base.OnParametersSetAsync();
     }
 
     async Task AddDiaryAsync() {
         await DiaryClient.AddDiaryAsync(diary!);
-        NavigationManager.Refresh(true);
+        StateHasChanged();
     }
 }
 

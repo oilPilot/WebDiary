@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "H7k9HVr/pcs=",
+  "dgSpecHash": "q8vUKUHPZl0=",
   "success": true,
-  "projectFilePath": "A:\\Projects\\WebDiary\\webdiary\\WebDiary.csproj",
+  "projectFilePath": "C:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\WebDiary\\WebDiary.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Dock\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\Dock\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

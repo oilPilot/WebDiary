@@ -2,18 +2,19 @@
 
 <PageTitle>Home</PageTitle>
 
-<h1>Testing AuthorizeView</h1>
 
 <AuthorizeView>
     <Authorized>
-        <p>Welcome, @context.User.Identity!.Name!</p>
+        <h1>Welcome, @context.User.Identity!.Name!</h1>
+        <p>@homeText</p>
     </Authorized>
     <NotAuthorized>
-        <p>You are not logged in.</p>
+        <h1>Home</h1>
+        <p>@homeText</p>
     </NotAuthorized>
 </AuthorizeView>
 
 @code {
-    
+    string homeText = "This is main page of Web-diary app, here is no functionality to be realistic, and i, as developer don't know what to add here.\nJust ignore this page, it's useless.";
 
 }

@@ -40,6 +40,7 @@
     </div>
 </EditForm>
 <p>Have no account? You can signin <a href="/Users/Signin">here</a></p>
+<p>Forgot your password? If you have entered Email you can restore it <a href="/Users/RestorePassword">here</a></p>
 
 @code {
     [SupplyParameterFromForm]
@@ -64,8 +65,7 @@
         await base.OnInitializedAsync();
         user = new User() {
             UserName = "",
-            Password = "",
-            Description = ""
+            Password = ""
         };
     }
 

@@ -2,6 +2,7 @@
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Authorization
 @using WebDiary.Frontend.Models.Auth
+@attribute [Authorize]
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 
@@ -14,13 +15,15 @@
         <p>Name:        @context.User.Identity!.Name</p>
         <p>Role:        @context.User.FindFirstValue(ClaimTypes.Role)</p>
         <p>Description: @context.User.FindFirstValue(ClaimTypes.UserData)</p>
-        <button type="button" class="btn btn-outline-danger" @onclick="Logout">Logout</button>
+        <p>Email:       @context.User.FindFirstValue(ClaimTypes.Email)</p>
         <button type="button" class="btn btn-outline-secondary" @onclick="Login">Login into another account</button>
+        <button type="button" class="btn btn-outline-secondary" @onclick="() => modalAccount!.OpenForUpdatingAsync(loggedUserId)">Modify account</button>
+        <button type="button" class="btn btn-outline-danger" @onclick="Logout">Logout</button>
+        <button type="button" class="btn btn-outline-danger" @onclick="() => modalAccount!.OpenForDelete(loggedUserId)">Delete account</button>
+        <WebDiary.Frontend.Components.Pages.Users.DeleteAndUpdateAccountDialogue @ref="modalAccount" />
         <AuthorizeView Roles="Admin" Context="AdminContext">
             <Authorized>
-                Debug TODO!
-                <button type="button" class="btn btn-outline-danger" @onclick="Logout">Delete account</button>
-                <button type="button" class="btn btn-outline-danger" @onclick="Logout">Modify account</button>
+                <p>You are Admin!</p>
             </Authorized>
         </AuthorizeView>
     </Authorized>
@@ -28,13 +31,14 @@
 
 @code {
     private int loggedUserId;
+    private WebDiary.Frontend.Components.Pages.Users.DeleteAndUpdateAccountDialogue? modalAccount;
     
     private async Task Logout() {
         await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).LogoutUserAsync();
         NavigationManager.NavigateTo("/", true);
     }
     private void Login() {
-        NavigationManager.NavigateTo("/", true);
+        NavigationManager.NavigateTo("/Users/Login", true);
     }
 
     protected async override Task OnAfterRenderAsync(bool firstRender) {

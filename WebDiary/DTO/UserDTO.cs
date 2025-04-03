@@ -27,4 +27,6 @@ public record class UpdateUserDTO
     public string? Password { get; set; }
     public string? Description { get; set; }
     public string? Email { get; set; }
+    public byte[]? ResetPasswordToken { get; set; }
+    public DateTime? ResetPasswordDateEnd { get; set; }
 }

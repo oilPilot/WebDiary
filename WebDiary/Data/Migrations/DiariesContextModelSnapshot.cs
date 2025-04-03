@@ -90,6 +90,12 @@ namespace WebDiary.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("ResetPasswordDateEnd")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte[]>("ResetPasswordToken")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

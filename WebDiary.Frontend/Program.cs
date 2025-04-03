@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using WebDiary.Frontend.Models.Auth;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
-using ASP.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,13 +48,10 @@ app.Run();
 
 /* TODO:
     Major tasks:
-        Make passwords equalizing at backend
-        Make managing account:
-            Double Auth
-            If password is forgotten somehow change it (Emails?);
-        Make more languages: Russian, Ukrainish, Deutsch;
+        Make more languages: Deutsch;
     Med tasks:
         Make more beatiful design for Users pages;
+        Show something when doing backend tasks;
     Little tasks:
         Nothing;
 

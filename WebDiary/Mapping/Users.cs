@@ -23,6 +23,8 @@ public static class Users
             Password = user.Password != null ? user.Password : currentUser.Password,
             Description = user.Description != null ? user.Description : currentUser.Description,
             Email = user.Email != null ? user.Email : currentUser.Email,
+            ResetPasswordToken = user.ResetPasswordToken,
+            ResetPasswordDateEnd = user.ResetPasswordDateEnd,
             Role = currentUser.Role
         };
     }

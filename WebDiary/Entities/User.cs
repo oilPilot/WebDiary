@@ -10,4 +10,6 @@ public class User
     public required string Role { get; set; }
     public required string Description { get; set; }
     public required string Email { get; set; }
+    public byte[]? ResetPasswordToken { get; set; }
+    public DateTime? ResetPasswordDateEnd { get; set; }
 }

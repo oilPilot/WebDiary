@@ -51,7 +51,7 @@ app.Run();
         Make more languages: Deutsch;
     Med tasks:
         Make more beatiful design for Users pages;
-        Show something when doing backend tasks;
+        Show something when doing backend tasks; < to THIS!
     Little tasks:
         Nothing;
 

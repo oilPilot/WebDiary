@@ -34,7 +34,6 @@ public static class Users
             Id = user.Id,
             UserName = user.UserName,
             Role = user.Role,
-            Email = user.Email,
             Description = user.Description
         };
     }

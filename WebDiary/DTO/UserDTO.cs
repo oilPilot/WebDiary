@@ -8,7 +8,6 @@ public record class UserDTO
     public required string UserName { get; set; }
     public required string Role { get; set; }
     public required string Description { get; set; }
-    public required string Email { get; set; }
 }
 
 public record class CreateUserDTO

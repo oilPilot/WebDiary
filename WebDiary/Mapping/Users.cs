@@ -12,7 +12,10 @@ public static class Users
             Password = user.Password,
             Role = "Default",
             Email = user.Email is null ? "" : user.Email,
-            Description = user.Description is null ? "" : user.Description
+            Description = user.Description is null ? "" : user.Description,
+            ActionToken = user.ActionToken,
+            ActionDateEnd = user.ActionDateEnd,
+            IsValidated = false
         };
     }
 
@@ -23,9 +26,10 @@ public static class Users
             Password = user.Password != null ? user.Password : currentUser.Password,
             Description = user.Description != null ? user.Description : currentUser.Description,
             Email = user.Email != null ? user.Email : currentUser.Email,
-            ResetPasswordToken = user.ResetPasswordToken,
-            ResetPasswordDateEnd = user.ResetPasswordDateEnd,
-            Role = currentUser.Role
+            ActionToken = user.ActionToken,
+            ActionDateEnd = user.ActionDateEnd,
+            Role = currentUser.Role,
+            IsValidated = true
         };
     }
 
@@ -34,7 +38,8 @@ public static class Users
             Id = user.Id,
             UserName = user.UserName,
             Role = user.Role,
-            Description = user.Description
+            Description = user.Description,
+            IsValidated = user.IsValidated
         };
     }
 }

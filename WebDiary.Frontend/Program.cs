@@ -1,9 +1,10 @@
 using WebDiary.Frontend.Clients;
-using WebDiary.Frontend.Components;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using WebDiary.Frontend.Models.Auth;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
+using WebDiary.Frontend.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,8 +51,7 @@ app.Run();
     Major tasks:
         Make more languages: Deutsch;
     Med tasks:
-        Make more beatiful design for Users pages;
-        Show something when doing backend tasks; < to THIS!
+        Nothing;
     Little tasks:
         Nothing;
 

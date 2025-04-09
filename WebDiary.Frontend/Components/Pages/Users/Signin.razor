@@ -1,71 +1,92 @@
 ﻿@page "/Users/Signin"
+@using System.Security.Cryptography
 
 @inject NavigationManager NavigationManager
 @inject UserClient UserClient
 @inject AuthenticationStateProvider AuthStateProvider
+@inject HttpClient HttpClient
 
-<PageTitle>Diary - Signin</PageTitle>
+<PageTitle>MyDiary</PageTitle>
 
 <h3>Signin</h3>
 
-<EditForm Model="user" OnValidSubmit="SignIn" FormName="SigninForm">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-    <div class="mt-3">
+@if(String.IsNullOrEmpty(Message)) {
+    <EditForm Model="user" OnValidSubmit="SignIn" FormName="SigninForm">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
         <div class="mt-3">
-            <label>
+            <div class="mt-3">
                 Username:
-                <InputText @bind-value="user!.UserName" />
+                <InputText class="form-full-width" @bind-value="user!.UserName" />
                 <ValidationMessage For="() => user.UserName" />
-            </label>
-        </div>
-        <div class="mt-3">
-            <label>
+            </div>
+            <div class="mt-3">
                 New password:
-                <InputText @bind-value="user.Password" />
+                <InputText class="form-full-width" @bind-value="user.Password" />
                 <ValidationMessage For="() => user.Password" />
-            </label>
-        </div>
-        <div class="mt-3">
-            <label>
-                Self-image (optional):
-                <InputTextArea @bind-value="user.Description" class="no-resize" />
+            </div>
+            <div class="mt-3">
+                Self-image(description) (optional):
+                <InputTextArea @bind-value="user.Description" class="no-resize form-full-width" />
                 <ValidationMessage For="() => user.Description" />
-            </label>
-        </div>
-        <div class="mt-3">
-            <label>
-                Email, so if you forget you password you can restore it:
-                <InputText @bind-value="user.Email" />
+            </div>
+            <div class="mt-3">
+                Email:
+                <InputText class="form-full-width" @bind-value="user.Email" />
                 <ValidationMessage For="() => user.Email" />
-            </label>
-        </div>
-        <div class="mt-3">
-            <label>
+            </div>
+            <div class="mt-3">
                 <button type="submit" class="btn btn-primary">Signin</button>
-            </label>
+            </div>
+            <div class="text-nowrap">
+                <p class="fs-5 fw-semibold text-danger">@ErrorMessage</p>
+            </div>
         </div>
-        <div>
-            <label>
-                <p>@ErrorMessage</p>
-            </label>
-        </div>
-    </div>
-</EditForm>
+    </EditForm>
+} else {
+    <p class="fs-4 fw-semibold">@Message</p>
+}
 
 @code {
     [SupplyParameterFromForm]
     public User? user { get; set; }
     private string ErrorMessage = "";
+    private string Message = "";
     
     public async Task SignIn() {
         ErrorMessage = "";
-        if( (await UserClient.GetUsersAsync()).Any(userDb => userDb.UserName == user!.UserName)) {
+        List<User> users = await UserClient.GetUsersAsync();
+        if( users.Any(userDb => userDb.UserName == user!.UserName)) {
             ErrorMessage = "Your username is already used by another user. Please try another username.";
             return;
         }
+        var response = await HttpClient.GetAsync($"/auth/email/isunique/{user!.Email}"); // If it is unique we will get true
+        if( response.IsSuccessStatusCode && response.Content.Headers.ContentLength == 4 ? false : true ) { // and if it is unique we don't wanna to go here
+            ErrorMessage = "Your email is already used by another user.";
+            return;
+        }
+        // Adding changes to DB
+        var token = RandomNumberGenerator.GetBytes(32);
+        user!.ActionToken = token;
+        user.ActionDateEnd = DateTime.Now.AddMinutes(300);
         await UserClient.AddUserAsync(user!);
-        NavigationManager.NavigateTo("/Users/Login");
+
+        // Seeing in DB id of new user
+        user = await UserClient.GetUserByEmailAsync(user.Email!);
+
+        // Creating callbackUrl
+        var Base64Token = Convert.ToBase64String(token).Replace('+', '-').Replace('/', '_');
+        var callbackUrl = NavigationManager.GetUriWithQueryParameters(NavigationManager.BaseUri + "Users/Validate",
+            new Dictionary<string, object?>() { {"token", Base64Token}, {"userId", user.Id} });
+
+        // using backend to send email
+        _ = HttpClient.PostAsJsonAsync("/auth/sendValidationEmail", new { userId = user.Id, CallbackUrl = callbackUrl })
+            .ContinueWith(exception => {
+                Console.WriteLine(exception);
+                ErrorMessage = $"Something went wrong on backend. Contact with developer."; }
+            , TaskContinuationOptions.OnlyOnFaulted);
+        // Now show that everything is fine.
+        Message = "To use account you firstly must validate it in email. For that you have 5 hours. Message will soon come to your email";
     }
 
     protected override async Task OnInitializedAsync() {

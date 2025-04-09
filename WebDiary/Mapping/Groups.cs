@@ -22,8 +22,7 @@ public static class Groups
     public static GroupDTO toDTO(this DiaryGroup group) {
         return new GroupDTO {
             Id = group.Id,
-            Name = group.Name,
-            UserId = group.UserId
+            Name = group.Name
         };
     }
 }

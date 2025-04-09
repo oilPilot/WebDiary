@@ -100,7 +100,7 @@
 
             if(loggedUser.Identity != null && loggedUser.Identity.IsAuthenticated) {
                 loggedUserId = Convert.ToInt32(loggedUser.FindFirstValue("userId"));
-                groups = (await DiaryGroupClient.GetGroupsAsync()).Where(group => group.UserId == loggedUserId).ToList();
+                groups = await DiaryGroupClient.GetGroupsOfUserAsync(loggedUserId);
                 topName = loggedUser.Identity.Name;
             }
 

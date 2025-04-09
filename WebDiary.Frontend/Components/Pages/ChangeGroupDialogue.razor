@@ -2,6 +2,7 @@
 @inject DiaryGroupClient DiaryGroupClient
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserClient UserClient
 
 <div class="modal" tabindex="-1" style="display: @ModalDisplay;">
     <div class="modal-dialogue" role="document">
@@ -15,12 +16,17 @@
                     <p>Name of your group:</p>
                     <InputText class="full-width" @bind-Value="group!.Name"></InputText>
                 } else{
-                    <p>are you sure you wanna to delete group "@group!.Name" and it's diaries?</p>
+                    <p class="fs-5 fw-semibold text-danger">are you sure you wanna to delete group "@group!.Name" and it's diaries?</p>
                 }
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="() => Close()">Cancel</button>
-                <button type="button" class="btn btn-@(isDeleting ? "danger" : "primary")" @onclick="SaveAsync">@(isDeleting ? "Delete" : "Save")</button>
+                @if(!@isValidated) {
+                    <p>You isn't validated. Validate email first.</p>
+                }
+                <button type="button" class="btn btn-secondary@(isValidated ? "" : " disabled")"
+                    data-dismiss="modal" @onclick="() => Close()">Cancel</button>
+                <button type="button" class="btn btn-@(isDeleting ? "danger" : "primary") @(isValidated ? "" : "disabled")"
+                    @onclick="SaveAsync">@(isDeleting ? "Delete" : "Save")</button>
             </div>
         </div>
     </div>
@@ -38,16 +44,31 @@
     public bool ShowBackdrop = false;
     private string? HeaderName;
     private bool isDeleting;
+    private bool isValidated;
 
     protected async override Task OnInitializedAsync() {
         group = new() {
-            Name = "",
-            UserId = 1  // OnAfterRender is happenning later, so we have no loggedUser and can't get their Id.
-                        // It's more effective to don't again calculate this, and just pass parameter from Navbar.
+            Name = ""
         };
         isDeleting = false;
 
         await base.OnInitializedAsync();
+    }
+    protected async override Task OnAfterRenderAsync(bool firstRender) {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if(firstRender) {
+
+            var loggedUser = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
+
+            if(loggedUser.Identity != null && loggedUser.Identity.IsAuthenticated) {
+                int loggedUserId = Convert.ToInt32(loggedUser.FindFirstValue("userId"));
+                User user = await UserClient.GetUserAsync(loggedUserId);
+                isValidated = user.IsValidated;
+            }
+
+            StateHasChanged();
+        }
     }
 
     private async Task SaveAsync() {

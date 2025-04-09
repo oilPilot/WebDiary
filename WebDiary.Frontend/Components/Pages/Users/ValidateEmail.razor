@@ -1,0 +1,27 @@
+﻿@page "/Users/Validate"
+@using System.Collections.Specialized
+@inject NavigationManager NavigationManager
+@inject HttpClient HttpClient
+
+<PageTitle>MyDiary</PageTitle>
+
+<p class="fs-5 fw-semibold text-danger">@Message</p>
+
+@code {
+    string Message { get; set; } = "";
+
+    private void Redirect() {
+        NavigationManager.NavigateTo("/Users/Login");
+    }
+
+    protected override async Task OnInitializedAsync() {
+        await base.OnInitializedAsync();
+        NameValueCollection? query = System.Web.HttpUtility.ParseQueryString(new UriBuilder(NavigationManager.Uri).Query);
+        var response = await HttpClient.PostAsJsonAsync("/auth/ValidateEmail", new
+            { Token = query!["token"], UserId = Convert.ToInt32(query["userId"]) });
+        if(response.IsSuccessStatusCode && response.Content.Headers.ContentLength == 4 ? true : false ) {
+            Redirect();
+        }
+        Message = "Something went wrong. Does your time isn't expired?";
+    }
+}

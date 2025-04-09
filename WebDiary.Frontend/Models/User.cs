@@ -9,16 +9,16 @@ public class User {
     public int Id { get; set; }
     [MinLength(3)]
     public required string UserName { get; set; }
+    public bool IsValidated { get; set; }
     [MinLength(8)]
     public string? Password { get; set; }
     public string? Description { get; set; } = "";
     public string? Role { get; set; }
-    [AllowNull]
     [EmailAddress(ErrorMessage = "This isn't correct Email address.")]
     public string? Email { get; set; }
     [AllowNull]
-    public byte[]? ResetPasswordToken { get; set; }
+    public byte[]? ActionToken { get; set; }
     [AllowNull]
-    public DateTime? ResetPasswordDateEnd { get; set; }
+    public DateTime? ActionDateEnd { get; set; }
 }
 

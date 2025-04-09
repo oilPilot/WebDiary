@@ -4,15 +4,17 @@
 @inject DiaryClient DiaryClient
 @inject DiaryGroupClient DiaryGroupClient
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserClient UserClient
 
+<PageTitle>MyDiary</PageTitle>
 
 <AuthorizeView Context="diaryContext">
     <Authorized>
 
         @if(diaries is null) {
             <p>Await, diaries and groups are loading...</p>
-        } else if(Convert.ToInt32(@diaryContext.User.FindFirstValue("userId")) == group!.UserId) {
-            <PageTitle>Diary - @PageTitle</PageTitle>
+        } else if(@isValidated) {
             <h1>@PageTitle</h1>
             <div>
                 @foreach(var date in diaries.GroupBy(diary => diary.Date).Select(diary => diary.First().Date)) {
@@ -38,14 +40,13 @@
             <EditForm Model="diary" OnValidSubmit="AddDiaryAsync" FormName="SendDiary" class="footer">
                 <div class="d-flex mb-2 me-2 ms-2" style="height: 60px;">
                     <InputTextArea @bind-value="diary!.Text" class="form-control bg-secondary no-resize" style="--bs-bg-opacity: .33;" />
-                    <button class="btn btn-secondary" type="submit">Send</button>
+                    <button class="btn btn-secondary ms-2" type="submit">Send</button>
                 </div>
-                <AddGroupDialogue></AddGroupDialogue>
             </EditForm>
         } else {
-            <PageTitle>Diary - Unathorized</PageTitle>
-            <h1>Unathorized</h1>
-            <p>This group belongs to another user.</p>
+            <PageTitle>Diary - Not validated</PageTitle>
+            <h1>Not validated</h1>
+            <p>Your email is not validated. Validate it first.</p>
         }
     </Authorized>
     <NotAuthorized>
@@ -63,20 +64,16 @@
     private Diary? diary;
     private DiaryGroup? group;
     public string? PageTitle;
+    private bool isValidated;
 
     protected override async Task OnInitializedAsync() {
         if(id is null)
             throw new Exception("id in Diaries page is null.");
-        group = new DiaryGroup() {
-            Name = "",
-            UserId = 1
-        };
-        diaries = await DiaryClient.GetDiariesAsync();
         diary ??= new() {
             Text = "",
             GroupId = id!.Value
         };
-        base.OnInitialized();
+        await base.OnInitializedAsync();
     }
 
     protected override async Task OnParametersSetAsync() {
@@ -84,21 +81,51 @@
             throw new Exception("id in Diaries page is null.");
         try {
             group = await DiaryGroupClient.GetGroupAsync(id.Value);
+            if(group == null) {
+                RedirectTo404();
+                return;
+            }
             PageTitle = group.Name;
             diary = new() {
                 Text = "",
                 GroupId = id!.Value
             };
-            diaries = diaries!.Where(diary => diary.GroupId == id).ToList();
+            diaries = await DiaryClient.GetDiariesOfGroupAsync(group.Id);
         } catch (Exception Exception) {
             Console.WriteLine(Exception);
         }
         await base.OnParametersSetAsync();
     }
+    protected async override Task OnAfterRenderAsync(bool firstRender) {
+        await base.OnAfterRenderAsync(firstRender);
 
+        if(firstRender) {
+            if(group == null) {
+                RedirectTo404();
+                return;
+            }
+
+            var loggedUser = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
+
+            if(loggedUser.Identity != null && loggedUser.Identity.IsAuthenticated) {
+                int loggedUserId = Convert.ToInt32(loggedUser.FindFirstValue("userId"));
+                User user = await UserClient.GetUserAsync(loggedUserId);
+                isValidated = user.IsValidated;
+            } else {
+                NavigationManager.NavigateTo("/Users/Login");
+            }
+
+            StateHasChanged();
+        }
+    }
+
+    private void RedirectTo404() {
+        NavigationManager.NavigateTo("NotFoundResource");
+    }
     async Task AddDiaryAsync() {
         await DiaryClient.AddDiaryAsync(diary!);
         StateHasChanged();
+        NavigationManager.Refresh(true);
     }
 }
 

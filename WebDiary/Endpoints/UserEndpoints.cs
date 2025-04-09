@@ -23,6 +23,14 @@ public static class UserEndpoints
 
             return Results.Ok(user.toDTO());
         }).WithName(getUserRoute);
+        group.MapGet("/byemail/{email}", async (string email, DiariesContext dbContext) => {
+            var user = await dbContext.users.AsNoTracking().Where(user => user.Email == email).ToListAsync();
+            if(user is null) {
+                return Results.NotFound();
+            }
+
+            return Results.Ok(user.First().toDTO());
+        });
         
         // mapping POST methods
         group.MapPost("/", async (CreateUserDTO newUser, DiariesContext dbContext) => {

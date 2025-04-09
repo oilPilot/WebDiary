@@ -17,6 +17,10 @@ li.nonumeration {
     top: 25%;
 }
 
+.form-full-width {
+    width: 80%;
+}
+
 .full-width {
     width: 100%;
 }

@@ -6,7 +6,6 @@ public record class GroupDTO
 {
     public int Id { get; set; }
     public required string Name { get; set; }
-    public int UserId { get; set; } = 1;
 }
 
 public record class CreateGroupDTO

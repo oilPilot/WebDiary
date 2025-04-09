@@ -8,6 +8,9 @@ public class DiaryGroupClient(HttpClient httpClient)
     public async Task<List<DiaryGroup>> GetGroupsAsync() =>
         await httpClient.GetFromJsonAsync<List<DiaryGroup>>("groups") ?? new List<DiaryGroup>();
         
+    public async Task<List<DiaryGroup>> GetGroupsOfUserAsync(int userId) =>
+        await httpClient.GetFromJsonAsync<List<DiaryGroup>>($"groups/ofuser/{userId}") ?? new List<DiaryGroup>();
+        
     public async Task<DiaryGroup> GetGroupAsync(int id) =>
         await httpClient.GetFromJsonAsync<DiaryGroup>($"groups/{id}") ?? throw new Exception("Diary wasn't found");
 

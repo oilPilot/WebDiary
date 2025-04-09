@@ -2,20 +2,24 @@
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Authorization
 @using WebDiary.Frontend.Models.Auth
-@attribute [Authorize]
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserClient UserClient
 @inject NavigationManager NavigationManager
 
-
-<h3>Manage account</h3>
+<PageTitle>MyDiary</PageTitle>
 
 <AuthorizeView>
     <Authorized>
-        <PageTitle>Diary - @context.User.Identity!.Name</PageTitle>
+        <h3>Manage account</h3>
         <p>Name:        @context.User.Identity!.Name</p>
         <p>Role:        @context.User.FindFirstValue(ClaimTypes.Role)</p>
         <p>Description: @context.User.FindFirstValue(ClaimTypes.UserData)</p>
         <p>Email:       @context.User.FindFirstValue(ClaimTypes.Email)</p>
+        @if(@isValidated) {
+            <p>Is validated</p>
+        } else {
+            <p>Is NOT validated</p>
+        }
         <button type="button" class="btn btn-outline-secondary" @onclick="Login">Login into another account</button>
         <button type="button" class="btn btn-outline-secondary" @onclick="() => modalAccount!.OpenForUpdatingAsync(loggedUserId)">Modify account</button>
         <button type="button" class="btn btn-outline-danger" @onclick="Logout">Logout</button>
@@ -31,15 +35,14 @@
 
 @code {
     private int loggedUserId;
+    private bool isValidated;
     private WebDiary.Frontend.Components.Pages.Users.DeleteAndUpdateAccountDialogue? modalAccount;
     
     private async Task Logout() {
         await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).LogoutUserAsync();
-        NavigationManager.NavigateTo("/", true);
+        Login();
     }
-    private void Login() {
-        NavigationManager.NavigateTo("/Users/Login", true);
-    }
+    private void Login() => NavigationManager.NavigateTo("/Users/Login");
 
     protected async override Task OnAfterRenderAsync(bool firstRender) {
         await base.OnAfterRenderAsync(firstRender);
@@ -50,6 +53,10 @@
 
             if(loggedUser.Identity != null && loggedUser.Identity.IsAuthenticated) {
                 loggedUserId = Convert.ToInt32(loggedUser.FindFirstValue("userId"));
+                User user = await UserClient.GetUserAsync(loggedUserId);
+                isValidated = user.IsValidated;
+            } else {
+                NavigationManager.NavigateTo("/Users/Login");
             }
 
             StateHasChanged();

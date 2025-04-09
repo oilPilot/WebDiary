@@ -81,10 +81,6 @@
             throw new Exception("id in Diaries page is null.");
         try {
             group = await DiaryGroupClient.GetGroupAsync(id.Value);
-            if(group == null) {
-                RedirectTo404();
-                return;
-            }
             PageTitle = group.Name;
             diary = new() {
                 Text = "",
@@ -92,6 +88,9 @@
             };
             diaries = await DiaryClient.GetDiariesOfGroupAsync(group.Id);
         } catch (Exception Exception) {
+            if(Exception.Message == "Response status code does not indicate success: 404 (Not Found).") {
+                RedirectTo404();
+            }
             Console.WriteLine(Exception);
         }
         await base.OnParametersSetAsync();
@@ -100,10 +99,6 @@
         await base.OnAfterRenderAsync(firstRender);
 
         if(firstRender) {
-            if(group == null) {
-                RedirectTo404();
-                return;
-            }
 
             var loggedUser = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
 

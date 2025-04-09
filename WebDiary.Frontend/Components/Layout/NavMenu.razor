@@ -24,12 +24,12 @@
             <Authorized>
                 <div class="nav-item px-3 d-flex">
                     <NavLink class="nav-link" href="/Users" Match="NavLinkMatch.All">
-                        <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Manage account
+                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Manage account
                     </NavLink>
                 </div>
                 <div class="nav-item px-3 d-flex">
                     <NavLink class="nav-link" @onclick="() => modalLogout!.Open()" Match="NavLinkMatch.All">
-                        <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Logout
+                        <span class="bi bi-person-dash-nav-menu" aria-hidden="true"></span> Logout
                     </NavLink>
                 </div>
             @if(groups is null) {
@@ -45,7 +45,7 @@
                                 <p class="mt-3">@group.Name</p>
                             }
                             <div class="d-flex position-buttons">
-                                <button type="button" class="btn btn-secondary bi bi-pencil-square-nav-menu" @onclick="() => modal!.OpenForEditing(group)" />
+                                <button type="button" class="btn btn-secondary bi bi-pencil-square-black-nav-menu" @onclick="() => modal!.OpenForEditing(group)" />
                                 <button type="button" class="btn btn-danger btn-close" @onclick="() => modal!.OpenForDeleting(group)" />
                             </div>
                         </NavLink>
@@ -61,12 +61,12 @@
             <NotAuthorized>
                 <div class="nav-item px-3 d-flex">
                     <NavLink class="nav-link" href="/Users/Signin" Match="NavLinkMatch.All">
-                        <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Signin
+                        <span class="bi bi-person-add-nav-menu" aria-hidden="true"></span> Signin
                     </NavLink>
                 </div>
                 <div class="nav-item px-3 d-flex">
                     <NavLink class="nav-link" href="/Users/Login" Match="NavLinkMatch.All">
-                        <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Login
+                        <span class="bi bi-person-check-nav-menu" aria-hidden="true"></span> Login
                     </NavLink>
                 </div>
             </NotAuthorized>

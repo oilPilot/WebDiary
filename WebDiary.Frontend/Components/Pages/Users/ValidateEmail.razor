@@ -2,6 +2,7 @@
 @using System.Collections.Specialized
 @inject NavigationManager NavigationManager
 @inject HttpClient HttpClient
+@inject IStringLocalizer<Resources.UsersResource> Localizator
 
 <PageTitle>MyDiary</PageTitle>
 
@@ -22,6 +23,6 @@
         if(response.IsSuccessStatusCode && response.Content.Headers.ContentLength == 4 ? true : false ) {
             Redirect();
         }
-        Message = "Something went wrong. Does your time isn't expired?";
+        Message = Localizator["ValidationErrorText"];
     }
 }

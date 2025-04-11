@@ -4,6 +4,7 @@
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject HttpClient HttpClient
+@inject IStringLocalizer<Resources.UsersResource> Localizator
 
 <div class="modal" tabindex="-1" style="display: @ModalDisplay;">
     <div class="modal-dialogue" role="document">
@@ -17,31 +18,31 @@
                     <div>
                         <div class="mt-3">
                             <label>
-                                Username:
+                                @Localizator["AskUsername"]
                                 <InputText @bind-value="newUser!.UserName" />
                             </label>
                         </div>
                         <div class="mt-3">
                             <label>
-                                Self-description:
+                                @Localizator["AskSelfdescription"]
                                 <InputTextArea @bind-value="newUser.Description" class="no-resize" />
                             </label>
                         </div>
                         <div class="mt-3">
                             <label>
-                                New Email:
+                                @Localizator["AskNewEmail"]
                                 <InputText @bind-value="newUser.Email" />
                             </label>
                         </div>
                         <div class="mt-3">
                             <label>
-                                Old password for verification:
+                                @Localizator["AskOldPassword"]
                                 <InputText type="password" @bind-value="newUser.Password" />
                             </label>
                         </div>
                         <div class="mt-3">
                             <label>
-                                New password:
+                                @Localizator["AskNewPassword"]
                                 <InputText type="password" @bind-value="newPassword" />
                             </label>
                         </div>
@@ -49,19 +50,21 @@
                             <label>
                                 <p class="fs-5 fw-semibold text-danger">@ErrorMessage</p>
                                 @if(passwordForgot) {
-                                    <p>Password is incorrect, do you forgot your password?
-                                        If you have entered Email you can restore it <a href="/Users/RestorePassword" class="link-info">here</a></p>
+                                    <p>@Localizator["PswdIncorrectDoYouForgot"]
+                                        @Localizator["Restore1"]<a href="/Users/RestorePassword" class="link-info">@Localizator["AddressForSomething"]</a></p>
                                 }
                             </label>
                         </div>
                     </div>
                 } else {
-                    <p class="fs-5 fw-semibold text-danger">Are you sure wanna delete your account? This will delete all diaries that you wrote. You can't undo this action.</p>
+                    <p class="fs-5 fw-semibold text-danger">@Localizator["DeleteAccSure"]</p>
                 }
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="() => Close()">Cancel</button>
-                <button type="button" class="btn btn-@(isDeleting ? "danger" : "primary")" data-dismiss="modal" @onclick="SaveAsync">@(isDeleting ? "Delete" : "Save")</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="() => Close()">
+                    @Localizator["CancelButtonText"]</button>
+                <button type="button" class="btn btn-@(isDeleting ? "danger" : "primary")" data-dismiss="modal" 
+                    @onclick="SaveAsync">@(isDeleting ? Localizator["DeleteButtonText"] : Localizator["SaveButtonText"])</button>
             </div>
         </div>
     </div>
@@ -138,20 +141,20 @@
             var response = (await HttpClient.GetAsync($"/auth/password/isequal/{newUser!.Password}/{user!.Id}"));
             if( response.IsSuccessStatusCode && response.Content.Headers.ContentLength == 4 ? true : false ) {
                 if(newUser.UserName.Length < 3) {
-                    ErrorMessage += "Username should be at least 3 symbols length.";
+                    ErrorMessage += Localizator["UpdateAccDialogueError1"];
                     return;
                 }
                 if(!String.IsNullOrEmpty(newUser.Email)) {
                     var index = newUser.Email.IndexOf('@');
                     if(index == 0 || index == newUser.Email.Length-1 || index != newUser.Email.LastIndexOf('@')) {
-                        ErrorMessage += "This is not correct Email address.";
+                        ErrorMessage += Localizator["UpdateAccDialogueError2"];
                         return;
                     }
                 }
                 if(!String.IsNullOrEmpty(newPassword) && newPassword.Length >= 8) {
                     newUser.Password = newPassword;
                 } else if(!String.IsNullOrEmpty(newPassword) && newPassword.Length < 8) {
-                    ErrorMessage += "Your new password is too short.\n";
+                    ErrorMessage += Localizator["UpdateAccDialogueError3"];
                     return;
                 }
                 await UserClient.UpdateUserAsync(newUser);
@@ -159,7 +162,7 @@
                 StateHasChanged();
                 Close();
             } else {
-                ErrorMessage += "Password isn't correct. Do you forget your password?";
+                ErrorMessage += Localizator["UpdateAccDialogueError4"];
                 passwordForgot = true;
             }
         }

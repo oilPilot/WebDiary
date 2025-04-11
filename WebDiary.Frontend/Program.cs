@@ -4,7 +4,8 @@ using WebDiary.Frontend.Models.Auth;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using WebDiary.Frontend.Components;
-using Microsoft.AspNetCore.Components.Web;
+using Microsoft.Extensions.Localization;
+using Microsoft.AspNetCore.Localization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,9 @@ builder.Services.AddScoped<DiaryGroupClient>();
 builder.Services.AddScoped<DiaryClient>();
 builder.Services.AddScoped<UserClient>();
 builder.Services.AddBlazoredLocalStorage();
+
+builder.Services.AddLocalization();
+builder.Services.AddControllers();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
 builder.Services.AddAuthorization();
@@ -41,6 +45,12 @@ app.UseHttpsRedirection();
 
 app.UseAntiforgery();
 
+var supportedCultures = new[] { "en", "de"};
+var localizationOptions = new RequestLocalizationOptions().
+    SetDefaultCulture(supportedCultures[0]).AddSupportedCultures(supportedCultures).AddSupportedUICultures(supportedCultures);
+app.MapControllers();
+app.UseRequestLocalization(localizationOptions);
+
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
@@ -49,7 +59,7 @@ app.Run();
 
 /* TODO:
     Major tasks:
-        Make more languages: Deutsch;
+        Make everything look better;
     Med tasks:
         Nothing;
     Little tasks:

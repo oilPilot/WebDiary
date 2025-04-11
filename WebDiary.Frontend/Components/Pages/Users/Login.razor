@@ -4,35 +4,37 @@
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthStateProvider
 @inject HttpClient HttpClient
+@inject IStringLocalizer<Resources.UsersResource> Localizator
 
 <PageTitle>MyDiary</PageTitle>
 
-<h3>Login</h3>
+<h3>@Localizator["Login"]</h3>
 
 <EditForm Model="user" OnValidSubmit="TryLogin" FormName="LoginForm">
     <DataAnnotationsValidator />
     <ValidationSummary />
     <div class="mt-3">
         <div class="mt-3">
-            Username:
+            @Localizator["AskUsername"]
             <InputText class="form-full-width" @bind-value="user!.UserName" DisplayName="Tst" />
             <ValidationMessage For="() => user.UserName" />
         </div>
         <div class="mt-3">
-            Password:
+            @Localizator["AskPassword"]
             <InputText type="password" class="form-full-width" @bind-value="user.Password" />
             <ValidationMessage For="() => user.Password" />
         </div>
         <div class="mt-3">
-            <button type="submit" class="btn btn-primary">Login</button>
+            <button type="submit" class="btn btn-primary">@Localizator["Login"]</button>
         </div>
         <div class="mt-3 text-nowrap">
             <p class="fs-5 fw-semibold text-danger">@ErrorMessage</p>
         </div>
     </div>
 </EditForm>
-<p>Have no account? You can signin <a href="/Users/Signin" class="link-info">here</a></p>
-<p>Forgot your password? If you have entered Email you can restore it <a href="/Users/RestorePassword" class="link-info">here</a></p>
+<p>@Localizator["SignInTextRedirect"]<a href="/Users/Signin" class="link-info">@Localizator["AddressForSomething"]</a></p>
+<p>@Localizator["ForgotTextRedirect"]<a href="/Users/RestorePassword"
+    class="link-info">@Localizator["AddressForSomething"]</a></p>
 
 @code {
     [SupplyParameterFromForm]
@@ -49,7 +51,7 @@
             NavigationManager.NavigateTo("/", true);
         }
         else {
-            ErrorMessage = "Something went wrong. Check if username and password is correct.";
+            ErrorMessage = Localizator["LoginError"];
         }
     }
 

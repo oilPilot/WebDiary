@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+	<data name="ValidationErrorText" xml:space="preserve">
+    	<value>Etwas ist schiefgelaufen. Ist Ihre Zeit noch nicht abgelaufen??</value>
+	</data>
+  	<data name="RestorePasswordTitle" xml:space="preserve">
+		<value>Passwort wiederherstellen</value>
+	</data>
+	<data name="Email" xml:space="preserve">
+		<value>E-Mail:</value>
+	</data>
+	<data name="RestorePasswordSendEmail" xml:space="preserve">
+		<value>E-Mail senden</value>
+	</data>
+	<data name="RestorePasswordError1" xml:space="preserve">
+		<value>Der Benutzer wurde nicht gefunden. Überprüfen Sie, ob die E-Mail-Adresse korrekt ist.</value>
+	</data>
+	<data name="WrongOnBackend" xml:space="preserve">
+		<value>Im Backend ist ein Fehler aufgetreten. Wenden Sie sich an den Entwickler.</value>
+	</data>
+	<data name="RestorePasswordSuccessSending" xml:space="preserve">
+		<value>Die Nachricht wurde gesendet. Überprüfen Sie Ihre E-Mails. Möglicherweise kommt die Nachricht erst in wenigen Sekunden oder Minuten.</value>
+	</data>
+	<data name="ResetPasswordTitle" xml:space="preserve">
+		<value>Passwort zurücksetzen</value>
+	</data>
+	<data name="ResetPasswordNew" xml:space="preserve">
+		<value>Neues Passwort:</value>
+	</data>
+	<data name="ResetPasswordVerify" xml:space="preserve">
+		<value>Kennwort bestätigen:</value>
+	</data>
+	<data name="ResetPasswordChange" xml:space="preserve">
+		<value>Kennwort ändern</value>
+	</data>
+	<data name="ResetPasswordError" xml:space="preserve">
+		<value>Bei der Überprüfung ist ein Fehler aufgetreten. Ist die Zeit zum Zurücksetzen Ihres Passworts noch nicht abgelaufen?</value>
+	</data>
+	<data name="ManageAccountTitle" xml:space="preserve">
+		<value>Konto verwalten</value>
+	</data>
+	<data name="ManageAccountName" xml:space="preserve">
+		<value>Benutzername:</value>
+	</data>
+	<data name="ManageAccountRole" xml:space="preserve">
+		<value>Rolle:       </value>
+	</data>
+	<data name="ManageAccountDesc" xml:space="preserve">
+		<value>Beschreibung:</value>
+	</data>
+	<data name="ManageAccountEmail" xml:space="preserve">
+		<value>E-Mail:      </value>
+	</data>
+	<data name="ManageAccountValid" xml:space="preserve">
+		<value>Ist validiert</value>
+	</data>
+	<data name="ManageAccountNotValid" xml:space="preserve">
+		<value>Ist NICHT validiert</value>
+	</data>
+	<data name="IntoAnotherAcc" xml:space="preserve">
+		<value>Melden Sie sich bei einem anderen Konto an</value>
+	</data>
+	<data name="ModifyAcc" xml:space="preserve">
+		<value>Konto ändern</value>
+	</data>
+	<data name="Logout" xml:space="preserve">
+		<value>Ausloggen</value>
+	</data>
+	<data name="DeleteAcc" xml:space="preserve">
+		<value>Konto löschen</value>
+	</data>
+	<data name="LogoutDialogueText" xml:space="preserve">
+		<value>Möchten Sie sich wirklich vom aktuellen Konto abmelden?</value>
+	</data>
+	<data name="CancelButtonText" xml:space="preserve">
+		<value>Stornieren</value>
+	</data>
+	<data name="SaveButtonText" xml:space="preserve">
+		<value>Speichern</value>
+	</data>
+	<data name="DeleteButtonText" xml:space="preserve">
+		<value>Löschen</value>
+	</data>
+	<data name="UpdateAccDialogueError1" xml:space="preserve">
+		<value>Der Benutzername sollte mindestens 3 Zeichen lang sein.</value>
+	</data>
+	<data name="UpdateAccDialogueError2" xml:space="preserve">
+		<value>Dies ist keine korrekte E-Mail-Adresse.</value>
+	</data>
+	<data name="UpdateAccDialogueError3" xml:space="preserve">
+		<value>Ihr neues Passwort ist zu kurz.</value>
+	</data>
+	<data name="UpdateAccDialogueError4" xml:space="preserve">
+		<value>Das Passwort ist falsch. Haben Sie Ihr Passwort vergessen?</value>
+	</data>
+	<data name="DeleteAccSure" xml:space="preserve">
+		<value>Möchtest du dein Konto wirklich löschen? Dadurch werden alle Tagebücher gelöscht, die du geschrieben hast. Diese Aktion kann nicht rückgängig gemacht werden.</value>
+	</data>
+	<data name="PswdIncorrectDoYouForgot" xml:space="preserve">
+		<value>Das Passwort ist falsch. Haben Sie Ihr Passwort vergessen?</value>
+	</data>
+	<data name="Restore1" xml:space="preserve">
+		<value>Sie können es wiederherstellen</value>
+	</data>
+	<data name="AddressForSomething" xml:space="preserve">
+		<value>Hier</value>
+	</data>
+	<data name="AskUsername" xml:space="preserve">
+		<value>Benutzername:</value>
+	</data>
+	<data name="AskSelfdescription" xml:space="preserve">
+		<value>Selbstbeschreibung:</value>
+	</data>
+	<data name="AskNewEmail" xml:space="preserve">
+		<value>Neue E-Mail:</value>
+	</data>
+	<data name="AskEmail" xml:space="preserve">
+		<value>E-Mail:</value>
+	</data>
+	<data name="AskOldPassword" xml:space="preserve">
+		<value>Altes Passwort zur Verifizierung:</value>
+	</data>
+	<data name="AskNewPassword" xml:space="preserve">
+		<value>Neues Passwort:</value>
+	</data>
+	<data name="Login" xml:space="preserve">
+		<value>Login</value>
+	</data>
+	<data name="AskPassword" xml:space="preserve">
+		<value>Passwort</value>
+	</data>
+	<data name="SignInTextRedirect" xml:space="preserve">
+		<value>Sie haben noch kein Konto? Sie können sich anmelden</value>
+	</data>
+	<data name="ForgotTextRedirect" xml:space="preserve">
+		<value>Passwort vergessen? Sie können es wiederherstellen </value>
+	</data>
+	<data name="LoginError" xml:space="preserve">
+		<value>Ein Fehler ist aufgetreten. Überprüfen Sie, ob Benutzername und Passwort korrekt sind.</value>
+	</data>
+	<data name="SignIn" xml:space="preserve">
+		<value>Anmelden</value>
+	</data>
+	<data name="UsernameAlreadyUsed" xml:space="preserve">
+		<value>Ihr Benutzername wird bereits von einem anderen Benutzer verwendet. Bitte versuchen Sie es mit einem anderen Benutzernamen.</value>
+	</data>
+	<data name="EmailAlreadyUsed" xml:space="preserve">
+		<value>Ihre E-Mail wird bereits von einem anderen Benutzer verwendet.</value>
+	</data>
+	<data name="ValidateMust" xml:space="preserve">
+		<value>Um Ihr Konto zu nutzen, müssen Sie es zunächst per E-Mail bestätigen. Sie haben dafür 5 Stunden Zeit. Die Nachricht wird in Kürze an Ihre E-Mail-Adresse gesendet.</value>
+	</data>
+</root>

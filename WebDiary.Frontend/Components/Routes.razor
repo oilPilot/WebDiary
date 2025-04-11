@@ -1,10 +1,12 @@
-﻿<CascadingAuthenticationState>
+﻿@inject IStringLocalizer<Resources.MainResource> Localizator
+
+<CascadingAuthenticationState>
     <Router AppAssembly="typeof(Program).Assembly">
         <Found Context="routeData">
             <AuthorizeRouteView RouteData="@routeData" DefaultLayout="typeof(Layout.MainLayout)">                
                 <NotAuthorized>
-                    <p>Sorry, you're not authorized to reach this page.</p>
-                    <p>You may need to log in as a different user.</p>
+                    <p>@Localizator["NotAuthPageText1"]</p>
+                    <p>@Localizator["NotAuthPageText2"]</p>
                 </NotAuthorized>
             </AuthorizeRouteView>
             <FocusOnNavigate RouteData="@routeData" Selector="h1" />

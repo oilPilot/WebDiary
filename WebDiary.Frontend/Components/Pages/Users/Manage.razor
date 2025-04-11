@@ -5,25 +5,27 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserClient UserClient
 @inject NavigationManager NavigationManager
+@inject IStringLocalizer<Resources.UsersResource> Localizator
 
 <PageTitle>MyDiary</PageTitle>
 
 <AuthorizeView>
     <Authorized>
-        <h3>Manage account</h3>
-        <p>Name:        @context.User.Identity!.Name</p>
-        <p>Role:        @context.User.FindFirstValue(ClaimTypes.Role)</p>
-        <p>Description: @context.User.FindFirstValue(ClaimTypes.UserData)</p>
-        <p>Email:       @context.User.FindFirstValue(ClaimTypes.Email)</p>
+        <h3>@Localizator["ManageAccountTitle"]</h3>
+        <p>@Localizator["ManageAccountName"]@context.User.Identity!.Name</p>
+        <p>@Localizator["ManageAccountRole"]@context.User.FindFirstValue(ClaimTypes.Role)</p>
+        <p>@Localizator["ManageAccountDesc"]@context.User.FindFirstValue(ClaimTypes.UserData)</p>
+        <p>@Localizator["ManageAccountEmail"]@context.User.FindFirstValue(ClaimTypes.Email)</p>
         @if(@isValidated) {
-            <p>Is validated</p>
+            <p>@Localizator["ManageAccountValid"]</p>
         } else {
-            <p>Is NOT validated</p>
+            <p>@Localizator["ManageAccountNotValid"]</p>
         }
-        <button type="button" class="btn btn-outline-secondary" @onclick="Login">Login into another account</button>
-        <button type="button" class="btn btn-outline-secondary" @onclick="() => modalAccount!.OpenForUpdatingAsync(loggedUserId)">Modify account</button>
-        <button type="button" class="btn btn-outline-danger" @onclick="Logout">Logout</button>
-        <button type="button" class="btn btn-outline-danger" @onclick="() => modalAccount!.OpenForDelete(loggedUserId)">Delete account</button>
+        <button type="button" class="btn btn-outline-secondary" @onclick="Login">@Localizator["IntoAnotherAcc"]</button>
+        <button type="button" class="btn btn-outline-secondary" @onclick="() => modalAccount!.OpenForUpdatingAsync(loggedUserId)"
+            >@Localizator["ModifyAcc"]</button>
+        <button type="button" class="btn btn-outline-danger" @onclick="Logout">@Localizator["Logout"]</button>
+        <button type="button" class="btn btn-outline-danger" @onclick="() => modalAccount!.OpenForDelete(loggedUserId)">@Localizator["DeleteAcc"]</button>
         <WebDiary.Frontend.Components.Pages.Users.DeleteAndUpdateAccountDialogue @ref="modalAccount" />
         <AuthorizeView Roles="Admin" Context="AdminContext">
             <Authorized>

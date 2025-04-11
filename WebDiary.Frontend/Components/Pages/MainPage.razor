@@ -6,6 +6,7 @@
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserClient UserClient
+@inject IStringLocalizer<Resources.MainResource> Localizator
 
 <PageTitle>MyDiary</PageTitle>
 
@@ -13,20 +14,22 @@
     <Authorized>
 
         @if(diaries is null) {
-            <p>Await, diaries and groups are loading...</p>
+            <p>@Localizator["LoadingDiaries"]</p>
         } else if(@isValidated) {
             <h1>@PageTitle</h1>
             <div>
                 @foreach(var date in diaries.GroupBy(diary => diary.Date).Select(diary => diary.First().Date)) {
                     <ol>
                         <p>@date
-                        <button class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#@date">Collapse</button>
+                        <button class="btn btn-outline-primary" data-bs-toggle="collapse"
+                            data-bs-target="#@date">@Localizator["CollapseInMainPage"]</button>
                         </p>
                     @foreach(var diary in diaries.Where(diary => diary.Date == date)) {
                         <li class="ms-2 collapse nonumeration" id="@date">
                             <ol>
                                 <p>@diary.Time
-                                <button class="btn btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#@diary.Id">Collapse</button>
+                                <button class="btn btn-outline-secondary" data-bs-toggle="collapse"
+                                    data-bs-target="#@diary.Id">@Localizator["CollapseInMainPage"]</button>
                                 </p>
                                 <li class="ms-4 nonumeration collapse" id="@diary.Id">
                                     <p class="new-line-work">@diary.Text</p>
@@ -40,19 +43,19 @@
             <EditForm Model="diary" OnValidSubmit="AddDiaryAsync" FormName="SendDiary" class="footer">
                 <div class="d-flex mb-2 me-2 ms-2" style="height: 60px;">
                     <InputTextArea @bind-value="diary!.Text" class="form-control bg-secondary no-resize" style="--bs-bg-opacity: .33;" />
-                    <button class="btn btn-secondary ms-2" type="submit">Send</button>
+                    <button class="btn btn-secondary ms-2" type="submit">@Localizator["MainPageButtonText"]</button>
                 </div>
             </EditForm>
         } else {
-            <PageTitle>Diary - Not validated</PageTitle>
-            <h1>Not validated</h1>
-            <p>Your email is not validated. Validate it first.</p>
+            <PageTitle>Diary - @Localizator["NotValidatedTitle"]</PageTitle>
+            <h1>@Localizator["NotValidatedTitle"]</h1>
+            <p>@Localizator["NotValidatedText"]</p>
         }
     </Authorized>
     <NotAuthorized>
-        <PageTitle>Diary - Unathorized</PageTitle>
-        <h1>Unathorized</h1>
-        <p>You need to login to see this page.</p>
+        <PageTitle>Diary - @Localizator["UnathorizedTitle"]</PageTitle>
+        <h1>@Localizator["UnathorizedTitle"]</h1>
+        <p>@Localizator["UnathorizedText"]</p>
     </NotAuthorized>
 </AuthorizeView>
 

@@ -1,20 +1,15 @@
 ﻿@page "/"
+@inject IStringLocalizer<Resources.MainResource> Localizator
 
 <PageTitle>MyDiary</PageTitle>
 
 
 <AuthorizeView>
     <Authorized>
-        <h1>Welcome, @context.User.Identity!.Name!</h1>
-        <p>@homeText</p>
+        <h1>@Localizator["HomePageTitleAuth"]@context.User.Identity!.Name!</h1>
     </Authorized>
     <NotAuthorized>
-        <h1>Home</h1>
-        <p>@homeText</p>
+        <h1>@Localizator["HomePageTitleNoAuth"]</h1>
     </NotAuthorized>
 </AuthorizeView>
-
-@code {
-    string homeText = "This is main page of Web-diary app, here is no functionality to be realistic, and i, as developer don't know what to add here.\nJust ignore this page, it's useless.";
-
-}
+<p>@Localizator["HomePageText"]</p>

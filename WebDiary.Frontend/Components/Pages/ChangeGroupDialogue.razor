@@ -3,6 +3,7 @@
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserClient UserClient
+@inject IStringLocalizer<Resources.MainResource> Localizator
 
 <div class="modal" tabindex="-1" style="display: @ModalDisplay;">
     <div class="modal-dialogue" role="document">
@@ -13,20 +14,20 @@
             </div>
             <div class="modal-body">
                 @if(!isDeleting) {
-                    <p>Name of your group:</p>
+                    <p>@Localizator["CreateGroupVar1"]</p>
                     <InputText class="full-width" @bind-Value="group!.Name"></InputText>
                 } else{
-                    <p class="fs-5 fw-semibold text-danger">are you sure you wanna to delete group "@group!.Name" and it's diaries?</p>
+                    <p class="fs-5 fw-semibold text-danger">@Localizator["DeleteGroupPart1"]@group!.Name@Localizator["DeleteGroupPart2"]</p>
                 }
             </div>
             <div class="modal-footer">
                 @if(!@isValidated) {
-                    <p>You isn't validated. Validate email first.</p>
+                    <p>@Localizator["NotValidatedText"]</p>
                 }
                 <button type="button" class="btn btn-secondary@(isValidated ? "" : " disabled")"
-                    data-dismiss="modal" @onclick="() => Close()">Cancel</button>
+                    data-dismiss="modal" @onclick="() => Close()">@Localizator["CancelButtonText"]</button>
                 <button type="button" class="btn btn-@(isDeleting ? "danger" : "primary") @(isValidated ? "" : "disabled")"
-                    @onclick="SaveAsync">@(isDeleting ? "Delete" : "Save")</button>
+                    @onclick="SaveAsync">@(isDeleting ? Localizator["DeleteButtonText"] : Localizator["SaveButtonText"])</button>
             </div>
         </div>
     </div>

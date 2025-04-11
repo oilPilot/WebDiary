@@ -2,6 +2,7 @@
 @inject DiaryGroupClient DiaryGroupClient
 @inject UserClient UserClient
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IStringLocalizer<Resources.LayoutResource> Localizator
 @rendermode InteractiveServer
 
 <div class="top-row ps-3 navbar navbar-dark">
@@ -16,7 +17,7 @@
     <nav class="nav flex-column">
         <div class="nav-item px-3 d-flex">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> @Localizator["HomeTitle"]
             </NavLink>
         </div>
 
@@ -24,16 +25,16 @@
             <Authorized>
                 <div class="nav-item px-3 d-flex">
                     <NavLink class="nav-link" href="/Users" Match="NavLinkMatch.All">
-                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Manage account
+                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @Localizator["ManageTitle"]
                     </NavLink>
                 </div>
                 <div class="nav-item px-3 d-flex">
                     <NavLink class="nav-link" @onclick="() => modalLogout!.Open()" Match="NavLinkMatch.All">
-                        <span class="bi bi-person-dash-nav-menu" aria-hidden="true"></span> Logout
+                        <span class="bi bi-person-dash-nav-menu" aria-hidden="true"></span> @Localizator["LogoutTitle"]
                     </NavLink>
                 </div>
             @if(groups is null) {
-                <p>Loading...</p>
+                <p>@Localizator["Loading"]</p>
             } else {
                 @foreach(var group in groups!) {
                     <div class="nav-item px-3 d-flex">
@@ -54,19 +55,19 @@
             }
             <div class="nav-item px-3 d-flex">
                 <button class="btn btn-primary transparent-color" type="button" @onclick="() => modal!.Open(loggedUserId)">
-                    <span class="bi bi-pencil-square-nav-menu" aria-hidden="true" /> Create new diary group
+                    <span class="bi bi-pencil-square-nav-menu" aria-hidden="true" /> @Localizator["NewDiaryGroupTitle"]
                 </button>
             </div>
             </Authorized>
             <NotAuthorized>
                 <div class="nav-item px-3 d-flex">
                     <NavLink class="nav-link" href="/Users/Signin" Match="NavLinkMatch.All">
-                        <span class="bi bi-person-add-nav-menu" aria-hidden="true"></span> Signin
+                        <span class="bi bi-person-add-nav-menu" aria-hidden="true"></span> @Localizator["SigninTitle"]
                     </NavLink>
                 </div>
                 <div class="nav-item px-3 d-flex">
                     <NavLink class="nav-link" href="/Users/Login" Match="NavLinkMatch.All">
-                        <span class="bi bi-person-check-nav-menu" aria-hidden="true"></span> Login
+                        <span class="bi bi-person-check-nav-menu" aria-hidden="true"></span> @Localizator["LoginTitle"]
                     </NavLink>
                 </div>
             </NotAuthorized>

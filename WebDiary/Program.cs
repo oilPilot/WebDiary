@@ -38,6 +38,12 @@ app.AddGroupsEndpoints();
 app.AddUsersEndpoint();
 app.MapControllers();
 
-await app.MigrateDbAsync();
+try {
+if(app.Environment.IsDevelopment()) {
+    await app.MigrateDbAsync();
+}
 
 app.Run();
+} catch(Exception Ex) {
+    Console.WriteLine("Catched exception upon opening app: " + Ex);
+}

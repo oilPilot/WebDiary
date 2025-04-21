@@ -25,11 +25,11 @@ public static class UserEndpoints
         }).WithName(getUserRoute);
         group.MapGet("/byemail/{email}", async (string email, DiariesContext dbContext) => {
             var user = await dbContext.users.AsNoTracking().Where(user => user.Email == email).ToListAsync();
-            if(user is null) {
+            if(user.FirstOrDefault() is null) {
                 return Results.NotFound();
             }
-
-            return Results.Ok(user.First().toDTO());
+            
+            return Results.Ok(user.FirstOrDefault()!.toDTO());
         });
         
         // mapping POST methods

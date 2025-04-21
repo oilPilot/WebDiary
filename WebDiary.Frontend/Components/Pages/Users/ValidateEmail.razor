@@ -20,7 +20,7 @@
         NameValueCollection? query = System.Web.HttpUtility.ParseQueryString(new UriBuilder(NavigationManager.Uri).Query);
         var response = await HttpClient.PostAsJsonAsync("/auth/ValidateEmail", new
             { Token = query!["token"], UserId = Convert.ToInt32(query["userId"]) });
-        if(response.IsSuccessStatusCode && response.Content.Headers.ContentLength == 4 ? true : false ) {
+        if(response.IsSuccessStatusCode ) {
             Redirect();
         }
         Message = Localizator["ValidationErrorText"];

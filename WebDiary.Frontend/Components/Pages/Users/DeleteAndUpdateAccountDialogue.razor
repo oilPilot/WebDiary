@@ -139,7 +139,7 @@
         } else {
             ErrorMessage = "";
             var response = (await HttpClient.GetAsync($"/auth/password/isequal/{newUser!.Password}/{user!.Id}"));
-            if( response.IsSuccessStatusCode && response.Content.Headers.ContentLength == 4 ? true : false ) {
+            if( response.IsSuccessStatusCode ) {
                 if(newUser.UserName.Length < 3) {
                     ErrorMessage += Localizator["UpdateAccDialogueError1"];
                     return;

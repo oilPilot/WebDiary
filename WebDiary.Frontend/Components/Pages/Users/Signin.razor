@@ -61,8 +61,8 @@
             ErrorMessage = Localizator["UsernameAlreadyUsed"];
             return;
         }
-        var response = await HttpClient.GetAsync($"/auth/email/isunique/{user!.Email}"); // If it is unique we will get true
-        if( response.IsSuccessStatusCode && response.Content.Headers.ContentLength == 4 ? false : true ) { // and if it is unique we don't wanna to go here
+        var response = await HttpClient.GetAsync($"/auth/email/isunique/{user!.Email}");
+        if( response.IsSuccessStatusCode ) {
             ErrorMessage = Localizator["EmailAlreadyUsed"];
             return;
         }
@@ -81,7 +81,7 @@
             new Dictionary<string, object?>() { {"token", Base64Token}, {"userId", user.Id} });
 
         // using backend to send email
-        _ = HttpClient.PostAsJsonAsync("/auth/sendValidationEmail", new { userId = user.Id, CallbackUrl = callbackUrl })
+        _ = HttpClient.PostAsJsonAsync("/auth/sendEmail", new { userId = user.Id, CallbackUrl = callbackUrl, IsValidation = true })
             .ContinueWith(exception => {
                 Console.WriteLine(exception);
                 ErrorMessage = Localizator["WrongOnBackend"]; }

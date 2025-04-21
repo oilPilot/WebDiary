@@ -38,17 +38,18 @@ public static class DiaryEndpoints
             return Results.CreatedAtRoute(getDiaryRoute, new {id = diary.Id}, diary.ToDTO());
         });
 
-        // mapping PUT methods
-        // Updating for diaries shouldn't be possible
+        /* mapping PUT methods
+        Updating for diaries shouldn't be possible
+        
         group.MapPut("/{id}", (int id) => {
             return Results.BadRequest("You can't change diaries");
         });
 
-        // mapping DELETE methods
-        // Deleting diaries shouldn't be possible
+        /* mapping DELETE methods
+        Deleting diaries shouldn't be possible
         group.MapDelete("/{id}", (int id) => {
-            return Results.BadRequest("You can't delete diaries");
-        });
+            return Results.("You can't delete diaries");
+        }); */
 
         return group;
     }

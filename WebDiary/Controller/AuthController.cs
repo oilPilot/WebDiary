@@ -10,7 +10,9 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using MimeKit;
 using MailKit.Net.Smtp;
+using MailKit.Security;
 using System.Security.Cryptography;
+using Microsoft.AspNetCore.Identity;
 
 namespace WebDiary.Controller;
 
@@ -20,12 +22,17 @@ public class AuthController (DiariesContext dbContext, IConfiguration config) : 
 {
     [HttpPost("jwttoken/login")]
     public IActionResult Login(LoginModel model) {
-        User? userLogin = dbContext.users.FirstOrDefault(user => user.UserName == model.Username && user.Password == model.Password);
-        if(userLogin != null) {
-            var token = GenerateJwtToken(userLogin);
+        User? user = dbContext.users.FirstOrDefault(user => user.UserName == model.Username);
+        if(user == null) {
+            return NotFound("Invalid username or password");
+        }
+        var hasher = new PasswordHasher<User>();
+        var verify = hasher.VerifyHashedPassword(user, user.Password, model.Password!);
+        if(verify == PasswordVerificationResult.Success) {
+            var token = GenerateJwtToken(user);
             return Ok(new { token });
         }
-        return Unauthorized();
+        return Unauthorized("Invalid username or password");
     }
 
     private string GenerateJwtToken(User user) {
@@ -46,79 +53,72 @@ public class AuthController (DiariesContext dbContext, IConfiguration config) : 
         return new JwtSecurityTokenHandler().WriteToken(securityToken);
     }
     [HttpPost("sendEmail")]
-    public async Task<bool> SendEmailAsync(SendEmailForm email) {
+    public async Task<IActionResult> SendEmailAsync(sendEmailForm email) {
+            if(email.userId == null) return BadRequest("user id in input was null");
             var user = await dbContext.users.FindAsync(email.userId);
-            if(user == null) return false;
+            if(user == null) return BadRequest("user was null");
             // Forming message to send
             MimeMessage message = new MimeMessage();
             message.From.Add(new MailboxAddress("MyDiary", config["EmailFromSend"]));
             message.To.Add(new MailboxAddress("", user.Email));
-            message.Subject = "Resetting password";
-            message.Body = new TextPart(MimeKit.Text.TextFormat.Html) {
-                Text = $"<p>Hello, {user.UserName}. We have received request to reset your password in \"MyDiary\" app, click <a href=\"{email.CallbackUrl}\">here</a> to reset." +
-                            "After 30 minutes this url will not be usable anymore. If it wasn't you, ignore this message</p>"
-            };
-
-            // Logic to send Email
-            using (var client = new SmtpClient()) {
-                await client.ConnectAsync("smtp.gmail.com", 25, false);
-                await client.AuthenticateAsync(config["EmailFromSend"], config["AppPaswordForEmailAuth"]);
-                await client.SendAsync(message);
-                await client.DisconnectAsync(true);
+            if(email.IsValidation) {
+                message.Subject = "Validating email";
+                message.Body = new TextPart(MimeKit.Text.TextFormat.Html) {
+                    Text = $"<p>Hello, {user.UserName} to MyDiary. Before starting using app you should validate your email, for that click" +
+                           $" <a href=\"{email.CallbackUrl}\">here</a> to reset." + $"After 300 minutes this url will not be usable anymore." + 
+                           $"If it wasn't you, ignore this message</p>"
+                };
+            } else {
+                message.Subject = "Resetting password";
+                message.Body = new TextPart(MimeKit.Text.TextFormat.Html) {
+                    Text = $"<p>Hello, {user.UserName}. We have received request to reset your password in \"MyDiary\" app, click <a href=\"{email.CallbackUrl}\">here</a>" +
+                        $" to reset. After 30 minutes this url will not be usable anymore. If it wasn't you, ignore this message</p>"
+                };
             }
 
-            return true;
-    }
-    [HttpPost("sendValidationEmail")]
-    public async Task<bool> SendValidationEmailAsync(SendEmailForm email) {
-            var user = await dbContext.users.FindAsync(email.userId);
-            if(user == null) return false;
-            // Forming message to send
-            MimeMessage message = new MimeMessage();
-            message.From.Add(new MailboxAddress("MyDiary", config["EmailFromSend"]));
-            message.To.Add(new MailboxAddress("", user.Email));
-            message.Subject = "Validating email";
-            message.Body = new TextPart(MimeKit.Text.TextFormat.Html) {
-                Text = $"<p>Hello, {user.UserName} to MyDiary. Before starting using app you should validate your email, " +
-                            $"for that click <a href=\"{email.CallbackUrl}\">here</a> to reset." +
-                            $"After 300 minutes this url will not be usable anymore. If it wasn't you, ignore this message</p>"
-            };
-
             // Logic to send Email
-            using (var client = new SmtpClient()) {
-                await client.ConnectAsync("smtp.gmail.com", 25, false);
-                await client.AuthenticateAsync(config["EmailFromSend"], config["AppPaswordForEmailAuth"]);
-                await client.SendAsync(message);
-                await client.DisconnectAsync(true);
+            try {
+                using (var client = new SmtpClient()) {
+                    await client.ConnectAsync("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
+                    await client.AuthenticateAsync(config["EmailFromSend"], config["AppPaswordForEmailAuth"]);
+                    await client.SendAsync(message);
+                    await client.DisconnectAsync(true);
+                }
+            } catch(Exception Ex) {
+                Console.WriteLine("Catched exception upon sending email: " + Ex);
             }
 
-            return true;
+            return Ok("Email sended successfully");
     }
     [HttpPost("ResetPassword")]
-    public async Task<bool> ResetPasswordAsync(ResetPasswordForm resetPasswordForm) {
+    public async Task<IActionResult> ResetPasswordAsync(resetPasswordForm resetPasswordForm) {
         var user = await dbContext.users.FindAsync(resetPasswordForm.UserId);
         if(user!.ActionDateEnd != null && user.ActionDateEnd > DateTime.Now) {
             var Base64Token = Convert.FromBase64String( resetPasswordForm.Token.Replace('-', '+').Replace('_', '/') );
-            if(user.ActionToken != null && user.ActionToken.SequenceEqual(Base64Token) ) {
+            if(user.ActionToken != null && CryptographicOperations.FixedTimeEquals(user.ActionToken, Base64Token) ) {
+                var hasher = new PasswordHasher<User>();
                 var newUser = user;
-                newUser.Password = resetPasswordForm.newPassword;
+                newUser.Password = hasher.HashPassword(newUser, resetPasswordForm.newPassword);
                 newUser.ActionDateEnd = null;
                 newUser.ActionToken = null;
                 
                 dbContext.users.Entry(user).CurrentValues.SetValues(newUser);
                 await dbContext.SaveChangesAsync();
 
-                return true;
+                return Ok("Resetted successfully");
+            } else {
+                return BadRequest("Tokens weren't equal");
             }
+        } else {
+            return BadRequest("Time had expired");
         }
-        return false;
     }
     [HttpPost("ValidateEmail")]
-    public async Task<bool> ValidateEmailAsync(ValidateEmailForm ValidateEmailForm) {
+    public async Task<IActionResult> ValidateEmailAsync(validateEmailForm ValidateEmailForm) {
         var user = await dbContext.users.FindAsync(ValidateEmailForm.UserId);
         if(user!.ActionDateEnd != null && user.ActionDateEnd > DateTime.Now) {
             var Base64Token = Convert.FromBase64String( ValidateEmailForm.Token.Replace('-', '+').Replace('_', '/') );
-            if(user.ActionToken != null && user.ActionToken.SequenceEqual(Base64Token) ) {
+            if(user.ActionToken != null && CryptographicOperations.FixedTimeEquals(user.ActionToken, Base64Token) ) {
                 var newUser = user;
                 newUser.IsValidated = true;
                 newUser.ActionDateEnd = null;
@@ -127,39 +127,48 @@ public class AuthController (DiariesContext dbContext, IConfiguration config) : 
                 dbContext.users.Entry(user).CurrentValues.SetValues(newUser);
                 await dbContext.SaveChangesAsync();
 
-                return true;
+                return Ok("Validated successfully");
+            } else {
+                return BadRequest("Tokens weren't equal");
             }
+        } else {
+            return BadRequest("Time had expired");
         }
-        return false;
     }
     [HttpGet("password/isequal/{password}/{userId:int}")]
-    public async Task<bool> IsEqualPasswordsAsync(string password, int userId) {
+    public async Task<IActionResult> IsEqualPasswordsAsync(string password, int userId) {
         var user = await dbContext.users.FindAsync(userId);
         if(user == null) {
-            return false;
+            return NotFound("Not found");
         }
-        return user.Password == password ? true : false;
+        var hasher = new PasswordHasher<User>();
+        var verify = hasher.VerifyHashedPassword(user, user.Password, password);
+        if(verify == PasswordVerificationResult.Success) {
+            return Ok("Are equal");
+        }
+        return BadRequest("Not equal");
     }
     [HttpGet("email/isunique/{email}")]
-    public async Task<bool> IsUniqueEmailAsync(string email) {
-        var user = await dbContext.users.AnyAsync(userDb => userDb.Email == email);
-        return !user;
+    public async Task<IActionResult> IsUniqueEmailAsync(string email) {
+        var user = await dbContext.users.AnyAsync(userDb => userDb.Email.ToLower() == email.ToLower());
+        return user ? Ok("Are exist") : BadRequest("Not exist");
     }
 
-    public class PasswordForm {
+    public class passwordForm {
         public string? Password { get; set; }
         public int? UserId { get; set; }
     }
-    public class SendEmailForm {
+    public class sendEmailForm {
         public int? userId { get; set; }
         public string? CallbackUrl { get; set; }
+        public bool IsValidation { get; set; } = false;
     }
-    public class ResetPasswordForm {
+    public class resetPasswordForm {
         public required string Token { get; set; }
         public int UserId { get; set; }
         public required string newPassword { get; set; }
     }
-    public class ValidateEmailForm {
+    public class validateEmailForm {
         public required string Token { get; set; }
         public int UserId { get; set; }
     }

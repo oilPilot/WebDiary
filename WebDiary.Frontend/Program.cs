@@ -60,10 +60,10 @@ app.Run();
 
 /* TODO:
     Major tasks:
-        Make everything look better;
+        Nothing;
     Med tasks:
         Nothing;
     Little tasks:
-        Difference beetween http and https and what they are;
+        Nothing;
 
 */

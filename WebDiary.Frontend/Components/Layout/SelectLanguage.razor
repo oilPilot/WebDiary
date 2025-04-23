@@ -1,0 +1,32 @@
+﻿@using Microsoft.AspNetCore.Localization
+@using System.Globalization
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<Resources.LayoutResource> Localizator
+
+<div>
+    <InputSelect @bind-value="@Culture" style="width: 100px;">
+        <option value="en">@Localizator["LanguageEng"]</option>
+        <option value="de">@Localizator["LanguageGer"]</option>
+    </InputSelect>
+</div>
+
+@code {
+    protected override void OnInitialized() {
+        Culture = CultureInfo.CurrentCulture;
+    }
+    private CultureInfo Culture {
+        get {
+            return CultureInfo.CurrentCulture;
+        }
+        set {
+            if(CultureInfo.CurrentCulture != value) {
+                var uri = new Uri(NavigationManager.Uri).GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
+                var cultureEscaped = Uri.EscapeDataString(value.Name);
+                var uriEscaped = Uri.EscapeDataString(uri);
+
+                NavigationManager.NavigateTo($"/Language/Set?culture={cultureEscaped}&redirectUri={uriEscaped}", true);
+            }
+        }
+    }
+
+}

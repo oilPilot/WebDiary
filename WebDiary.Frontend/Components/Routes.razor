@@ -1,6 +1,18 @@
-﻿<Router AppAssembly="typeof(Program).Assembly">
-    <Found Context="routeData">
-        <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" />
-        <FocusOnNavigate RouteData="routeData" Selector="h1" />
-    </Found>
-</Router>
+﻿@inject IStringLocalizer<Resources.MainResource> Localizator
+
+<CascadingAuthenticationState>
+    <Router AppAssembly="typeof(Program).Assembly">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="typeof(Layout.MainLayout)">                
+                <NotAuthorized>
+                    <p>@Localizator["NotAuthPageText1"]</p>
+                    <p>@Localizator["NotAuthPageText2"]</p>
+                </NotAuthorized>
+            </AuthorizeRouteView>
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        </Found>
+        <NotFound>
+            <WebDiary.Frontend.Components.Pages.NotFound />
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>

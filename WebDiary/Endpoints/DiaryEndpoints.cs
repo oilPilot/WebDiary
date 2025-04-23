@@ -1,4 +1,5 @@
 using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using WebDiary.Data;
 using WebDiary.DTO;
@@ -16,9 +17,11 @@ public static class DiaryEndpoints
         var group = app.MapGroup("diaries");
 
         // mapping GET methods
-        group.MapGet("/", async (DiariesContext dbContext) =>
+        group.MapGet("/", [Authorize] async (DiariesContext dbContext) =>
             await dbContext.diaries.Select(diary => diary.ToDTO()).AsNoTracking().ToListAsync());
-        group.MapGet("/{id}", async (int id, DiariesContext dbContext) => { 
+        group.MapGet("/ofgroup/{groupId}", [Authorize] async (int groupId, DiariesContext dbContext) =>
+            await dbContext.diaries.Where(diary => diary.GroupId == groupId).Select(diary => diary.ToDTO()).AsNoTracking().ToListAsync());
+        group.MapGet("/{id}", [Authorize] async (int id, DiariesContext dbContext) => { 
             var diary = await dbContext.diaries.FindAsync(id);
             if(diary is null) {
                 return Results.NotFound();
@@ -28,7 +31,7 @@ public static class DiaryEndpoints
             }).WithName(getDiaryRoute);
         
         // mapping POST methods
-        group.MapPost("/", async (CreateDiaryDTO createDiary, DiariesContext dbContext) => {
+        group.MapPost("/", [Authorize] async (CreateDiaryDTO createDiary, DiariesContext dbContext) => {
             Diary diary = createDiary.ToEntity();
             await dbContext.diaries.AddAsync(diary);
             await dbContext.SaveChangesAsync();
@@ -36,17 +39,18 @@ public static class DiaryEndpoints
             return Results.CreatedAtRoute(getDiaryRoute, new {id = diary.Id}, diary.ToDTO());
         });
 
-        // mapping PUT methods
-        // Updating for diaries shouldn't be possible
+        /* mapping PUT methods
+        Updating for diaries shouldn't be possible
+        
         group.MapPut("/{id}", (int id) => {
             return Results.BadRequest("You can't change diaries");
         });
 
-        // mapping DELETE methods
-        // Deleting diaries shouldn't be possible
+        /* mapping DELETE methods
+        Deleting diaries shouldn't be possible
         group.MapDelete("/{id}", (int id) => {
-            return Results.BadRequest("You can't delete diaries");
-        });
+            return Results.("You can't delete diaries");
+        }); */
 
         return group;
     }

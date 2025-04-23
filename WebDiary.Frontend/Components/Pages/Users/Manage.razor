@@ -1,0 +1,67 @@
+﻿@page "/Users"
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Authorization
+@using WebDiary.Frontend.Models.Auth
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserClient UserClient
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<Resources.UsersResource> Localizator
+
+<PageTitle>MyDiary</PageTitle>
+
+<AuthorizeView>
+    <Authorized>
+        <h3>@Localizator["ManageAccountTitle"]</h3>
+        <p>@Localizator["ManageAccountName"]@context.User.Identity!.Name</p>
+        <p>@Localizator["ManageAccountRole"]@context.User.FindFirstValue(ClaimTypes.Role)</p>
+        <p>@Localizator["ManageAccountDesc"]@context.User.FindFirstValue(ClaimTypes.UserData)</p>
+        <p>@Localizator["ManageAccountEmail"]@context.User.FindFirstValue(ClaimTypes.Email)</p>
+        @if(@isValidated) {
+            <p>@Localizator["ManageAccountValid"]</p>
+        } else {
+            <p>@Localizator["ManageAccountNotValid"]</p>
+        }
+        <button type="button" class="btn btn-outline-secondary" @onclick="Login">@Localizator["IntoAnotherAcc"]</button>
+        <button type="button" class="btn btn-outline-secondary" @onclick="() => modalAccount!.OpenForUpdatingAsync(loggedUserId)"
+            >@Localizator["ModifyAcc"]</button>
+        <button type="button" class="btn btn-outline-danger" @onclick="Logout">@Localizator["Logout"]</button>
+        <button type="button" class="btn btn-outline-danger" @onclick="() => modalAccount!.OpenForDelete(loggedUserId)">@Localizator["DeleteAcc"]</button>
+        <WebDiary.Frontend.Components.Pages.Users.DeleteAndUpdateAccountDialogue @ref="modalAccount" />
+        <AuthorizeView Roles="Admin" Context="AdminContext">
+            <Authorized>
+                <p>You are Admin!</p>
+            </Authorized>
+        </AuthorizeView>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    private int loggedUserId;
+    private bool isValidated;
+    private WebDiary.Frontend.Components.Pages.Users.DeleteAndUpdateAccountDialogue? modalAccount;
+    
+    private async Task Logout() {
+        await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).LogoutUserAsync();
+        Login();
+    }
+    private void Login() => NavigationManager.NavigateTo("/Users/Login");
+
+    protected async override Task OnAfterRenderAsync(bool firstRender) {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if(firstRender) {
+
+            var loggedUser = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
+
+            if(loggedUser.Identity != null && loggedUser.Identity.IsAuthenticated) {
+                loggedUserId = Convert.ToInt32(loggedUser.FindFirstValue("userId"));
+                User user = await UserClient.GetUserByIdAsync(loggedUserId);
+                isValidated = user.IsValidated;
+            } else {
+                NavigationManager.NavigateTo("/Users/Login");
+            }
+
+            StateHasChanged();
+        }
+    }
+}

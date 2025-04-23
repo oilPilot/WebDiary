@@ -24,8 +24,12 @@ build_property.EnableCodeStyleSeverity =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBcHAucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Dock/Documents/Helpers/Projects/C\#/WebDiary/WebDiary.Frontend/Components/Pages/AddGroupDialogue.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xBZGRHcm91cERpYWxvZ3VlLnJhem9y
+[C:/Users/Dock/Documents/Helpers/Projects/C\#/WebDiary/WebDiary.Frontend/Components/Layout/SelectLanguage.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcU2VsZWN0TGFuZ3VhZ2UucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Dock/Documents/Helpers/Projects/C\#/WebDiary/WebDiary.Frontend/Components/Pages/ChangeGroupDialogue.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xDaGFuZ2VHcm91cERpYWxvZ3VlLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Dock/Documents/Helpers/Projects/C\#/WebDiary/WebDiary.Frontend/Components/Pages/Error.razor]
@@ -38,6 +42,42 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/Dock/Documents/Helpers/Projects/C\#/WebDiary/WebDiary.Frontend/Components/Pages/MainPage.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xNYWluUGFnZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Dock/Documents/Helpers/Projects/C\#/WebDiary/WebDiary.Frontend/Components/Pages/NotFound.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xOb3RGb3VuZC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Dock/Documents/Helpers/Projects/C\#/WebDiary/WebDiary.Frontend/Components/Pages/Users/DeleteAndUpdateAccountDialogue.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xVc2Vyc1xEZWxldGVBbmRVcGRhdGVBY2NvdW50RGlhbG9ndWUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Dock/Documents/Helpers/Projects/C\#/WebDiary/WebDiary.Frontend/Components/Pages/Users/Login.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xVc2Vyc1xMb2dpbi5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Dock/Documents/Helpers/Projects/C\#/WebDiary/WebDiary.Frontend/Components/Pages/Users/LogoutDialogue.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xVc2Vyc1xMb2dvdXREaWFsb2d1ZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Dock/Documents/Helpers/Projects/C\#/WebDiary/WebDiary.Frontend/Components/Pages/Users/Manage.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xVc2Vyc1xNYW5hZ2UucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Dock/Documents/Helpers/Projects/C\#/WebDiary/WebDiary.Frontend/Components/Pages/Users/ResetPassword.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xVc2Vyc1xSZXNldFBhc3N3b3JkLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Dock/Documents/Helpers/Projects/C\#/WebDiary/WebDiary.Frontend/Components/Pages/Users/RestorePassword.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xVc2Vyc1xSZXN0b3JlUGFzc3dvcmQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Dock/Documents/Helpers/Projects/C\#/WebDiary/WebDiary.Frontend/Components/Pages/Users/Signin.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xVc2Vyc1xTaWduaW4ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Dock/Documents/Helpers/Projects/C\#/WebDiary/WebDiary.Frontend/Components/Pages/Users/ValidateEmail.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xVc2Vyc1xWYWxpZGF0ZUVtYWlsLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Dock/Documents/Helpers/Projects/C\#/WebDiary/WebDiary.Frontend/Components/Routes.razor]

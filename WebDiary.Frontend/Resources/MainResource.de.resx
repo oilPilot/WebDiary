@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+	<data name="HomePageTitleAuth" xml:space="preserve">
+    	<value>Willkommen, </value>
+	</data>
+  	<data name="HomePageTitleNoAuth" xml:space="preserve">
+		<value>Heim</value>
+	</data>
+	<data name="HomePageText" xml:space="preserve">
+		<value>Dies ist die Hauptseite der Web-Tagebuch-App. Sie bietet keine realistische Funktionalität, und ich als Entwickler weiß nicht, was ich hier hinzufügen soll. Ignoriere diese Seite einfach, sie ist nutzlos.</value>
+	</data>
+  	<data name="404Title" xml:space="preserve">
+		<value>404 – Nicht gefunden</value>
+	</data>
+  	<data name="404Text" xml:space="preserve">
+		<value>Die von Ihnen angeforderte Ressource wurde nicht gefunden.</value>
+	</data>
+  	<data name="LoadingDiaries" xml:space="preserve">
+		<value>Warten Sie, Tagebücher und Gruppen werden geladen …</value>
+	</data>
+  	<data name="MainPageButtonText" xml:space="preserve">
+		<value>Schicken</value>
+	</data>
+  	<data name="NotValidatedTitle" xml:space="preserve">
+		<value>Nicht validiert</value>
+	</data>
+  	<data name="NotValidatedText" xml:space="preserve">
+		<value>Ihre E-Mail-Adresse ist nicht bestätigt. Bestätigen Sie sie zuerst.</value>
+	</data>
+  	<data name="UnathorizedTitle" xml:space="preserve">
+		<value>Nicht autorisiert</value>
+	</data>
+  	<data name="UnathorizedText" xml:space="preserve">
+		<value>Sie müssen sich anmelden, um diese Seite anzuzeigen.</value>
+	</data>
+  	<data name="CollapseInMainPage" xml:space="preserve">
+		<value>Ausblenden</value>
+	</data>
+  	<data name="NotAuthPageText1" xml:space="preserve">
+		<value>Entschuldigung, Sie sind nicht berechtigt, auf diese Seite zuzugreifen.</value>
+	</data>
+  	<data name="NotAuthPageText2" xml:space="preserve">
+		<value>Möglicherweise müssen Sie sich als anderer Benutzer anmelden.</value>
+	</data>
+  	<data name="CreateGroupVar1" xml:space="preserve">
+		<value>Name Ihrer Gruppe:</value>
+	</data>
+  	<data name="DeleteGroupPart1" xml:space="preserve">
+		<value>Möchten Sie die Gruppe "</value>
+	</data>
+  	<data name="DeleteGroupPart2" xml:space="preserve">
+		<value>" und ihre Tagebücher wirklich löschen?</value>
+	</data>
+  	<data name="CancelButtonText" xml:space="preserve">
+		<value>Stornieren</value>
+	</data>
+  	<data name="DeleteButtonText" xml:space="preserve">
+		<value>Löschen</value>
+	</data>
+  	<data name="SaveButtonText" xml:space="preserve">
+		<value>Speichern</value>
+	</data>
+  	<data name="ErrorTitle" xml:space="preserve">
+		<value>Fehler.</value>
+	</data>
+  	<data name="ErrorText" xml:space="preserve">
+		<value>Bei der Bearbeitung Ihrer Anfrage ist ein Fehler aufgetreten.</value>
+	</data>
+  	<data name="RequestID" xml:space="preserve">
+		<value>Anforderungs-ID:</value>
+	</data>
+  	<data name="DevMode" xml:space="preserve">
+		<value>Entwicklungsmodus</value>
+	</data>
+  	<data name="Swapping" xml:space="preserve">
+		<value>Beim Wechsel zur </value>
+	</data>
+  	<data name="Dev" xml:space="preserve">
+		<value>Entwicklung</value>
+	</data>
+  	<data name="Display" xml:space="preserve">
+		<value>sumgebung werden ausführlichere Informationen zu dem aufgetretenen Fehler angezeigt.</value>
+	</data>
+  	<data name="ErrorPageMainTextPart1" xml:space="preserve">
+		<value>Die Entwicklungsumgebung sollte für bereitgestellte Anwendungen nicht aktiviert werden.</value>
+	</data>
+  	<data name="ErrorPageMainTextPart2" xml:space="preserve">
+		<value>Dies kann dazu führen, dass Endbenutzern vertrauliche Informationen aus Ausnahmen angezeigt werden.</value>
+	</data>
+  	<data name="ErrorPageMainTextPart3" xml:space="preserve">
+		<value>Aktivieren Sie für das lokale Debuggen die </value>
+	</data>
+  	<data name="ErrorPageMainTextPart4" xml:space="preserve">
+		<value>sumgebung, indem Sie die Umgebungsvariable</value>
+	</data>
+  	<data name="ErrorPageMainTextPart5" xml:space="preserve">
+		<value> auf setzen </value>
+	</data>
+  	<data name="ErrorPageMainTextPart6" xml:space="preserve">
+		<value>und die App neu starten.</value>
+	</data>
+</root>

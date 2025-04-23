@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+	<data name="ValidationErrorText" xml:space="preserve">
+    	<value>Something went wrong. Does your time isn't expired?</value>
+	</data>
+  	<data name="RestorePasswordTitle" xml:space="preserve">
+		<value>Restoring password</value>
+	</data>
+	<data name="Email" xml:space="preserve">
+		<value>Email:</value>
+	</data>
+	<data name="RestorePasswordSendEmail" xml:space="preserve">
+		<value>Send email</value>
+	</data>
+	<data name="RestorePasswordError1" xml:space="preserve">
+		<value>User wasn't found. Check if email is correct.</value>
+	</data>
+	<data name="WrongOnBackend" xml:space="preserve">
+		<value>Something went wrong on backend. Contact with developer.</value>
+	</data>
+	<data name="RestorePasswordSuccessSending" xml:space="preserve">
+		<value>Message has been sent. Check your email, maybe message will come after few seconds or minutes.</value>
+	</data>
+	<data name="ResetPasswordTitle" xml:space="preserve">
+		<value>Resetting password</value>
+	</data>
+	<data name="ResetPasswordNew" xml:space="preserve">
+		<value>New password:</value>
+	</data>
+	<data name="ResetPasswordVerify" xml:space="preserve">
+		<value>Verify password:</value>
+	</data>
+	<data name="ResetPasswordChange" xml:space="preserve">
+		<value>Change password</value>
+	</data>
+	<data name="ResetPasswordError" xml:space="preserve">
+		<value>Something went wrong with verifying. Are your reset password time isn't expired?</value>
+	</data>
+	<data name="ManageAccountTitle" xml:space="preserve">
+		<value>Manage account</value>
+	</data>
+	<data name="ManageAccountName" xml:space="preserve">
+		<value>Username:    </value>
+	</data>
+	<data name="ManageAccountRole" xml:space="preserve">
+		<value>Role:        </value>
+	</data>
+	<data name="ManageAccountDesc" xml:space="preserve">
+		<value>Description: </value>
+	</data>
+	<data name="ManageAccountEmail" xml:space="preserve">
+		<value>Email:       </value>
+	</data>
+	<data name="ManageAccountValid" xml:space="preserve">
+		<value>Is validated</value>
+	</data>
+	<data name="ManageAccountNotValid" xml:space="preserve">
+		<value>Is NOT validated</value>
+	</data>
+	<data name="IntoAnotherAcc" xml:space="preserve">
+		<value>Login into another account</value>
+	</data>
+	<data name="ModifyAcc" xml:space="preserve">
+		<value>Modify account</value>
+	</data>
+	<data name="Logout" xml:space="preserve">
+		<value>Logout</value>
+	</data>
+	<data name="DeleteAcc" xml:space="preserve">
+		<value>Delete account</value>
+	</data>
+	<data name="LogoutDialogueText" xml:space="preserve">
+		<value>Are you sure wanna to logout from current account?</value>
+	</data>
+	<data name="CancelButtonText" xml:space="preserve">
+		<value>Cancel</value>
+	</data>
+	<data name="SaveButtonText" xml:space="preserve">
+		<value>Save</value>
+	</data>
+	<data name="DeleteButtonText" xml:space="preserve">
+		<value>Delete</value>
+	</data>
+	<data name="UpdateAccDialogueError1" xml:space="preserve">
+		<value>Username should be at least 3 symbols length.</value>
+	</data>
+	<data name="UpdateAccDialogueError2" xml:space="preserve">
+		<value>This is not correct Email address.</value>
+	</data>
+	<data name="UpdateAccDialogueError3" xml:space="preserve">
+		<value>Your new password is too short.</value>
+	</data>
+	<data name="DeleteAccSure" xml:space="preserve">
+		<value>Are you sure wanna delete your account? This will delete all diaries that you wrote. You can't undo this action.</value>
+	</data>
+	<data name="PswdIncorrectDoYouForgot" xml:space="preserve">
+		<value>Password is incorrect, do you forgot your password?</value>
+	</data>
+	<data name="Restore1" xml:space="preserve">
+		<value>You can restore it </value>
+	</data>
+	<data name="AddressForSomething" xml:space="preserve">
+		<value>here</value>
+	</data>
+	<data name="AskUsername" xml:space="preserve">
+		<value>Username:</value>
+	</data>
+	<data name="AskSelfdescription" xml:space="preserve">
+		<value>Self-description:</value>
+	</data>
+	<data name="AskNewEmail" xml:space="preserve">
+		<value>New Email:</value>
+	</data>
+	<data name="AskEmail" xml:space="preserve">
+		<value>Email:</value>
+	</data>
+	<data name="AskOldPassword" xml:space="preserve">
+		<value>Old password for verification:</value>
+	</data>
+	<data name="AskNewPassword" xml:space="preserve">
+		<value>New password:</value>
+	</data>
+	<data name="Login" xml:space="preserve">
+		<value>Login</value>
+	</data>
+	<data name="AskPassword" xml:space="preserve">
+		<value>Password</value>
+	</data>
+	<data name="SignInTextRedirect" xml:space="preserve">
+		<value>Have no account? You can signin </value>
+	</data>
+	<data name="ForgotTextRedirect" xml:space="preserve">
+		<value>Forgot your password? You can restore it </value>
+	</data>
+	<data name="LoginError" xml:space="preserve">
+		<value>Something went wrong. Check if username and password is correct.</value>
+	</data>
+	<data name="SignIn" xml:space="preserve">
+		<value>Signin</value>
+	</data>
+	<data name="UsernameAlreadyUsed" xml:space="preserve">
+		<value>Your username is already used by another user. Please try another username.</value>
+	</data>
+	<data name="EmailAlreadyUsed" xml:space="preserve">
+		<value>Your email is already used by another user.</value>
+	</data>
+	<data name="ValidateMust" xml:space="preserve">
+		<value>To use account you first must validate it in email. For that you have 5 hours. Message will soon come to your email.</value>
+	</data>
+</root>

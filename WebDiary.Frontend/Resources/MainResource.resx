@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+	<data name="HomePageTitleAuth" xml:space="preserve">
+    	<value>Welcome, </value>
+	</data>
+  	<data name="HomePageTitleNoAuth" xml:space="preserve">
+		<value>Home</value>
+	</data>
+	<data name="HomePageText" xml:space="preserve">
+		<value>This is main page of Web-diary app, here is no functionality to be realistic, and i, as developer don't know what to add here. Just ignore this page, it's useless.</value>
+	</data>
+  	<data name="404Title" xml:space="preserve">
+		<value>404 - Not found</value>
+	</data>
+  	<data name="404Text" xml:space="preserve">
+		<value>Resource for which you asked hasn't been found.</value>
+	</data>
+  	<data name="LoadingDiaries" xml:space="preserve">
+		<value>Await, diaries and groups are loading...</value>
+	</data>
+  	<data name="MainPageButtonText" xml:space="preserve">
+		<value>Send</value>
+	</data>
+  	<data name="NotValidatedTitle" xml:space="preserve">
+		<value>Not validated</value>
+	</data>
+  	<data name="NotValidatedText" xml:space="preserve">
+		<value>Your email is not validated. Validate it first.</value>
+	</data>
+  	<data name="UnathorizedTitle" xml:space="preserve">
+		<value>Unauthorized</value>
+	</data>
+  	<data name="UnathorizedText" xml:space="preserve">
+		<value>You need to login to see this page.</value>
+	</data>
+  	<data name="CollapseInMainPage" xml:space="preserve">
+		<value>Collapse</value>
+	</data>
+  	<data name="NotAuthPageText1" xml:space="preserve">
+		<value>Sorry, you're not authorized to reach this page.</value>
+	</data>
+  	<data name="NotAuthPageText2" xml:space="preserve">
+		<value>You may need to log in as a different user.</value>
+	</data>
+  	<data name="CreateGroupVar1" xml:space="preserve">
+		<value>Name of your group:</value>
+	</data>
+  	<data name="DeleteGroupPart1" xml:space="preserve">
+		<value>Are you sure you wanna to delete group "</value>
+	</data>
+  	<data name="DeleteGroupPart2" xml:space="preserve">
+		<value>" and it's diaries?</value>
+	</data>
+  	<data name="CancelButtonText" xml:space="preserve">
+		<value>Cancel</value>
+	</data>
+  	<data name="DeleteButtonText" xml:space="preserve">
+		<value>Delete</value>
+	</data>
+  	<data name="SaveButtonText" xml:space="preserve">
+		<value>Save</value>
+	</data>
+  	<data name="ErrorTitle" xml:space="preserve">
+		<value>Error.</value>
+	</data>
+  	<data name="ErrorText" xml:space="preserve">
+		<value>An error occurred while processing your request.</value>
+	</data>
+  	<data name="RequestID" xml:space="preserve">
+		<value>Request ID:</value>
+	</data>
+  	<data name="DevMode" xml:space="preserve">
+		<value>Development Mode</value>
+	</data>
+  	<data name="Swapping" xml:space="preserve">
+		<value>Swapping to </value>
+	</data>
+  	<data name="Dev" xml:space="preserve">
+		<value>Development</value>
+	</data>
+  	<data name="Display" xml:space="preserve">
+		<value> environment will display more detailed information about the error that occurred.</value>
+	</data>
+  	<data name="ErrorPageMainTextPart1" xml:space="preserve">
+		<value>The Development environment shouldn't be enabled for deployed applications.</value>
+	</data>
+  	<data name="ErrorPageMainTextPart2" xml:space="preserve">
+		<value>It can result in displaying sensitive information from exceptions to end users.</value>
+	</data>
+  	<data name="ErrorPageMainTextPart3" xml:space="preserve">
+		<value>For local debugging, enable the </value>
+	</data>
+  	<data name="ErrorPageMainTextPart4" xml:space="preserve">
+		<value> environment by setting the </value>
+	</data>
+  	<data name="ErrorPageMainTextPart5" xml:space="preserve">
+		<value> environment variable to </value>
+	</data>
+  	<data name="ErrorPageMainTextPart6" xml:space="preserve">
+		<value>and restarting the app.</value>
+	</data>
+</root>

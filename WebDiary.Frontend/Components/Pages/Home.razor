@@ -1,7 +1,15 @@
 ﻿@page "/"
+@inject IStringLocalizer<Resources.MainResource> Localizator
 
-<PageTitle>Home</PageTitle>
+<PageTitle>MyDiary</PageTitle>
 
-<h1>Hello, to web-diary!</h1>
 
-Enter in as user to use app.
+<AuthorizeView>
+    <Authorized>
+        <h1>@Localizator["HomePageTitleAuth"]@context.User.Identity!.Name!</h1>
+    </Authorized>
+    <NotAuthorized>
+        <h1>@Localizator["HomePageTitleNoAuth"]</h1>
+    </NotAuthorized>
+</AuthorizeView>
+<p>@Localizator["HomePageText"]</p>

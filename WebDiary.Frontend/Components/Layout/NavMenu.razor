@@ -1,9 +1,14 @@
-﻿@inject DiaryGroupClient DiaryGroupClient
+﻿@using System.Security.Claims
+@using WebDiary.Frontend.Models.Auth
+@inject DiaryGroupClient DiaryGroupClient
+@inject UserClient UserClient
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IStringLocalizer<Resources.LayoutResource> Localizator
 @rendermode InteractiveServer
 
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">Web-diary</a>
+        <a class="navbar-brand" href="">@topName</a>
     </div>
 </div>
 
@@ -11,50 +16,104 @@
 
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="nav flex-column">
-        <div class="nav-item px-3">
+        <div class="nav-item px-3 d-flex">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> @Localizator["HomeTitle"]
             </NavLink>
         </div>
 
-        @if(groups is null) {
-            <p>Loading...</p>
-        } else {
-            @foreach(var group in groups!) {
+        <AuthorizeView Context="navbarContext">
+            <Authorized>
                 <div class="nav-item px-3 d-flex">
-                    <NavLink class="nav-link" href="@($"Diary/{group.Id}")" Match="NavLinkMatch.All">
-                        <span class="bi bi-pencil-square-nav-menu" />
-                        @if(group.Name.Length > 10) {
-                            <p class="mt-3">@group.Name.Substring(0, 10)...</p>
-                        } else {
-                            <p class="mt-3">@group.Name</p>
-                        }
-                        <div class="d-flex position-buttons">
-                            <button type="button" class="btn btn-secondary bi bi-pencil-square-nav-menu" @onclick="() => modal!.OpenForEditing(group)" />
-                            <button type="button" class="btn btn-danger btn-close" @onclick="() => modal!.OpenForDeleting(group)" />
-                        </div>
+                    <NavLink class="nav-link" href="/Users" Match="NavLinkMatch.All">
+                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @Localizator["ManageTitle"]
                     </NavLink>
                 </div>
+                <div class="nav-item px-3 d-flex">
+                    <NavLink class="nav-link" @onclick="() => modalLogout!.Open()" Match="NavLinkMatch.All">
+                        <span class="bi bi-person-dash-nav-menu" aria-hidden="true"></span> @Localizator["LogoutTitle"]
+                    </NavLink>
+                </div>
+            @if(groups is null) {
+                <p>@Localizator["Loading"]</p>
+            } else {
+                @foreach(var group in groups!) {
+                    <div class="nav-item px-3 d-flex">
+                        <NavLink class="nav-link" href="@($"Diary/{group.Id}")" Match="NavLinkMatch.All">
+                            <span class="bi bi-pencil-square-nav-menu" />
+                            @if(group.Name!.Length > 10) {
+                                <p class="mt-3">@group.Name.Substring(0, 10)...</p>
+                            } else {
+                                <p class="mt-3">@group.Name</p>
+                            }
+                            <div class="d-flex position-buttons">
+                                <button type="button" class="btn btn-secondary bi bi-pencil-square-black-nav-menu" @onclick="() => modal!.OpenForEditing(group)" />
+                                <button type="button" class="btn btn-danger btn-close" @onclick="() => modal!.OpenForDeleting(group)" />
+                            </div>
+                        </NavLink>
+                    </div>
+                }
             }
-        }
-        <WebDiary.Frontend.Components.Pages.AddGroupDialogue @ref="modal" />
+            <div class="nav-item px-3 d-flex">
+                <button class="btn btn-primary transparent-color" type="button" @onclick="() => modal!.Open(loggedUserId)">
+                    <span class="bi bi-pencil-square-nav-menu" aria-hidden="true" /> @Localizator["NewDiaryGroupTitle"]
+                </button>
+            </div>
+            </Authorized>
+            <NotAuthorized>
+                <div class="nav-item px-3 d-flex">
+                    <NavLink class="nav-link" href="/Users/Signin" Match="NavLinkMatch.All">
+                        <span class="bi bi-person-add-nav-menu" aria-hidden="true"></span> @Localizator["SigninTitle"]
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3 d-flex">
+                    <NavLink class="nav-link" href="/Users/Login" Match="NavLinkMatch.All">
+                        <span class="bi bi-person-check-nav-menu" aria-hidden="true"></span> @Localizator["LoginTitle"]
+                    </NavLink>
+                </div>
+            </NotAuthorized>
+        </AuthorizeView>
+        
+        <WebDiary.Frontend.Components.Pages.ChangeGroupDialogue @ref="modal" />
+        <WebDiary.Frontend.Components.Pages.Users.LogoutDialogue @ref="modalLogout" />
 
-        <div class="nav-item px-3 d-flex">
-            <button class="btn btn-primary transparent-color" type="button" @onclick="() => modal.Open()">
-                <span class="bi bi-pencil-square-nav-menu" aria-hidden="true" /> Create new thematic group
-            </button>
-        </div>
         
     </nav>
 </div>
 
 @code {
     List<DiaryGroup>? groups;
-    private WebDiary.Frontend.Components.Pages.AddGroupDialogue? modal;
+    int loggedUserId;
+    private string? topName;
+    private WebDiary.Frontend.Components.Pages.ChangeGroupDialogue? modal;
+    private WebDiary.Frontend.Components.Pages.Users.LogoutDialogue? modalLogout;
 
     protected async override Task OnInitializedAsync() {
-        groups = await DiaryGroupClient.GetGroupsAsync();
+        topName = "Web-diary";
         await base.OnInitializedAsync();
+    }
+
+    protected async override Task OnAfterRenderAsync(bool firstRender) {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if(firstRender) {
+
+            var loggedUser = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
+
+            if(loggedUser.Identity != null && loggedUser.Identity.IsAuthenticated) {
+                loggedUserId = Convert.ToInt32(loggedUser.FindFirstValue("userId"));
+                try {
+                    await UserClient.GetUserByIdAsync(loggedUserId);
+                } catch (Exception Ex) {
+                    Console.WriteLine("Exception of user nonexistance?: " + Ex);
+                    await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).LogoutUserAsync();
+                }
+                groups = await DiaryGroupClient.GetGroupsOfUserAsync(loggedUserId);
+                topName = loggedUser.Identity.Name;
+            }
+
+            StateHasChanged();
+        }
     }
 
 }

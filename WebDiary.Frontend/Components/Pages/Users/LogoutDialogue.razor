@@ -1,0 +1,47 @@
+﻿@using WebDiary.Frontend.Models.Auth
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IStringLocalizer<Resources.UsersResource> Localizator
+
+
+<div class="modal" tabindex="-1" style="display: @ModalDisplay;">
+    <div class="modal-dialogue" role="document">
+        <div class="modal-placement modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">@Localizator["Logout"]</h4>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" @onclick="() => Close()" />
+            </div>
+            <div class="modal-body">
+                <p>@Localizator["LogoutDialogueText"]</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" @onclick="() => Close()">@Localizator["CancelButtonText"]</button>
+                <button type="button" class="btn btn-outline-danger" @onclick="LogoutUserAsync">@Localizator["Logout"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if(ShowBackdrop) {
+    <div class="modal-backdrop fade show"></div>
+}
+
+@code {
+    bool ShowBackdrop = false;
+    public string ModalDisplay = "none;";
+
+    private async void LogoutUserAsync() {
+        await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).LogoutUserAsync();
+        NavigationManager.NavigateTo("/", true);
+    }
+    public void Open() {
+        ShowBackdrop = true;
+        ModalDisplay = "block;";
+        StateHasChanged();
+    }
+    private void Close() {
+        ShowBackdrop = false;
+        ModalDisplay = "none;";
+        StateHasChanged();
+    }
+}

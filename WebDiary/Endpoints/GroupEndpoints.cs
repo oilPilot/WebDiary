@@ -17,6 +17,8 @@ public static class GroupEndpoints
 
         // mapping GET methods
         group.MapGet("/", async (DiariesContext dbContext) => await dbContext.diaryGroups.Select(diaryGroup => diaryGroup.toDTO()).AsNoTracking().ToListAsync());
+        group.MapGet("/ofuser/{userId}", async (int userId, DiariesContext dbContext) =>
+            await dbContext.diaryGroups.Where(group => group.UserId == userId).Select(group => group.toDTO()).AsNoTracking().ToListAsync());
         group.MapGet("/{id}", async (int id, DiariesContext dbContext) => {
             var group = await dbContext.diaryGroups.FindAsync(id);
             if(group is null) {

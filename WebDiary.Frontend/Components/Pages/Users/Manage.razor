@@ -55,7 +55,7 @@
 
             if(loggedUser.Identity != null && loggedUser.Identity.IsAuthenticated) {
                 loggedUserId = Convert.ToInt32(loggedUser.FindFirstValue("userId"));
-                User user = await UserClient.GetUserAsync(loggedUserId);
+                User user = await UserClient.GetUserByIdAsync(loggedUserId);
                 isValidated = user.IsValidated;
             } else {
                 NavigationManager.NavigateTo("/Users/Login");

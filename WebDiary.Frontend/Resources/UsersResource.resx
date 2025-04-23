@@ -90,9 +90,6 @@
 	<data name="UpdateAccDialogueError3" xml:space="preserve">
 		<value>Your new password is too short.</value>
 	</data>
-	<data name="UpdateAccDialogueError4" xml:space="preserve">
-		<value>Password isn't correct. Do you forget your password?</value>
-	</data>
 	<data name="DeleteAccSure" xml:space="preserve">
 		<value>Are you sure wanna delete your account? This will delete all diaries that you wrote. You can't undo this action.</value>
 	</data>

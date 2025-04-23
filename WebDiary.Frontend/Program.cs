@@ -45,6 +45,7 @@ app.UseHttpsRedirection();
 
 app.UseAntiforgery();
 
+// add localization. If changed should also be changed in Backend (error messages are working with resources).
 var supportedCultures = new[] { "en", "de"};
 var localizationOptions = new RequestLocalizationOptions().
     SetDefaultCulture(supportedCultures[0]).AddSupportedCultures(supportedCultures).AddSupportedUICultures(supportedCultures);
@@ -63,6 +64,6 @@ app.Run();
     Med tasks:
         Nothing;
     Little tasks:
-        Nothing;
+        Difference beetween http and https and what they are;
 
 */

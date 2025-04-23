@@ -39,20 +39,29 @@
 @code {
     [SupplyParameterFromForm]
     public User? user { get; set; }
-    private string ErrorMessage = "";
+    [SupplyParameterFromQuery]
+    private string ErrorMessage { get; set; } = "";
     
     public async Task TryLogin() {
         ErrorMessage = "";
-        var response = await HttpClient.PostAsJsonAsync("/auth/jwttoken/login", new { Username = user!.UserName, Password = user.Password });
+        var response = await HttpClient.PostAsJsonAsync($"/auth/jwttoken/login?culture={CultureInfo.CurrentCulture}", new { Username = user!.UserName, Password = user.Password });
         if(response.IsSuccessStatusCode) {
-            System.Text.Json.JsonElement result = await response.Content.ReadFromJsonAsync<dynamic>();
-            var token = result.GetProperty("token").GetString();
-            await ((CustomAuthenticationStateProvider)AuthStateProvider).LoginUserAsync(token!);
+            var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
+            var token = result!.token;
+            var refreshToken = result.refreshToken;
+            if(token != null && refreshToken != null)
+                await ((CustomAuthenticationStateProvider)AuthStateProvider).LoginUserAsync(token, refreshToken);
             NavigationManager.NavigateTo("/", true);
+        } else {
+            var msg = await response.Content.ReadAsStringAsync();
+            ErrorMessage = msg;
+//            ErrorMessage = Localizator["LoginError"];
         }
-        else {
-            ErrorMessage = Localizator["LoginError"];
-        }
+    }
+    
+    private class LoginResponse {
+        public string token { get; set; } = "";
+        public string refreshToken { get; set; } = "";
     }
 
     protected override async Task OnInitializedAsync() {

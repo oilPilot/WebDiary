@@ -37,7 +37,7 @@
 		<value>Ausblenden</value>
 	</data>
   	<data name="NotAuthPageText1" xml:space="preserve">
-		<value>Entschuldigung, Sie sind nicht berechtigt, auf diese Seite zuzugreifen./value>
+		<value>Entschuldigung, Sie sind nicht berechtigt, auf diese Seite zuzugreifen.</value>
 	</data>
   	<data name="NotAuthPageText2" xml:space="preserve">
 		<value>Möglicherweise müssen Sie sich als anderer Benutzer anmelden.</value>

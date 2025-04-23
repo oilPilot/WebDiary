@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+	<data name="InvalidNameOrPswd" xml:space="preserve">
+    	<value>Ungültiger Benutzername oder ungültiges Passwort.</value>
+	</data>
+  	<data name="TokenNotEqual" xml:space="preserve">
+		<value>Die Token waren nicht gleich.</value>
+	</data>
+  	<data name="TokenTimeExpired" xml:space="preserve">
+		<value>Die Zeit ist abgelaufen.</value>
+	</data>
+  	<data name="PasswordsNotEqual" xml:space="preserve">
+		<value>Das Passwort ist falsch. Haben Sie Ihr Passwort vergessen?</value>
+	</data>
+  	<data name="RefreshTokenError" xml:space="preserve">
+		<value>Die Zeit für das Aktualisierungstoken ist abgelaufen. Bitte melden Sie sich erneut an, um zu bestätigen, dass Sie Sie sind.</value>
+	</data>
+</root>

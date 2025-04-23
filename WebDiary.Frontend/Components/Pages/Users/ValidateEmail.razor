@@ -18,11 +18,13 @@
     protected override async Task OnInitializedAsync() {
         await base.OnInitializedAsync();
         NameValueCollection? query = System.Web.HttpUtility.ParseQueryString(new UriBuilder(NavigationManager.Uri).Query);
-        var response = await HttpClient.PostAsJsonAsync("/auth/ValidateEmail", new
+        var response = await HttpClient.PostAsJsonAsync($"/auth/ValidateEmail?culture={CultureInfo.CurrentCulture}", new
             { Token = query!["token"], UserId = Convert.ToInt32(query["userId"]) });
         if(response.IsSuccessStatusCode ) {
             Redirect();
         }
-        Message = Localizator["ValidationErrorText"];
+        var msg = await response.Content.ReadAsStringAsync();
+        Message = msg;
+//        Message = Localizator["ValidationErrorText"];
     }
 }

@@ -1,4 +1,5 @@
 ﻿@using System.Security.Claims
+@using WebDiary.Frontend.Models.Auth
 @inject DiaryGroupClient DiaryGroupClient
 @inject UserClient UserClient
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -40,7 +41,7 @@
                     <div class="nav-item px-3 d-flex">
                         <NavLink class="nav-link" href="@($"Diary/{group.Id}")" Match="NavLinkMatch.All">
                             <span class="bi bi-pencil-square-nav-menu" />
-                            @if(group.Name.Length > 10) {
+                            @if(group.Name!.Length > 10) {
                                 <p class="mt-3">@group.Name.Substring(0, 10)...</p>
                             } else {
                                 <p class="mt-3">@group.Name</p>
@@ -101,6 +102,12 @@
 
             if(loggedUser.Identity != null && loggedUser.Identity.IsAuthenticated) {
                 loggedUserId = Convert.ToInt32(loggedUser.FindFirstValue("userId"));
+                try {
+                    await UserClient.GetUserByIdAsync(loggedUserId);
+                } catch (Exception Ex) {
+                    Console.WriteLine("Exception of user nonexistance?: " + Ex);
+                    await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).LogoutUserAsync();
+                }
                 groups = await DiaryGroupClient.GetGroupsOfUserAsync(loggedUserId);
                 topName = loggedUser.Identity.Name;
             }

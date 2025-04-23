@@ -25,11 +25,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         });
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
+builder.Services.AddLocalization();
 
 var app = builder.Build();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+var supportedCultures = new[] { "en", "de"};
+var localizationOptions = new RequestLocalizationOptions().
+    SetDefaultCulture(supportedCultures[0]).AddSupportedCultures(supportedCultures).AddSupportedUICultures(supportedCultures);
+app.UseRequestLocalization(localizationOptions);
 
 app.MapGet("/", () => "Hello World!");
 

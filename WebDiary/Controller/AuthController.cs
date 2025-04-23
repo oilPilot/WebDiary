@@ -13,26 +13,39 @@ using MailKit.Net.Smtp;
 using MailKit.Security;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Identity;
+using WebDiary.Resources;
+using Microsoft.Extensions.Localization;
 
 namespace WebDiary.Controller;
 
 [Route("auth")]
 [ApiController]
-public class AuthController (DiariesContext dbContext, IConfiguration config) : ControllerBase
+public class AuthController (DiariesContext dbContext, IConfiguration config, IStringLocalizer<ErrorResource> localizer) : ControllerBase
 {
     [HttpPost("jwttoken/login")]
-    public IActionResult Login(LoginModel model) {
+    public async Task<IActionResult> LoginAsync(LoginModel model) {
         User? user = dbContext.users.FirstOrDefault(user => user.UserName == model.Username);
         if(user == null) {
-            return NotFound("Invalid username or password");
+            return NotFound(localizer["InvalidNameOrPswd"].Value);
         }
         var hasher = new PasswordHasher<User>();
         var verify = hasher.VerifyHashedPassword(user, user.Password, model.Password!);
         if(verify == PasswordVerificationResult.Success) {
-            var token = GenerateJwtToken(user);
-            return Ok(new { token });
+            return await CreatingTokens(user);
         }
-        return Unauthorized("Invalid username or password");
+        return Unauthorized(localizer["InvalidNameOrPswd"].Value);
+    }
+
+    private async Task<IActionResult> CreatingTokens(User user, bool populateExpire = true) {
+        var token = GenerateJwtToken(user);
+        var refreshToken = GenerateRefreshToken();
+        var oldUser = user;
+        user.RefreshToken = refreshToken;
+        if(populateExpire)
+            user.RefreshTokenDateEnd = DateTime.Now.AddDays(7);
+        dbContext.users.Entry(oldUser).CurrentValues.SetValues(user);
+        await dbContext.SaveChangesAsync();
+        return Ok(new { token = token, refreshToken = refreshToken });
     }
 
     private string GenerateJwtToken(User user) {
@@ -47,11 +60,52 @@ public class AuthController (DiariesContext dbContext, IConfiguration config) : 
             issuer: config["Jwt:Issuer"],
             audience: config["Jwt:Audience"],
             claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(30),
+            expires: DateTime.Now.AddMinutes(15),
             signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]!)), SecurityAlgorithms.HmacSha256)
         );
         return new JwtSecurityTokenHandler().WriteToken(securityToken);
     }
+
+    [HttpPost("refresh")]
+    public async Task<IActionResult> Refresh(TokenRequestModel tokenModel) {
+        var principal = GetPrincipalFromExpiredToken(tokenModel.AccessToken!);
+
+        var user = await dbContext.users.FirstOrDefaultAsync(user => user.UserName == principal.Identity!.Name);
+        if(user == null || user.RefreshToken != tokenModel.RefreshToken || user.RefreshTokenDateEnd <= DateTime.Now)
+            return BadRequest(localizer["RefreshTokenError"].Value);
+        
+        return await CreatingTokens(user, false);
+    }
+
+    private string GenerateRefreshToken() {
+        var number = new byte[32];
+        using(var random = RandomNumberGenerator.Create()) {
+            random.GetBytes(number);
+
+            return Convert.ToBase64String(number);
+        }
+    }
+    private ClaimsPrincipal GetPrincipalFromExpiredToken(string token) {
+        var TokenValidationParameters = new TokenValidationParameters {
+            ValidateLifetime = false,
+            ValidateAudience = true,
+            ValidateIssuer = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]!)),
+            ValidIssuer = config["Jwt:Issuer"],
+            ValidAudience = config["Jwt:Audience"]
+        };
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var principal = tokenHandler.ValidateToken(token, TokenValidationParameters, out var securityToken);
+        var JwtSecurityToken = (JwtSecurityToken)securityToken;
+        if(securityToken == null || !JwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase)) {
+            throw new Exception("Invalid token.");
+        }
+
+        return principal;
+    }
+
     [HttpPost("sendEmail")]
     public async Task<IActionResult> SendEmailAsync(sendEmailForm email) {
             if(email.userId == null) return BadRequest("user id in input was null");
@@ -107,10 +161,10 @@ public class AuthController (DiariesContext dbContext, IConfiguration config) : 
 
                 return Ok("Resetted successfully");
             } else {
-                return BadRequest("Tokens weren't equal");
+                return BadRequest(localizer["TokenNotEqual"].Value);
             }
         } else {
-            return BadRequest("Time had expired");
+            return BadRequest(localizer["TokenTimeExpired"].Value);
         }
     }
     [HttpPost("ValidateEmail")]
@@ -129,10 +183,10 @@ public class AuthController (DiariesContext dbContext, IConfiguration config) : 
 
                 return Ok("Validated successfully");
             } else {
-                return BadRequest("Tokens weren't equal");
+                return BadRequest(localizer["TokenNotEqual"].Value);
             }
         } else {
-            return BadRequest("Time had expired");
+            return BadRequest(localizer["TokenTimeExpired"].Value);
         }
     }
     [HttpGet("password/isequal/{password}/{userId:int}")]
@@ -146,7 +200,7 @@ public class AuthController (DiariesContext dbContext, IConfiguration config) : 
         if(verify == PasswordVerificationResult.Success) {
             return Ok("Are equal");
         }
-        return BadRequest("Not equal");
+        return BadRequest(localizer["PasswordsNotEqual"].Value);
     }
     [HttpGet("email/isunique/{email}")]
     public async Task<IActionResult> IsUniqueEmailAsync(string email) {
@@ -157,6 +211,10 @@ public class AuthController (DiariesContext dbContext, IConfiguration config) : 
     public class passwordForm {
         public string? Password { get; set; }
         public int? UserId { get; set; }
+    }
+    public class TokenRequestModel {
+        public string? RefreshToken { get; set; }
+        public string? AccessToken { get; set; }
     }
     public class sendEmailForm {
         public int? userId { get; set; }

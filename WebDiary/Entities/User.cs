@@ -13,4 +13,6 @@ public class User
     public required bool IsValidated { get; set; }
     public byte[]? ActionToken { get; set; }
     public DateTime? ActionDateEnd { get; set; }
+    public string? RefreshToken { get; set; }
+    public DateTime? RefreshTokenDateEnd { get; set; }
 }

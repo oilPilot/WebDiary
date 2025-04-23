@@ -101,7 +101,7 @@
         ModalDisplay = "block";
         showBackdrop = true;
         isDeleting = false;
-        user = await UserClient.GetUserAsync(loggedUserId);
+        user = await UserClient.GetUserByIdAsync(loggedUserId);
         newUser = user;
         newUser.Password = "";
         HeaderName = "Change account";
@@ -127,7 +127,12 @@
         if(response.IsSuccessStatusCode) {
             System.Text.Json.JsonElement result = await response.Content.ReadFromJsonAsync<dynamic>();
             var token = result.GetProperty("token").GetString();
-            await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).LoginUserAsync(token!);
+            var refreshToken = result.GetProperty("refreshToken").GetString();
+            if(token != null && refreshToken != null)
+                await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).LoginUserAsync(token!, refreshToken!);
+        } else {
+            var msg = await response.Content.ReadAsStringAsync();
+            ErrorMessage = msg;
         }
     }
 
@@ -138,7 +143,7 @@
             NavigationManager.NavigateTo("/", true);
         } else {
             ErrorMessage = "";
-            var response = (await HttpClient.GetAsync($"/auth/password/isequal/{newUser!.Password}/{user!.Id}"));
+            var response = (await HttpClient.GetAsync($"/auth/password/isequal/{newUser!.Password}/{user!.Id}?culture={CultureInfo.CurrentCulture}"));
             if( response.IsSuccessStatusCode ) {
                 if(newUser.UserName.Length < 3) {
                     ErrorMessage += Localizator["UpdateAccDialogueError1"];
@@ -162,7 +167,8 @@
                 StateHasChanged();
                 Close();
             } else {
-                ErrorMessage += Localizator["UpdateAccDialogueError4"];
+                var msg = await response.Content.ReadAsStringAsync();
+                ErrorMessage += msg;
                 passwordForgot = true;
             }
         }

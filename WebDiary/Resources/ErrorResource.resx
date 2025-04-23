@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+	<data name="InvalidNameOrPswd" xml:space="preserve">
+    	<value>Invalid username or password.</value>
+	</data>
+  	<data name="TokenNotEqual" xml:space="preserve">
+		<value>Tokens weren't equal.</value>
+	</data>
+  	<data name="TokenTimeExpired" xml:space="preserve">
+		<value>Time has expired.</value>
+	</data>
+  	<data name="PasswordsNotEqual" xml:space="preserve">
+		<value>Password isn't correct. Do you forget your password?</value>
+	</data>
+  	<data name="RefreshTokenError" xml:space="preserve">
+		<value>Refresh token time has expired. Please, relogin to confirm that you is you.</value>
+	</data>
+</root>

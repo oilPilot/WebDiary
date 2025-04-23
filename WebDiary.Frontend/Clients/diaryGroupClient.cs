@@ -12,14 +12,26 @@ public class DiaryGroupClient(HttpClient httpClient)
         await httpClient.GetFromJsonAsync<List<DiaryGroup>>($"groups/ofuser/{userId}") ?? new List<DiaryGroup>();
         
     public async Task<DiaryGroup> GetGroupAsync(int id) =>
-        await httpClient.GetFromJsonAsync<DiaryGroup>($"groups/{id}") ?? throw new Exception("Diary wasn't found");
+        await httpClient.GetFromJsonAsync<DiaryGroup>($"groups/{id}") ?? throw new Exception("Group wasn't found");
 
-    public async Task AddGroupAsync(DiaryGroup group) =>
-        await httpClient.PostAsJsonAsync<DiaryGroup>("groups", group);
+    public async Task AddGroupAsync(DiaryGroup group) {
+        var response = await httpClient.PostAsJsonAsync<DiaryGroup>("groups", group);
+        if(!response.IsSuccessStatusCode) {
+            throw new Exception();
+        }
+    }
 
-    public async Task UpdateGroupAsync(DiaryGroup newGroup) =>
-        await httpClient.PutAsJsonAsync<DiaryGroup>($"groups/{newGroup.Id}", newGroup);
+    public async Task UpdateGroupAsync(DiaryGroup newGroup) {
+        var response = await httpClient.PutAsJsonAsync<DiaryGroup>($"groups/{newGroup.Id}", newGroup);
+        if(!response.IsSuccessStatusCode) {
+            throw new Exception();
+        }
+    }
 
-    public async Task DeleteGroupAsync(int id) =>
-        await httpClient.DeleteAsync($"groups/{id}");
+    public async Task DeleteGroupAsync(int id) {
+        var response = await httpClient.DeleteAsync($"groups/{id}");
+        if(!response.IsSuccessStatusCode) {
+            throw new Exception();
+        }
+    }
 }

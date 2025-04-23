@@ -57,7 +57,7 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 app.Run();
-// This should not work
+
 /* TODO:
     Major tasks:
         Nothing;

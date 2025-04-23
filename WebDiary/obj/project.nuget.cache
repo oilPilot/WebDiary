@@ -2,7 +2,7 @@
   "version": 2,
   "dgSpecHash": "RUDUnOKmjHY=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\WebDiary\\WebDiary.csproj",
+  "projectFilePath": "c:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\WebDiary\\WebDiary.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Dock\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\Dock\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
@@ -86,12 +86,5 @@
     "C:\\Users\\Dock\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.4\\system.threading.tasks.extensions.4.5.4.nupkg.sha512",
     "C:\\Users\\Dock\\.nuget\\packages\\system.windows.extensions\\6.0.0\\system.windows.extensions.6.0.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Problem reading the cache file C:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\WebDiary\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
-    }
-  ]
+  "logs": []
 }

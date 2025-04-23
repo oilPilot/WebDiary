@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\WebDiary\\WebDiary.csproj": {}
+    "c:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\WebDiary\\WebDiary.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\WebDiary\\WebDiary.csproj": {
+    "c:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\WebDiary\\WebDiary.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\WebDiary\\WebDiary.csproj",
+        "projectUniqueName": "c:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\WebDiary\\WebDiary.csproj",
         "projectName": "WebDiary",
-        "projectPath": "C:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\WebDiary\\WebDiary.csproj",
+        "projectPath": "c:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\WebDiary\\WebDiary.csproj",
         "packagesPath": "C:\\Users\\Dock\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\WebDiary\\obj\\",
+        "outputPath": "c:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\WebDiary\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

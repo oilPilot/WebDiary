@@ -5,7 +5,7 @@ using WebDiary.Frontend.Models.Auth;
 
 namespace WebDiary.Frontend.Clients;
 
-public class UserClient(HttpClient httpClient, AuthenticationStateProvider authenticationStateProvider)
+public class UserClient(HttpClient httpClient)
 {
     public async Task<List<User>> GetUsersAsync() =>
         await httpClient.GetFromJsonAsync<List<User>>("users") ?? new List<User>();

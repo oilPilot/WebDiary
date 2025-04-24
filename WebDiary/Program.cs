@@ -31,11 +31,13 @@ var app = builder.Build();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.Logger.LogInformation("Added Authentication and Authorization to app");
 
 var supportedCultures = new[] { "en", "de"};
 var localizationOptions = new RequestLocalizationOptions().
     SetDefaultCulture(supportedCultures[0]).AddSupportedCultures(supportedCultures).AddSupportedUICultures(supportedCultures);
 app.UseRequestLocalization(localizationOptions);
+app.Logger.LogInformation("Added Localization to app");
 
 app.MapGet("/", () => "Hello World!");
 
@@ -43,13 +45,15 @@ app.AddDiariesEndpoints();
 app.AddGroupsEndpoints();
 app.AddUsersEndpoint();
 app.MapControllers();
+app.Logger.LogInformation("Added Endpoints and Controllers to app");
 
 try {
 if(app.Environment.IsDevelopment()) {
     await app.MigrateDbAsync();
+    app.Logger.LogInformation("Migrated DB");
 }
 
 app.Run();
 } catch(Exception Ex) {
-    Console.WriteLine("Catched exception upon opening app: " + Ex);
+    app.Logger.LogCritical("Catched exception upon opening app: {Exception}", Ex);
 }

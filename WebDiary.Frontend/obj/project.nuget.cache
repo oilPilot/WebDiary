@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "V71iZB8tNmU=",
+  "dgSpecHash": "t4TRKN6D+W0=",
   "success": true,
   "projectFilePath": "C:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\WebDiary.Frontend\\WebDiary.Frontend.csproj",
   "expectedPackageFiles": [
@@ -46,12 +46,5 @@
     "C:\\Users\\Dock\\.nuget\\packages\\microsoft.jsinterop\\9.0.2\\microsoft.jsinterop.9.0.2.nupkg.sha512",
     "C:\\Users\\Dock\\.nuget\\packages\\system.identitymodel.tokens.jwt\\8.0.1\\system.identitymodel.tokens.jwt.8.0.1.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Problem reading the cache file C:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\WebDiary.Frontend\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
-    }
-  ]
+  "logs": []
 }

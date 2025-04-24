@@ -15,17 +15,19 @@ public static class UserEndpoints
 
         // mapping GET methods
         group.MapGet("/", async (DiariesContext dbContext) => await dbContext.users.Select(user => user.toDTO()).AsNoTracking().ToListAsync());
-        group.MapGet("/{id}", async (int id, DiariesContext dbContext) => {
+        group.MapGet("/{id}", async (int id, DiariesContext dbContext, ILogger<Endpoint> logger) => {
             var user = await dbContext.users.FindAsync(id);
+                logger.LogError("Search of user by id '{ID}' was unsuccessful", id);
             if(user is null) {
                 return Results.NotFound();
             }
 
             return Results.Ok(user.toDTO());
         }).WithName(getUserRoute);
-        group.MapGet("/byemail/{email}", async (string email, DiariesContext dbContext) => {
+        group.MapGet("/byemail/{email}", async (string email, DiariesContext dbContext, ILogger<Endpoint> logger) => {
             var user = await dbContext.users.AsNoTracking().Where(user => user.Email == email).ToListAsync();
             if(user.FirstOrDefault() is null) {
+                logger.LogError("Search of user by email '{Email}' was unsuccessful", email);
                 return Results.NotFound();
             }
             
@@ -33,19 +35,22 @@ public static class UserEndpoints
         });
         
         // mapping POST methods
-        group.MapPost("/", async (CreateUserDTO newUser, DiariesContext dbContext) => {
+        group.MapPost("/", async (CreateUserDTO newUser, DiariesContext dbContext, ILogger<Endpoint> logger) => {
             var user = newUser.toEntity();
 
             await dbContext.users.AddAsync(user);
             await dbContext.SaveChangesAsync();
 
+            logger.LogInformation("Created new user with id: '{ID}' name: '{Name}'", user.Id, user.UserName);
+
             return Results.CreatedAtRoute(getUserRoute, new {id = user.Id}, user.toDTO());
         });
 
         // mapping PUT methods
-        group.MapPut("/{id}", async (int id, UpdateUserDTO newUser, DiariesContext dbContext) => {
+        group.MapPut("/{id}", async (int id, UpdateUserDTO newUser, DiariesContext dbContext, ILogger<Endpoint> logger) => {
             var currentUser = await dbContext.users.FindAsync(id);
             if(currentUser is null) {
+                logger.LogError("Search of user by id '{ID}' upon updating was unsuccessful", id);
                 return Results.NotFound();
             }
 
@@ -57,10 +62,13 @@ public static class UserEndpoints
         });
 
         // mapping DELETE methods
-        group.MapDelete("/{id}", async (int id, DiariesContext dbContext) => {
+        group.MapDelete("/{id}", async (int id, DiariesContext dbContext, ILogger<Endpoint> logger) => {
             await dbContext.users.Where(user => user.Id == id).ExecuteDeleteAsync();
-            await dbContext.diaries.Where(diary => dbContext.diaryGroups.Where(group => group.UserId == id).Where(group => group.Id == diary.GroupId).ToList().Contains(diary.Group)).ExecuteDeleteAsync();
+            await dbContext.diaries.Where(diary => dbContext.diaryGroups.Where(group => group.UserId == id)
+                                    .Where(group => group.Id == diary.GroupId).ToList().Contains(diary.Group)).ExecuteDeleteAsync();
             await dbContext.diaryGroups.Where(group => group.UserId == id).ExecuteDeleteAsync();
+            
+            logger.LogInformation("Deleted user with id '{ID}' and it's groups with diaries", id);
 
             return Results.NoContent();
         });

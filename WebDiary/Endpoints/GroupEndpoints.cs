@@ -19,9 +19,10 @@ public static class GroupEndpoints
         group.MapGet("/", async (DiariesContext dbContext) => await dbContext.diaryGroups.Select(diaryGroup => diaryGroup.toDTO()).AsNoTracking().ToListAsync());
         group.MapGet("/ofuser/{userId}", async (int userId, DiariesContext dbContext) =>
             await dbContext.diaryGroups.Where(group => group.UserId == userId).Select(group => group.toDTO()).AsNoTracking().ToListAsync());
-        group.MapGet("/{id}", async (int id, DiariesContext dbContext) => {
+        group.MapGet("/{id}", async (int id, DiariesContext dbContext, ILogger<Endpoint> logger) => {
             var group = await dbContext.diaryGroups.FindAsync(id);
             if(group is null) {
+                logger.LogError("Search of group by id '{ID}' was unsuccessful", id);
                 return Results.NotFound();
             }
 
@@ -29,19 +30,22 @@ public static class GroupEndpoints
         }).WithName(getGroupRoute);
         
         // mapping POST methods
-        group.MapPost("/", async (CreateGroupDTO newGroup, DiariesContext dbContext) => {
+        group.MapPost("/", async (CreateGroupDTO newGroup, DiariesContext dbContext, ILogger<Endpoint> logger) => {
             var group = newGroup.toEntity();
 
             await dbContext.diaryGroups.AddAsync(group);
             await dbContext.SaveChangesAsync();
 
+            logger.LogInformation("Created new group with name: {Name} and id: {Id}", group.Name, group.Id);
+
             return Results.CreatedAtRoute(getGroupRoute, new {id = group.Id}, group.toDTO());
         });
 
         // mapping PUT methods
-        group.MapPut("/{id}", async (int id, UpdateGroupDTO newGroup, DiariesContext dbContext) => {
+        group.MapPut("/{id}", async (int id, UpdateGroupDTO newGroup, DiariesContext dbContext, ILogger<Endpoint> logger) => {
             var currentGroup = await dbContext.diaryGroups.FindAsync(id);
             if(currentGroup is null) {
+                logger.LogError("Search of group by id '{ID}' upon updating was unsuccessful", id);
                 return Results.NotFound();
             }
 
@@ -53,9 +57,11 @@ public static class GroupEndpoints
         });
 
         // mapping DELETE methods
-        group.MapDelete("/{id}", async (int id, DiariesContext dbContext) => {
+        group.MapDelete("/{id}", async (int id, DiariesContext dbContext, ILogger<Endpoint> logger) => {
             await dbContext.diaryGroups.Where(group => group.Id == id).ExecuteDeleteAsync();
             await dbContext.diaries.Where(diary => diary.GroupId == id).ExecuteDeleteAsync();
+
+            logger.LogInformation("Deleted group with id '{ID}' and it's diaries", id);
 
             return Results.NoContent();
         });

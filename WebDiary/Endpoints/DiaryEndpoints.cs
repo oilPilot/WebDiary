@@ -21,9 +21,10 @@ public static class DiaryEndpoints
             await dbContext.diaries.Select(diary => diary.ToDTO()).AsNoTracking().ToListAsync());
         group.MapGet("/ofgroup/{groupId}", [Authorize] async (int groupId, DiariesContext dbContext) =>
             await dbContext.diaries.Where(diary => diary.GroupId == groupId).Select(diary => diary.ToDTO()).AsNoTracking().ToListAsync());
-        group.MapGet("/{id}", [Authorize] async (int id, DiariesContext dbContext) => { 
+        group.MapGet("/{id}", [Authorize] async (int id, DiariesContext dbContext, ILogger<Endpoint> logger) => { 
             var diary = await dbContext.diaries.FindAsync(id);
             if(diary is null) {
+                logger.LogError("Search of diary by id '{ID}' was unsuccessful", id);
                 return Results.NotFound();
             }
 

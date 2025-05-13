@@ -17,7 +17,7 @@ public record class CreateUserDTO
     public required string UserName { get; set; }
     [Required]
     public required string Password { get; set; }
-    public string? Description { get; set; }
+    public string Description { get; set; } = "";
     public required string Email { get; set; }
     public byte[]? ActionToken { get; set; }
     public DateTime? ActionDateEnd { get; set; }

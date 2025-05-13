@@ -15,6 +15,7 @@ using System.Security.Cryptography;
 using Microsoft.AspNetCore.Identity;
 using WebDiary.Resources;
 using Microsoft.Extensions.Localization;
+using WebDiary.DTO;
 
 namespace WebDiary.Controller;
 
@@ -76,13 +77,14 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
 
         var user = await dbContext.users.FirstOrDefaultAsync(user => user.UserName == principal.Identity!.Name);
         if(user == null) {
-            logger.LogError("Upon refresh user wasn't found, name {principalName}", principal.Identity!.Name);
+            if(logger != null)
+                logger.LogError("Upon refresh user wasn't found, name {principalName}", principal.Identity!.Name);
             return BadRequest(localizer["RefreshTokenError"].Value);
         }
         if(user.RefreshToken != tokenModel.RefreshToken || user.RefreshTokenDateEnd <= DateTime.Now) {
             logger.LogError("Refresh for user {Name} has been unsuccessful, refreshTokenExpDate: {RefreshTokenExpTime}," +
-                                    "user token {RefreshTokenUser}, sended token {RefreshTokenSended}",
-                                    user.UserName, user.RefreshTokenDateEnd, user.RefreshToken, tokenModel.RefreshToken);
+                            "user token {RefreshTokenUser}, sended token {RefreshTokenSended}",
+                            user.UserName, user.RefreshTokenDateEnd, user.RefreshToken, tokenModel.RefreshToken);
             return BadRequest(localizer["RefreshTokenError"].Value);
         }
         
@@ -109,16 +111,21 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
             ValidAudience = config["Jwt:Audience"]
         };
 
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var principal = tokenHandler.ValidateToken(token, TokenValidationParameters, out var securityToken);
-        var JwtSecurityToken = (JwtSecurityToken)securityToken;
-        if(securityToken == null || !JwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase)) {
-            logger.LogError("Upon GetPrincipalFromExpiredToken token was inwalid {Token} Algorithm: {Alg}",
-                                    securityToken, JwtSecurityToken.Header.Alg);
-            throw new Exception("Invalid token.");
+        try {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var principal = tokenHandler.ValidateToken(token, TokenValidationParameters, out var securityToken);
+            var JwtSecurityToken = (JwtSecurityToken)securityToken;
+            if(securityToken == null || !JwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase)) {
+                logger.LogError("Upon GetPrincipalFromExpiredToken token was inwalid {Token} Algorithm: {Alg}",
+                                securityToken, JwtSecurityToken.Header.Alg);
+                throw new Exception("Invalid token.");
+            }
+            return principal;
+        } catch(Exception Ex) {
+            logger.LogError("Catched exception at GetPrincipalFromExpiredToken: {Exception}", Ex);
         }
 
-        return principal;
+        return new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>() { new Claim(ClaimTypes.Name, "") }));
     }
 
     [HttpPost("sendEmail")]
@@ -163,7 +170,10 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
     [HttpPost("ResetPassword")]
     public async Task<IActionResult> ResetPasswordAsync(resetPasswordForm resetPasswordForm) {
         var user = await dbContext.users.FindAsync(resetPasswordForm.UserId);
-        if(user!.ActionDateEnd != null && user.ActionDateEnd > DateTime.Now) {
+        if (user is null) {
+            return NotFound(localizer["InvalidNameOrPswd"].Value);
+        }
+        if(user.ActionDateEnd != null && user.ActionDateEnd > DateTime.Now) {
             var Base64Token = Convert.FromBase64String( resetPasswordForm.Token.Replace('-', '+').Replace('_', '/') );
             if(user.ActionToken != null && CryptographicOperations.FixedTimeEquals(user.ActionToken, Base64Token) ) {
                 var hasher = new PasswordHasher<User>();
@@ -189,7 +199,10 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
     [HttpPost("ValidateEmail")]
     public async Task<IActionResult> ValidateEmailAsync(validateEmailForm ValidateEmailForm) {
         var user = await dbContext.users.FindAsync(ValidateEmailForm.UserId);
-        if(user!.ActionDateEnd != null && user.ActionDateEnd > DateTime.Now) {
+        if (user is null) {
+            return NotFound(localizer["InvalidNameOrPswd"].Value);
+        }
+        if(user.ActionDateEnd != null && user.ActionDateEnd > DateTime.Now) {
             var Base64Token = Convert.FromBase64String( ValidateEmailForm.Token.Replace('-', '+').Replace('_', '/') );
             if(user.ActionToken != null && CryptographicOperations.FixedTimeEquals(user.ActionToken, Base64Token) ) {
                 var newUser = user;

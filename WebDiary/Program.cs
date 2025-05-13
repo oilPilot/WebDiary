@@ -57,3 +57,5 @@ app.Run();
 } catch(Exception Ex) {
     app.Logger.LogCritical("Catched exception upon opening app: {Exception}", Ex);
 }
+
+public partial class Program { }

@@ -60,7 +60,8 @@ app.Run();
 
 /* TODO:
     Major tasks:
-        Nothing;
+        Make microservices;
+        Make integration and E2E tests;
     Med tasks:
         Nothing;
     Little tasks:

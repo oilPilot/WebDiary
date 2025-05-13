@@ -15,7 +15,7 @@ public static class Users
             Password = hasher.HashPassword(dummyUser, user.Password),
             Role = "Default",
             Email = user.Email is null ? "" : user.Email,
-            Description = user.Description is null ? "" : user.Description,
+            Description = user.Description,
             ActionToken = user.ActionToken,
             ActionDateEnd = user.ActionDateEnd,
             IsValidated = false

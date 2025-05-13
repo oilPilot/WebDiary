@@ -2,7 +2,7 @@ using System;
 using WebDiary.DTO;
 using WebDiary.Entities;
 
-namespace WebDiary.Endpoints;
+namespace WebDiary.Mapping;
 
 public static class Groups
 {

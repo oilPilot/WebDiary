@@ -28,7 +28,6 @@ public class AuthControllerTests
     private readonly Mock<DiariesContext> _mockContext;
     private readonly Mock<IStringLocalizer<ErrorResource>> _mockLocalizer;
     private readonly Mock<IConfiguration> _mockConfig;
-    private readonly Mock<ILogger<AuthController>> _mockLogger;
     private readonly DbContextOptions<DiariesContext> _options;
 
     public AuthControllerTests() {
@@ -36,11 +35,10 @@ public class AuthControllerTests
 
         _mockContext = new Mock<DiariesContext>(_options);
         _mockLocalizer = new Mock<IStringLocalizer<ErrorResource>>();
-        _mockConfig = new Mock<IConfiguration>(); 
-        _mockLogger = new Mock<ILogger<AuthController>>();
+        _mockConfig = new Mock<IConfiguration>();
     }
     private AuthController GetControllerWithContext(DiariesContext diariesContext) {
-        return new AuthController(diariesContext, _mockConfig.Object, _mockLocalizer.Object, _mockLogger.Object);
+        return new AuthController(diariesContext, _mockConfig.Object, _mockLocalizer.Object);
     }
 
     [Fact]

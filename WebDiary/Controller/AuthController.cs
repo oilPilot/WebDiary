@@ -16,13 +16,14 @@ using Microsoft.AspNetCore.Identity;
 using WebDiary.Resources;
 using Microsoft.Extensions.Localization;
 using WebDiary.DTO;
+using Serilog;
 
 namespace WebDiary.Controller;
 
 [Route("auth")]
 [ApiController]
 public class AuthController (DiariesContext dbContext, IConfiguration config,
-                            IStringLocalizer<ErrorResource> localizer, ILogger<AuthController> logger) : ControllerBase
+                            IStringLocalizer<ErrorResource> localizer) : ControllerBase
 {
     [HttpPost("jwttoken/login")]
     public async Task<IActionResult> LoginAsync(LoginModel model) {
@@ -33,7 +34,7 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
         var hasher = new PasswordHasher<User>();
         var verify = hasher.VerifyHashedPassword(user, user.Password, model.Password!);
         if(verify == PasswordVerificationResult.Success) {
-            logger.LogInformation("User {Name} tries to login with correct password", user.UserName);
+            Log.Information("User {Name} tries to login with correct password", user.UserName);
             return await CreatingTokens(user);
         }
         return Unauthorized(localizer["InvalidNameOrPswd"].Value);
@@ -48,7 +49,7 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
             user.RefreshTokenDateEnd = DateTime.Now.AddDays(7);
         dbContext.users.Entry(oldUser).CurrentValues.SetValues(user);
         await dbContext.SaveChangesAsync();
-        logger.LogInformation("Created tokens for user {Name} with refresh token expiration {ExpTime}", user.UserName, user.RefreshTokenDateEnd);
+        Log.Information("Created tokens for user {Name} with refresh token expiration {ExpTime}", user.UserName, user.RefreshTokenDateEnd);
         return Ok(new { token = token, refreshToken = refreshToken });
     }
 
@@ -67,7 +68,7 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
             expires: DateTime.Now.AddMinutes(15),
             signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]!)), SecurityAlgorithms.HmacSha256)
         );
-        logger.LogInformation("Generated jwt token for user {Name}", user.UserName);
+        Log.Information("Generated jwt token for user {Name}", user.UserName);
         return new JwtSecurityTokenHandler().WriteToken(securityToken);
     }
 
@@ -77,18 +78,17 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
 
         var user = await dbContext.users.FirstOrDefaultAsync(user => user.UserName == principal.Identity!.Name);
         if(user == null) {
-            if(logger != null)
-                logger.LogError("Upon refresh user wasn't found, name {principalName}", principal.Identity!.Name);
+                Log.Error("Upon refresh user wasn't found, name {principalName}", principal.Identity!.Name);
             return BadRequest(localizer["RefreshTokenError"].Value);
         }
         if(user.RefreshToken != tokenModel.RefreshToken || user.RefreshTokenDateEnd <= DateTime.Now) {
-            logger.LogError("Refresh for user {Name} has been unsuccessful, refreshTokenExpDate: {RefreshTokenExpTime}," +
+            Log.Error("Refresh for user {Name} has been unsuccessful, refreshTokenExpDate: {RefreshTokenExpTime}," +
                             "user token {RefreshTokenUser}, sended token {RefreshTokenSended}",
                             user.UserName, user.RefreshTokenDateEnd, user.RefreshToken, tokenModel.RefreshToken);
             return BadRequest(localizer["RefreshTokenError"].Value);
         }
         
-        logger.LogInformation("Refreshing token for user name {Name}", user.UserName);
+        Log.Information("Refreshing token for user name {Name}", user.UserName);
         return await CreatingTokens(user, false);
     }
 
@@ -116,13 +116,13 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
             var principal = tokenHandler.ValidateToken(token, TokenValidationParameters, out var securityToken);
             var JwtSecurityToken = (JwtSecurityToken)securityToken;
             if(securityToken == null || !JwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase)) {
-                logger.LogError("Upon GetPrincipalFromExpiredToken token was inwalid {Token} Algorithm: {Alg}",
+                Log.Error("Upon GetPrincipalFromExpiredToken token was inwalid {Token} Algorithm: {Alg}",
                                 securityToken, JwtSecurityToken.Header.Alg);
                 throw new Exception("Invalid token.");
             }
             return principal;
         } catch(Exception Ex) {
-            logger.LogError("Catched exception at GetPrincipalFromExpiredToken: {Exception}", Ex);
+            Log.Error("Catched exception at GetPrincipalFromExpiredToken: {Exception}", Ex);
         }
 
         return new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>() { new Claim(ClaimTypes.Name, "") }));
@@ -161,10 +161,10 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
                     await client.DisconnectAsync(true);
                 }
             } catch(Exception Ex) {
-                logger.LogError("Catched exception upon sending email: {Exception}", Ex);
+                Log.Error("Catched exception upon sending email: {Exception}", Ex);
             }
 
-            logger.LogInformation("Has sended email to {Email} isvalidation email: {Isvalidation}", user.Email, email.IsValidation);
+            Log.Information("Has sended email to {Email} isvalidation email: {Isvalidation}", user.Email, email.IsValidation);
             return Ok("Email sended successfully");
     }
     [HttpPost("ResetPassword")]
@@ -187,12 +187,12 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
 
                 return Ok("Resetted successfully");
             } else {
-                logger.LogError("ResetPassword was unsuccessful, token {token}, base64Token {base64Token}",
+                Log.Error("ResetPassword was unsuccessful, token {token}, base64Token {base64Token}",
                                 user.ActionToken, Base64Token);
                 return BadRequest(localizer["TokenNotEqual"].Value);
             }
         } else {
-            logger.LogInformation("ResetPassword was unsuccessful, actionDateEnd {DateEnd}", user.ActionDateEnd);
+            Log.Information("ResetPassword was unsuccessful, actionDateEnd {DateEnd}", user.ActionDateEnd);
             return BadRequest(localizer["TokenTimeExpired"].Value);
         }
     }
@@ -215,12 +215,12 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
 
                 return Ok("Validated successfully");
             } else {
-                logger.LogError("ValidateEmail was unsuccessful, token {token}, base64Token {base64Token}",
+                Log.Error("ValidateEmail was unsuccessful, token {token}, base64Token {base64Token}",
                                 user.ActionToken, Base64Token);
                 return BadRequest(localizer["TokenNotEqual"].Value);
             }
         } else {
-            logger.LogInformation("ValidateEmail was unsuccessful, actionDateEnd {DateEnd}", user.ActionDateEnd);
+            Log.Information("ValidateEmail was unsuccessful, actionDateEnd {DateEnd}", user.ActionDateEnd);
             return BadRequest(localizer["TokenTimeExpired"].Value);
         }
     }

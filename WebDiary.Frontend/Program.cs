@@ -58,13 +58,3 @@ app.MapRazorComponents<App>()
 
 app.Run();
 
-/* TODO:
-    Major tasks:
-        Make microservices;
-        Make integration and E2E tests;
-    Med tasks:
-        Nothing;
-    Little tasks:
-        Nothing;
-
-*/

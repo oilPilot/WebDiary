@@ -9,63 +9,72 @@
 <div class="modal" tabindex="-1" style="display: @ModalDisplay;">
     <div class="modal-dialogue" role="document">
         <div class="modal-placement modal-content" style="top: 10%;">
-            <div class="modal-header">
-                <h4 class="modal-title">@HeaderName</h4>
-                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" @onclick="() => Close()" />
-            </div>
-            <div class="modal-body">
-                @if(!isDeleting) {
-                    <div>
-                        <div class="mt-3">
-                            <label>
-                                @Localizator["AskUsername"]
-                                <InputText @bind-value="newUser!.UserName" />
-                            </label>
-                        </div>
-                        <div class="mt-3">
-                            <label>
-                                @Localizator["AskSelfdescription"]
-                                <InputTextArea @bind-value="newUser.Description" class="no-resize" />
-                            </label>
-                        </div>
-                        <div class="mt-3">
-                            <label>
-                                @Localizator["AskNewEmail"]
-                                <InputText @bind-value="newUser.Email" />
-                            </label>
-                        </div>
-                        <div class="mt-3">
-                            <label>
-                                @Localizator["AskOldPassword"]
-                                <InputText type="password" @bind-value="newUser.Password" />
-                            </label>
-                        </div>
-                        <div class="mt-3">
-                            <label>
-                                @Localizator["AskNewPassword"]
-                                <InputText type="password" @bind-value="newPassword" />
-                            </label>
-                        </div>
+            <EditForm Model="newUser" OnValidSubmit="SaveAsync" FormName="AccountDialogueForm">
+                <div class="modal-header">
+                    <h4 class="modal-title">@HeaderName</h4>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" @onclick="() => Close()" />
+                </div>
+                <div class="modal-body">
+                    @if(!isDeleting) {
                         <div>
-                            <label>
-                                <p class="fs-5 fw-semibold text-danger">@ErrorMessage</p>
-                                @if(passwordForgot) {
-                                    <p>@Localizator["PswdIncorrectDoYouForgot"]
-                                        @Localizator["Restore1"]<a href="/Users/RestorePassword" class="link-info">@Localizator["AddressForSomething"]</a></p>
-                                }
-                            </label>
+                            <DataAnnotationsValidator />
+                            <ValidationSummary />
+                            <div class="mt-3">
+                                <label>
+                                    @Localizator["AskUsername"]
+                                    <InputText @bind-value="newUser!.UserName" />
+                                    <ValidationMessage For="() => newUser!.UserName" />
+                                </label>
+                            </div>
+                            <div class="mt-3">
+                                <label>
+                                    @Localizator["AskSelfdescription"]
+                                    <InputTextArea @bind-value="newUser.Description" class="no-resize" />
+                                    <ValidationMessage For="() => newUser.Description" />
+                                </label>
+                            </div>
+                            <div class="mt-3">
+                                <label>
+                                    @Localizator["AskNewEmail"]
+                                    <InputText @bind-value="newEmail" />
+                                    <ValidationMessage For="() => newEmail" />
+                                </label>
+                            </div>
+                            <div class="mt-3">
+                                <label>
+                                    @Localizator["AskOldPassword"]
+                                    <InputText type="password" @bind-value="newUser.Password" />
+                                    <ValidationMessage For="() => newUser.Password" />
+                                </label>
+                            </div>
+                            <div class="mt-3">
+                                <label>
+                                    @Localizator["AskNewPassword"]
+                                    <InputText type="password" @bind-value="newPassword" />
+                                    <ValidationMessage For="() => newPassword" />
+                                </label>
+                            </div>
+                            <div>
+                                <label>
+                                    <p class="fs-5 fw-semibold text-danger">@ErrorMessage</p>
+                                    @if(passwordForgot) {
+                                        <p>@Localizator["PswdIncorrectDoYouForgot"]
+                                            @Localizator["Restore1"]<a href="/Users/RestorePassword" class="link-info">@Localizator["AddressForSomething"]</a></p>
+                                    }
+                                </label>
+                            </div>
                         </div>
-                    </div>
-                } else {
-                    <p class="fs-5 fw-semibold text-danger">@Localizator["DeleteAccSure"]</p>
-                }
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="() => Close()">
-                    @Localizator["CancelButtonText"]</button>
-                <button type="button" class="btn btn-@(isDeleting ? "danger" : "primary")" data-dismiss="modal" 
-                    @onclick="SaveAsync">@(isDeleting ? Localizator["DeleteButtonText"] : Localizator["SaveButtonText"])</button>
-            </div>
+                    } else {
+                        <p class="fs-5 fw-semibold text-danger">@Localizator["DeleteAccSure"]</p>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="() => Close()">
+                        @Localizator["CancelButtonText"]</button>
+                    <button type="submit" class="btn btn-@(isDeleting ? "danger" : "primary")" data-dismiss="modal">
+                        @(isDeleting ? Localizator["DeleteButtonText"] : Localizator["SaveButtonText"])</button>
+                </div>
+            </EditForm>
         </div>
     </div>
 </div>
@@ -85,7 +94,13 @@
     private User? user;
     private User? newUser;
     private int _loggedUserId;
+    [MinLength(8)]
+    [MaxLength(64)]
+    [Required(AllowEmptyStrings = true)]
     private string? newPassword;
+    [EmailAddress]
+    [Required(AllowEmptyStrings = true)]
+    public string? newEmail { get; set; }
 
     protected override async Task OnInitializedAsync() {
         HeaderName = "Delete account?";
@@ -145,23 +160,10 @@
             ErrorMessage = "";
             var response = (await HttpClient.GetAsync($"/auth/password/isequal/{newUser!.Password}/{user!.Id}?culture={CultureInfo.CurrentCulture}"));
             if( response.IsSuccessStatusCode ) {
-                if(newUser.UserName.Length < 3) {
-                    ErrorMessage += Localizator["UpdateAccDialogueError1"];
-                    return;
-                }
-                if(!String.IsNullOrEmpty(newUser.Email)) {
-                    var index = newUser.Email.IndexOf('@');
-                    if(index == 0 || index == newUser.Email.Length-1 || index != newUser.Email.LastIndexOf('@')) {
-                        ErrorMessage += Localizator["UpdateAccDialogueError2"];
-                        return;
-                    }
-                }
-                if(!String.IsNullOrEmpty(newPassword) && newPassword.Length >= 8) {
+                if(!String.IsNullOrEmpty(newPassword))
                     newUser.Password = newPassword;
-                } else if(!String.IsNullOrEmpty(newPassword) && newPassword.Length < 8) {
-                    ErrorMessage += Localizator["UpdateAccDialogueError3"];
-                    return;
-                }
+                if(!String.IsNullOrEmpty(newEmail))
+                    newUser.Email = newEmail;
                 await UserClient.UpdateUserAsync(newUser);
                 await ReLogin();
                 StateHasChanged();

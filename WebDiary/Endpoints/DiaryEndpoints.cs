@@ -22,7 +22,7 @@ public static class DiaryEndpoints
             await dbContext.diaries.Select(diary => diary.ToDTO()).AsNoTracking().ToListAsync());
         group.MapGet("/ofgroup/{groupId}", [Authorize] async (int groupId, DiariesContext dbContext) =>
             await dbContext.diaries.Where(diary => diary.GroupId == groupId).Select(diary => diary.ToDTO()).AsNoTracking().ToListAsync());
-        group.MapGet("/{id}", [Authorize] async (int id, DiariesContext dbContext) => { 
+        group.MapGet("/{id}", [Authorize] async (int id, DiariesContext dbContext) => {
             var diary = await dbContext.diaries.FindAsync(id);
             if(diary is null) {
                 Log.Error("Search of diary by id '{ID}' was unsuccessful", id);
@@ -34,12 +34,18 @@ public static class DiaryEndpoints
         
         // mapping POST methods
         group.MapPost("/", [Authorize] async (CreateDiaryDTO createDiary, DiariesContext dbContext) => {
-            Diary diary = createDiary.ToEntity();
-            await dbContext.diaries.AddAsync(diary);
-            await dbContext.SaveChangesAsync();
-            Log.Error("Added diary with name: '{Name}' to group with id: '{Id}'", diary.Text, diary.GroupId);
+            try {
+                Diary diary = createDiary.ToEntity();
+                await dbContext.diaries.AddAsync(diary);
+                await dbContext.SaveChangesAsync();
+                Log.Information("Added diary with name: '{Name}' to group with id: '{Id}'", diary.Text, diary.GroupId);
 
-            return Results.CreatedAtRoute(getDiaryRoute, new {id = diary.Id}, diary.ToDTO());
+                return Results.CreatedAtRoute(getDiaryRoute, new {id = diary.Id}, diary.ToDTO());
+            } catch (Exception Ex) {
+                Log.Fatal("Adding Diary was failed. Creating diary data: " +
+                "{@creatingDiary} Exception text: {Exception}", createDiary, Ex);
+                return Results.Problem("Exception message: " + Ex);
+            }
         });
 
         /* mapping PUT methods

@@ -32,29 +32,41 @@ public static class GroupEndpoints
         
         // mapping POST methods
         group.MapPost("/", async (CreateGroupDTO newGroup, DiariesContext dbContext) => {
-            var group = newGroup.toEntity();
+            try {
+                var group = newGroup.toEntity();
 
-            await dbContext.diaryGroups.AddAsync(group);
-            await dbContext.SaveChangesAsync();
+                await dbContext.diaryGroups.AddAsync(group);
+                await dbContext.SaveChangesAsync();
 
-            Log.Information("Created new group with name: {Name} and id: {Id}", group.Name, group.Id);
+                Log.Information("Created new group with name: {Name} and id: {Id}", group.Name, group.Id);
 
-            return Results.CreatedAtRoute(getGroupRoute, new {id = group.Id}, group.toDTO());
+                return Results.CreatedAtRoute(getGroupRoute, new {id = group.Id}, group.toDTO());
+            } catch (Exception Ex) {
+                Log.Fatal("Adding Group was failed. New Group data: " +
+                "{@newGroup} Exception text: {Exception}", newGroup, Ex);
+                return Results.Problem("Exception message: " + Ex);
+            }
         });
 
         // mapping PUT methods
         group.MapPut("/{id}", async (int id, UpdateGroupDTO newGroup, DiariesContext dbContext) => {
-            var currentGroup = await dbContext.diaryGroups.FindAsync(id);
-            if(currentGroup is null) {
-                Log.Error("Search of group by id '{ID}' upon updating was unsuccessful", id);
-                return Results.NotFound();
-            }
+            try {
+                var currentGroup = await dbContext.diaryGroups.FindAsync(id);
+                if(currentGroup is null) {
+                    Log.Error("Search of group by id '{ID}' upon updating was unsuccessful", id);
+                    return Results.NotFound();
+                }
 
-            var group = newGroup.toEntity(id, currentGroup.UserId);
-            dbContext.diaryGroups.Entry(currentGroup).CurrentValues.SetValues(group);
-            await dbContext.SaveChangesAsync();
-            
-            return Results.NoContent();
+                var group = newGroup.toEntity(id, currentGroup.UserId);
+                dbContext.diaryGroups.Entry(currentGroup).CurrentValues.SetValues(group);
+                await dbContext.SaveChangesAsync();
+                
+                return Results.NoContent();
+            } catch (Exception Ex) {
+                Log.Fatal("Updating Group was failed. New Group data: " +
+                "{@newGroup} Exception text: {Exception}", newGroup, Ex);
+                return Results.Problem("Exception message: " + Ex);
+            }
         });
 
         // mapping DELETE methods

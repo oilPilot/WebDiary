@@ -2,6 +2,7 @@
 @using System.Globalization
 @inject NavigationManager NavigationManager
 @inject IStringLocalizer<Resources.LayoutResource> Localizator
+@inject IConfiguration config
 
 <div>
     <InputSelect @bind-value="@Culture" style="width: 100px;">
@@ -20,11 +21,11 @@
         }
         set {
             if(CultureInfo.CurrentCulture != value) {
-                var uri = new Uri(NavigationManager.Uri).GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
+                var uri = new Uri(NavigationManager.Uri).GetComponents(UriComponents.AbsoluteUri, UriFormat.Unescaped);
                 var cultureEscaped = Uri.EscapeDataString(value.Name);
                 var uriEscaped = Uri.EscapeDataString(uri);
 
-                NavigationManager.NavigateTo($"/Language/Set?culture={cultureEscaped}&redirectUri={uriEscaped}", true);
+                NavigationManager.NavigateTo($"{config["ApiConnection"]}/Language/Set?culture={cultureEscaped}&redirectUri={uriEscaped}", true);
             }
         }
     }

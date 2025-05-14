@@ -1,7 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
-namespace WebDiary.Frontend.Controllers;
+namespace WebDiary.Controllers;
 
 [Route("[controller]/[action]")]
 [ApiController]
@@ -16,6 +16,6 @@ public class LanguageController : ControllerBase
             HttpContext.Response.Cookies.Append(cookieName, cookieValue);
         }
 
-        return LocalRedirect(redirectUri);
+        return Redirect(redirectUri);
     }
 }

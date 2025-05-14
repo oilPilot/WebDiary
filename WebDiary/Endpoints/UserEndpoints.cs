@@ -37,29 +37,41 @@ public static class UserEndpoints
         
         // mapping POST methods
         group.MapPost("/", async (CreateUserDTO newUser, DiariesContext dbContext) => {
-            var user = newUser.toEntity();
+            try {
+                var user = newUser.toEntity();
 
-            await dbContext.users.AddAsync(user);
-            await dbContext.SaveChangesAsync();
+                await dbContext.users.AddAsync(user);
+                await dbContext.SaveChangesAsync();
 
-            Log.Information("Created new user with id: '{ID}' name: '{Name}'", user.Id, user.UserName);
+                Log.Information("Created new user with id: '{ID}' name: '{Name}'", user.Id, user.UserName);
 
-            return Results.CreatedAtRoute(getUserRoute, new {id = user.Id}, user.toDTO());
+                return Results.CreatedAtRoute(getUserRoute, new {id = user.Id}, user.toDTO());
+            } catch (Exception Ex) {
+                Log.Fatal("Adding User was failed. New User data: " +
+                "{@newUser} Exception text: {Exception}", newUser, Ex);
+                return Results.Problem("Exception message: " + Ex);
+            }
         });
 
         // mapping PUT methods
         group.MapPut("/{id}", async (int id, UpdateUserDTO newUser, DiariesContext dbContext) => {
-            var currentUser = await dbContext.users.FindAsync(id);
-            if(currentUser is null) {
-                Log.Error("Search of user by id '{ID}' upon updating was unsuccessful", id);
-                return Results.NotFound();
-            }
+            try {
+                var currentUser = await dbContext.users.FindAsync(id);
+                if(currentUser is null) {
+                    Log.Error("Search of user by id '{ID}' upon updating was unsuccessful", id);
+                    return Results.NotFound();
+                }
 
-            var user = newUser.toEntity(currentUser);
-            dbContext.users.Entry(currentUser).CurrentValues.SetValues(user);
-            await dbContext.SaveChangesAsync();
-            
-            return Results.NoContent();
+                var user = newUser.toEntity(currentUser);
+                dbContext.users.Entry(currentUser).CurrentValues.SetValues(user);
+                await dbContext.SaveChangesAsync();
+                
+                return Results.NoContent();
+            } catch (Exception Ex) {
+                Log.Fatal("Updating User was failed. New User data: " +
+                "{@newUser} Exception text: {Exception}", newUser, Ex);
+                return Results.Problem("Exception message: " + Ex);
+            }
         });
 
         // mapping DELETE methods

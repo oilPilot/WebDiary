@@ -45,7 +45,7 @@ public class SigninTests : TestContext
     public async Task SigninPage_ExistingUsername_ShowsError()
     {
         // Arrange
-        var mockUserClient = new Mock<UserClient>();
+        var mockUserClient = new Mock<UserClient>(new HttpClient(new MockHttpMessageHandler()));
         mockUserClient.Setup(u => u.GetUsersAsync()).ReturnsAsync(new List<User> {
             new User { UserName = "existing" }
         });
@@ -58,49 +58,57 @@ public class SigninTests : TestContext
 
         // Act
         await cut.InvokeAsync(() => cut.Instance.SignIn());
+        cut.Render();
 
         // Assert
-        Assert.Contains("UsernameAlreadyUsed", cut.Markup); // or use Localizer if returning string
+        Assert.Contains("Your username is already used by another user. Please try another username.", cut.Markup);
     }
 
     [Fact]
     public async Task SigninPage_UniqueUser_SetsMessage()
     {
         // Arrange
-        var mockUserClient = new Mock<UserClient>();
-        mockUserClient.Setup(u => u.GetUsersAsync()).ReturnsAsync(new List<User>());
-        mockUserClient.Setup(u => u.GetUserByEmailAsync(It.IsAny<string>())).ReturnsAsync(new User { Id = 123, UserName = "" });
-
-        Services.AddSingleton<UserClient>(mockUserClient.Object);
-        Services.AddSingleton<IStringLocalizer<UsersResource>>(new DummyLocalizer());
-
         var handler = new MockHttpMessageHandler((req) =>
         {
             if (req.RequestUri!.ToString().Contains("isunique"))
                 return new HttpResponseMessage(HttpStatusCode.BadRequest); // Email is unique
             return new HttpResponseMessage(HttpStatusCode.OK);
         });
-        Services.AddSingleton<HttpClient>(new HttpClient(handler));
+        var httpClient = new HttpClient(handler) { BaseAddress = new Uri("http://localhost:5281") };
+        Services.AddSingleton<HttpClient>(httpClient);
+        var mockUserClient = new Mock<UserClient>(httpClient);
+        mockUserClient.Setup(u => u.GetUsersAsync()).ReturnsAsync(new List<User>());
+        mockUserClient.Setup(u => u.GetUserByEmailAsync(It.IsAny<string>())).ReturnsAsync(new User { Id = 123, UserName = "" });
+
+        Services.AddSingleton<UserClient>(mockUserClient.Object);
+        RegisterMocks(skipUserClient: true, skipHttpClient: true);
 
         var cut = RenderComponent<Signin>();
         cut.Instance.user = new User { UserName = "newuser", Password = "pass", Email = "unique@example.com" };
 
         // Act
         await cut.InvokeAsync(() => cut.Instance.SignIn());
+        cut.Render();
 
         // Assert
-        Assert.Contains("ValidateMust", cut.Markup);
+        Assert.Contains("To use account you first must validate it in email. For that you have 5 hours. Message will soon come to your email.", cut.Markup);
     }
 
     // --------------------
     // Helper registration
     // --------------------
-    private void RegisterMocks(bool skipUserClient = false)
+    private void RegisterMocks(bool skipUserClient = false, bool skipHttpClient = false)
     {
-        Services.AddSingleton<IStringLocalizer<UsersResource>>(new DummyLocalizer());
-        Services.AddSingleton<HttpClient>(new HttpClient(new MockHttpMessageHandler()));
+        Mock<IStringLocalizer<UsersResource>>? _mockLocalizer = new Mock<IStringLocalizer<UsersResource>>();
+        _mockLocalizer.Setup(l => l["UsernameAlreadyUsed"]).Returns(new LocalizedString
+            ("UsernameAlreadyUsed", "Your username is already used by another user. Please try another username."));
+        _mockLocalizer.Setup(l => l["ValidateMust"]).Returns(new LocalizedString
+            ("ValidateMust", "To use account you first must validate it in email. For that you have 5 hours. Message will soon come to your email."));
+        Services.AddSingleton<IStringLocalizer<UsersResource>>(_mockLocalizer.Object);
+        if (!skipHttpClient)
+            Services.AddSingleton<HttpClient>(new HttpClient(new MockHttpMessageHandler()));
         if (!skipUserClient)
-            Services.AddSingleton(Mock.Of<UserClient>());
+            Services.AddSingleton<UserClient>(new UserClient( new HttpClient(new MockHttpMessageHandler()) ));
     }
 
     private class MockHttpMessageHandler : HttpMessageHandler
@@ -116,13 +124,5 @@ public class SigninTests : TestContext
         {
             return Task.FromResult(handler?.Invoke(request) ?? new HttpResponseMessage(HttpStatusCode.OK));
         }
-    }
-
-    private class DummyLocalizer : IStringLocalizer<UsersResource>
-    {
-        public LocalizedString this[string name] => new(name, name);
-        public LocalizedString this[string name, params object[] arguments] => new(name, name);
-        public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures) => Array.Empty<LocalizedString>();
-        public IStringLocalizer WithCulture(System.Globalization.CultureInfo culture) => this;
     }
 }

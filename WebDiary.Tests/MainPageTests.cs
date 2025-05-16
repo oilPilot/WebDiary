@@ -9,6 +9,7 @@ using Microsoft;
 using WebDiary.Frontend.Models;
 using WebDiary.Frontend.Components.Pages;
 using WebDiary.Frontend.Resources;
+using Bunit.TestDoubles;
 
 namespace WebDiary.Tests.Frontend;
 
@@ -17,23 +18,39 @@ public class MainPageTests : TestContext
     public MainPageTests()
     {
         // Register default services
-        Services.AddSingleton<IStringLocalizer<MainResource>>(new DummyLocalizer());
-        Services.AddSingleton<DiaryClient>(Mock.Of<DiaryClient>());
-        Services.AddSingleton<DiaryGroupClient>(Mock.Of<DiaryGroupClient>());
-        Services.AddSingleton<UserClient>(Mock.Of<UserClient>());
+        Mock<IStringLocalizer<MainResource>>? _mockLocalizer = new Mock<IStringLocalizer<MainResource>>();
+        _mockLocalizer.Setup(l => l["LoadingDiaries"]).Returns(new LocalizedString
+            ("LoadingDiaries", "Await, diaries and groups are loading..."));
+        _mockLocalizer.Setup(l => l["UnathorizedTitle"]).Returns(new LocalizedString
+            ("UnathorizedTitle", "Unauthorized"));
+        _mockLocalizer.Setup(l => l["UnathorizedText"]).Returns(new LocalizedString
+            ("UnathorizedText", "You need to login to see this page."));
+        Services.AddSingleton<IStringLocalizer<MainResource>>(_mockLocalizer.Object);
+        Services.AddSingleton<DiaryClient>(new DiaryClient(new HttpClient(), new TestAuthProvider(false)));
+        Services.AddSingleton<DiaryGroupClient>(new DiaryGroupClient(new HttpClient()));
+        Services.AddSingleton<UserClient>(new UserClient(new HttpClient()));
+        Services.AddAuthentication();
+        Services.AddAuthorization();
+        Services.AddCascadingAuthenticationState();
+        this.AddTestAuthorization();
     }
 
     [Fact]
     public void MainPage_ShowsLoading_WhenDiariesAreNull()
     {
         // Arrange: mock diary list to be null and user is validated
-        var diaryClient = new Mock<DiaryClient>();
-        var diaryGroupClient = new Mock<DiaryGroupClient>();
-        var userClient = new Mock<UserClient>();
+        Mock<IStringLocalizer<MainResource>>? _mockLocalizer = new Mock<IStringLocalizer<MainResource>>();
+        _mockLocalizer.Setup(l => l["LoadingDiaries"]).Returns(new LocalizedString
+            ("LoadingDiaries", "Await, diaries and groups are loading..."));
+        Services.AddSingleton<IStringLocalizer<MainResource>>(_mockLocalizer.Object);
+
+        var diaryClient = new Mock<DiaryClient>(new HttpClient(), new TestAuthProvider(false));
+        var diaryGroupClient = new Mock<DiaryGroupClient>(new HttpClient());
+        var userClient = new Mock<UserClient>(new HttpClient());
 
         var group = new DiaryGroup { Id = 5, Name = "Group A" };
         diaryGroupClient.Setup(c => c.GetGroupAsync(5)).ReturnsAsync(group);
-        diaryClient.Setup(c => c.GetDiariesOfGroupAsync(5)).ReturnsAsync((List<Diary>?)null);
+        diaryClient.Setup(c => c.GetDiariesOfGroupAsync(5))!.ReturnsAsync((List<Diary>?)null);
 
         var fakeUser = new User { Id = 1, IsValidated = true, UserName = "123" };
         userClient.Setup(c => c.GetUserByIdAsync(1)).ReturnsAsync(fakeUser);
@@ -47,7 +64,7 @@ public class MainPageTests : TestContext
         var cut = RenderComponent<MainPage>(parameters => parameters.Add(p => p.id, 5));
 
         // Assert
-        cut.MarkupMatches(@"<p>LoadingDiaries</p>");
+        cut.MarkupMatches(@"<p>Await, diaries and groups are loading...</p>");
     }
 
     [Fact]
@@ -59,8 +76,8 @@ public class MainPageTests : TestContext
         var cut = RenderComponent<MainPage>(parameters => parameters.Add(p => p.id, 1));
 
         // Assert
-        Assert.Contains("UnathorizedTitle", cut.Markup);
-        Assert.Contains("UnathorizedText", cut.Markup);
+        Assert.Contains("Unauthorized", cut.Markup);
+        Assert.Contains("You need to login to see this page.", cut.Markup);
     }
 
     [Fact]

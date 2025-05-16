@@ -7,18 +7,18 @@ namespace WebDiary.Frontend.Clients;
 
 public class DiaryClient(HttpClient httpClient, AuthenticationStateProvider authenticationStateProvider)
 {
-    public async Task<List<Diary>> GetDiariesAsync() {
+    virtual public async Task<List<Diary>> GetDiariesAsync() {
         var response = await ((CustomAuthenticationStateProvider)authenticationStateProvider).AuthorizedRequestAsync(() =>
             httpClient.GetAsync($"diaries"));
         return await response.Content.ReadFromJsonAsync<List<Diary>>() ?? new List<Diary>();
     }
-    public async Task<List<Diary>> GetDiariesOfGroupAsync(int groupId) {
+    virtual public async Task<List<Diary>> GetDiariesOfGroupAsync(int groupId) {
         var response = await ((CustomAuthenticationStateProvider)authenticationStateProvider).AuthorizedRequestAsync(() =>
             httpClient.GetAsync($"diaries/ofgroup/{groupId}"));
         return await response.Content.ReadFromJsonAsync<List<Diary>>() ?? new List<Diary>();
     }
         
-    public async Task<Diary> GetDiaryAsync(int id) {
+    virtual public async Task<Diary> GetDiaryAsync(int id) {
         var response = await ((CustomAuthenticationStateProvider)authenticationStateProvider).AuthorizedRequestAsync(() =>
             httpClient.GetAsync($"diaries/{id}"));
         return await response.Content.ReadFromJsonAsync<Diary>() ?? throw new Exception("Diary wasn't found");

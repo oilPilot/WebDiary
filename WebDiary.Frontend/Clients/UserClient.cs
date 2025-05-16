@@ -7,13 +7,13 @@ namespace WebDiary.Frontend.Clients;
 
 public class UserClient(HttpClient httpClient)
 {
-    public async Task<List<User>> GetUsersAsync() =>
+    virtual public async Task<List<User>> GetUsersAsync() =>
         await httpClient.GetFromJsonAsync<List<User>>("users") ?? new List<User>();
         
-    public async Task<User> GetUserByIdAsync(int id) =>
+    virtual public async Task<User> GetUserByIdAsync(int id) =>
         await httpClient.GetFromJsonAsync<User>($"users/{id}") ?? throw new Exception("User wasn't found");
         
-    public async Task<User> GetUserByEmailAsync(string email) =>
+    virtual public async Task<User> GetUserByEmailAsync(string email) =>
         await httpClient.GetFromJsonAsync<User>($"users/byemail/{email}") ?? throw new Exception("User wasn't found");
 
     public async Task AddUserAsync(User user) {

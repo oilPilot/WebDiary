@@ -7,13 +7,14 @@ This is web application built with ASP.NET Core and Blazor that allows users to 
 * Input validation
 * Serilog-based logging
 * Unit tests
+## Deployment url (for normal usage): https://webdiary-frontend.onrender.com
 
-## 🧗 Getting Started
+## 🧗 Installation on local machine
 ### Prerequisites:
 * .NET 9
 * SQL Server
 * Visual Studio / VS Code
-###Installation
+### Installation
 1. Clone the repository:
 ```
 git clone https://github.com/oilPilot/WebDiary.git

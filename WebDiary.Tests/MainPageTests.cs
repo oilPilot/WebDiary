@@ -59,6 +59,11 @@ public class MainPageTests : TestContext
         Services.AddSingleton(diaryGroupClient.Object);
         Services.AddSingleton(userClient.Object);
         Services.AddSingleton<AuthenticationStateProvider>(new TestAuthProvider(authenticated: true, userId: 1));
+        var authContext = this.AddTestAuthorization();
+        authContext.SetClaims(new[] {
+            new Claim("userId", fakeUser.Id.ToString())
+        });
+        authContext.SetAuthorized(fakeUser.UserName);
 
         // Act
         var cut = RenderComponent<MainPage>(parameters => parameters.Add(p => p.id, 5));
@@ -84,9 +89,9 @@ public class MainPageTests : TestContext
     public void MainPage_ShowsGroupedDiaries_WhenValidated()
     {
         // Arrange
-        var diaryClient = new Mock<DiaryClient>();
-        var diaryGroupClient = new Mock<DiaryGroupClient>();
-        var userClient = new Mock<UserClient>();
+        var diaryClient = new Mock<DiaryClient>(new HttpClient(), new TestAuthProvider(false));
+        var diaryGroupClient = new Mock<DiaryGroupClient>(new HttpClient());
+        var userClient = new Mock<UserClient>(new HttpClient());
 
         var group = new DiaryGroup { Id = 7, Name = "Group B" };
         var date = DateOnly.FromDateTime(DateTime.Now);
@@ -99,12 +104,19 @@ public class MainPageTests : TestContext
 
         diaryGroupClient.Setup(c => c.GetGroupAsync(7)).ReturnsAsync(group);
         diaryClient.Setup(c => c.GetDiariesOfGroupAsync(7)).ReturnsAsync(diaries);
-        userClient.Setup(c => c.GetUserByIdAsync(1)).ReturnsAsync(new User { Id = 1, IsValidated = true, UserName = "123" });
+        
+        var fakeUser = new User { Id = 1, IsValidated = true, UserName = "123" };
+        userClient.Setup(c => c.GetUserByIdAsync(1)).ReturnsAsync(fakeUser);
 
         Services.AddSingleton(diaryClient.Object);
         Services.AddSingleton(diaryGroupClient.Object);
         Services.AddSingleton(userClient.Object);
         Services.AddSingleton<AuthenticationStateProvider>(new TestAuthProvider(authenticated: true, userId: 1));
+        var authContext = this.AddTestAuthorization();
+        authContext.SetClaims(new[] {
+            new Claim("userId", fakeUser.Id.ToString())
+        });
+        authContext.SetAuthorized(fakeUser.UserName);
 
         // Act
         var cut = RenderComponent<MainPage>(parameters => parameters.Add(p => p.id, 7));

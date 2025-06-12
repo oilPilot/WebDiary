@@ -4,7 +4,8 @@
 @inject IStringLocalizer<Resources.LayoutResource> Localizator
 @inject IConfiguration config
 
-<div>
+<div style="right: 10px;position: absolute;">
+    @Localizator["LanguageText"]
     <InputSelect @bind-value="@Culture" style="width: 100px;">
         <option value="en">@Localizator["LanguageEng"]</option>
         <option value="de">@Localizator["LanguageGer"]</option>

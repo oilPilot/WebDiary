@@ -147,4 +147,7 @@
 	<data name="ValidateMust" xml:space="preserve">
 		<value>Um Ihr Konto zu nutzen, müssen Sie es zunächst per E-Mail bestätigen. Sie haben dafür 5 Stunden Zeit. Die Nachricht wird in Kürze an Ihre E-Mail-Adresse gesendet.</value>
 	</data>
+	<data name="PrerenderedTextUponLoading" xml:space="preserve">
+		<value>Daten werden geladen, warten Sie einen Moment...</value>
+	</data>
 </root>

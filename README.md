@@ -7,6 +7,7 @@ This is web application built with ASP.NET Core and Blazor that allows users to 
 * Input validation
 * Serilog-based logging
 * Unit tests
+
 ## Deployment url (for normal usage): https://webdiary-frontend.onrender.com
 
 ## 🧗 Installation on local machine

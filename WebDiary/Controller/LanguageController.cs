@@ -7,8 +7,11 @@ namespace WebDiary.Controllers;
 [ApiController]
 public class LanguageController : ControllerBase
 {
-    public IActionResult Set(string culture, string redirectUri) {
-        if(culture != null) {
+    [NonAction]
+    public IActionResult Set(string culture, string redirectUri)
+    {
+        if (culture != null)
+        {
             var requestCulture = new RequestCulture(culture, culture);
             var cookieName = CookieRequestCultureProvider.DefaultCookieName;
             var cookieValue = CookieRequestCultureProvider.MakeCookieValue(requestCulture);

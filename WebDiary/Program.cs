@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Serilog;
 using WebDiary.Data;
 using WebDiary.Endpoints;
@@ -27,6 +28,26 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 builder.Services.AddLocalization();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo()
+    {
+        Version = "v1",
+        Title = "My Diary API",
+        Description = "Simple ASP.NET Core Web API for managing personal diary entries.",
+        Contact = new OpenApiContact
+        {
+            Name = "Github url to my account",
+            Url = new Uri("https://github.com/oilPilot")
+        },
+        License = new OpenApiLicense
+        {
+            Name = "Example License",
+            Url = new Uri("https://example.com/license")
+        }
+    });
+});
 
 var app = builder.Build();
 
@@ -53,12 +74,17 @@ app.MapControllers();
 Log.Information("Added Endpoints and Controllers to app");
 
 try {
-if(app.Environment.IsDevelopment()) {
-    await app.MigrateDbAsync();
-    Log.Information("Migrated DB");
-}
+    if(app.Environment.IsDevelopment()) {
+        await app.MigrateDbAsync();
+        app.UseSwagger();
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyDiaryV1");
+        });
+        Log.Information("Migrated DB");
+    }
 
-app.Run();
+    app.Run();
 } catch(Exception Ex) {
     Log.Fatal("Catched exception upon opening app: {Exception}", Ex);
 }

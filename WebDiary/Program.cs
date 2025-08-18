@@ -75,15 +75,7 @@ app.AddGroupsEndpoints();
 app.AddUsersEndpoint();
 app.MapControllers();
 Log.Information("Added Endpoints and Controllers to app");
-    
-}
-catch (Exception Ex)
-{
-    Log.Fatal("Catched exception upon opening app: {Exception}", Ex);
-}
 
-try
-{
     if (app.Environment.IsDevelopment())
     {
         await app.MigrateDbAsync();

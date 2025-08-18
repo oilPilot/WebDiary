@@ -8,6 +8,9 @@ using Serilog;
 using WebDiary.Data;
 using WebDiary.Endpoints;
 
+try
+{
+
 var builder = WebApplication.CreateBuilder(args);
 
 var connstring = builder.Configuration.GetConnectionString("DiariesConnection");
@@ -72,9 +75,17 @@ app.AddGroupsEndpoints();
 app.AddUsersEndpoint();
 app.MapControllers();
 Log.Information("Added Endpoints and Controllers to app");
+    
+}
+catch (Exception Ex)
+{
+    Log.Fatal("Catched exception upon opening app: {Exception}", Ex);
+}
 
-try {
-    if(app.Environment.IsDevelopment()) {
+try
+{
+    if (app.Environment.IsDevelopment())
+    {
         await app.MigrateDbAsync();
         app.UseSwagger();
         app.UseSwaggerUI(c =>
@@ -85,6 +96,8 @@ try {
     }
 
     app.Run();
-} catch(Exception Ex) {
+}
+catch (Exception Ex)
+{
     Log.Fatal("Catched exception upon opening app: {Exception}", Ex);
 }

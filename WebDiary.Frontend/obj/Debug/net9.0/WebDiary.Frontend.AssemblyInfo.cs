@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("WebDiary.Frontend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f3d2340966830800b1ed30600b9b058ed9f447ba")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1f24840ebcbe0129eabc150ccc2dd44c0987dc61")]
 [assembly: System.Reflection.AssemblyProductAttribute("WebDiary.Frontend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WebDiary.Frontend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

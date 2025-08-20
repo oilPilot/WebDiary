@@ -8,9 +8,6 @@ using Serilog;
 using WebDiary.Data;
 using WebDiary.Endpoints;
 
-try
-{
-
 var builder = WebApplication.CreateBuilder(args);
 
 var connstring = builder.Configuration.GetConnectionString("DiariesConnection");
@@ -75,6 +72,9 @@ app.AddGroupsEndpoints();
 app.AddUsersEndpoint();
 app.MapControllers();
 Log.Information("Added Endpoints and Controllers to app");
+
+try
+{
 
     if (app.Environment.IsDevelopment())
     {

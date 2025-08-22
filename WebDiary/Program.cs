@@ -1,6 +1,5 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -46,6 +45,16 @@ builder.Services.AddSwaggerGen(c =>
             Name = "Example License",
             Url = new Uri("https://example.com/license")
         }
+    });
+});
+
+builder.Services.AddCors(options => {
+    options.AddPolicy("MyPolicy", policy =>
+    {
+        policy.WithOrigins(builder.Configuration["FrontendUrl"] ?? throw new Exception("FrontendUrl wasn't in configuration."))
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
 

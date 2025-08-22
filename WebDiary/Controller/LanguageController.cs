@@ -15,7 +15,12 @@ public class LanguageController : ControllerBase
             var cookieName = CookieRequestCultureProvider.DefaultCookieName;
             var cookieValue = CookieRequestCultureProvider.MakeCookieValue(requestCulture);
 
-            HttpContext.Response.Cookies.Append(cookieName, cookieValue);
+            HttpContext.Response.Cookies.Append(cookieName, cookieValue, new CookieOptions
+            {
+                Expires = DateTimeOffset.MaxValue,
+                SameSite = SameSiteMode.None,
+                Secure = true
+            });
         }
 
         return Redirect(redirectUri);

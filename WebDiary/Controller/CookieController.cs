@@ -19,7 +19,9 @@ public class CookieController : ControllerBase
         HttpContext.Response.Cookies.Append("CookieAgreement", "true", new CookieOptions
         {
             IsEssential = true,
-            Expires = DateTimeOffset.UtcNow.AddYears(1)
+            Expires = DateTimeOffset.UtcNow.AddYears(1),
+            SameSite = SameSiteMode.None,
+            Secure = true
         });
         return Redirect(redirectUri);
     }

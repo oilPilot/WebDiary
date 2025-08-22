@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using WebDiary.Frontend.Models.Auth;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
-using WebDiary.Frontend.Components;
 using Microsoft.Extensions.Localization;
 using Microsoft.AspNetCore.Localization;
 

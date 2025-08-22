@@ -36,4 +36,13 @@
 	<data name="LanguageText" xml:space="preserve">
 		<value>Spreche: </value>
 	</data>
+	<data name="CookieAgreeTitle" xml:space="preserve">
+		<value>Verwendung von Cookies</value>
+	</data>
+	<data name="CookieAgree" xml:space="preserve">
+		<value>Wir verwenden Cookies, damit die Website besser funktioniert. Durch die Anwesenheit auf der Website stimmen Sie dem zu.</value>
+	</data>
+	<data name="CookieAgreeButtonText" xml:space="preserve">
+		<value>Okay</value>
+	</data>
 </root>

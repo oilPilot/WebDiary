@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Y6AyinDGmyY=",
+  "dgSpecHash": "AwUHgLks3cE=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\WebDiary.Frontend\\WebDiary.Frontend.csproj",
+  "projectFilePath": "c:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\WebDiary.Frontend\\WebDiary.Frontend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Dock\\.nuget\\packages\\blazored.localstorage\\4.5.0\\blazored.localstorage.4.5.0.nupkg.sha512",
     "C:\\Users\\Dock\\.nuget\\packages\\blazored.sessionstorage\\2.4.0\\blazored.sessionstorage.2.4.0.nupkg.sha512",

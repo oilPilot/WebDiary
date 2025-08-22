@@ -7,7 +7,6 @@ namespace WebDiary.Controllers;
 [ApiController]
 public class LanguageController : ControllerBase
 {
-    [NonAction]
     public IActionResult Set(string culture, string redirectUri)
     {
         if (culture != null)

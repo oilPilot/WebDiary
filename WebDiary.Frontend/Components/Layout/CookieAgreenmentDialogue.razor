@@ -1,0 +1,48 @@
+﻿@using WebDiary.Frontend.Models.Auth
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IStringLocalizer<Resources.LayoutResource> Localizator
+@inject IConfiguration config
+@inject IJSRuntime JSRuntime
+
+
+<div class="modal" tabindex="-1" style="display: @ModalDisplay;">
+    <div class="modal-dialogue" role="document">
+        <div class="position-absolute bottom-0 end-0 modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">@Localizator["CookieAgreeTitle"]</h4>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" @onclick="() => Close()" />
+            </div>
+            <div class="modal-body">
+                <p>@Localizator["CookieAgree"]</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-primary" @onclick="Close">@Localizator["CookieAgreeButtonText"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if(ShowBackdrop) {
+    <div class="modal-backdrop fade show"></div>
+}
+
+@code {
+    bool ShowBackdrop = false;
+    public string ModalDisplay = "none;";
+
+    public void Open() {
+        ShowBackdrop = true;
+        ModalDisplay = "block;";
+        StateHasChanged();
+    }
+    private async Task Close() {
+        ShowBackdrop = false;
+        ModalDisplay = "none;";
+        StateHasChanged();
+
+        var uri = new Uri(NavigationManager.Uri).GetComponents(UriComponents.AbsoluteUri, UriFormat.Unescaped);
+        var uriEscaped = Uri.EscapeDataString(uri);
+        NavigationManager.NavigateTo($"{config["ApiConnection"]}/Cookie/AddCookieAgreement?redirectUri={uriEscaped}");
+    }
+}

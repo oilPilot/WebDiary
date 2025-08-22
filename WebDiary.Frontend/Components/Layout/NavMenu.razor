@@ -4,6 +4,7 @@
 @inject UserClient UserClient
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IStringLocalizer<Resources.LayoutResource> Localizator
+@inject IHttpContextAccessor HttpContextAccessor
 @rendermode InteractiveServer
 
 <div class="top-row ps-3 navbar navbar-dark">
@@ -76,8 +77,8 @@
         
         <WebDiary.Frontend.Components.Pages.ChangeGroupDialogue @ref="modal" />
         <WebDiary.Frontend.Components.Pages.Users.LogoutDialogue @ref="modalLogout" />
+        <CookieAgreenmentDialogue @ref="cookieAgreementModal" />
 
-        
     </nav>
 </div>
 
@@ -87,6 +88,7 @@
     private string? topName;
     private WebDiary.Frontend.Components.Pages.ChangeGroupDialogue? modal;
     private WebDiary.Frontend.Components.Pages.Users.LogoutDialogue? modalLogout;
+    private WebDiary.Frontend.Components.Layout.CookieAgreenmentDialogue? cookieAgreementModal;
 
     protected async override Task OnInitializedAsync() {
         topName = "Web-diary";
@@ -98,6 +100,9 @@
 
         if(firstRender) {
 
+            if(HttpContextAccessor.HttpContext?.Request.Cookies.ContainsKey("CookieAgreement") != true) {
+                cookieAgreementModal?.Open();
+            }
             var loggedUser = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
 
             if(loggedUser.Identity != null && loggedUser.Identity.IsAuthenticated) {

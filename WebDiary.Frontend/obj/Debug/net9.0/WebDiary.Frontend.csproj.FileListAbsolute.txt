@@ -229,14 +229,3 @@ A:\Projects\WebDiary\webdiary.frontend\bin\Debug\net9.0\Microsoft.IdentityModel.
 A:\Projects\WebDiary\webdiary.frontend\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll
 A:\Projects\WebDiary\webdiary.frontend\bin\Debug\net9.0\Blazored.SessionStorage.dll
 A:\Projects\WebDiary\webdiary.frontend\bin\Debug\net9.0\Blazored.LocalStorage.dll
-C:\Users\Dock\Documents\Helpers\Projects\C#\WebDiary\webdiary.frontend\bin\Debug\net9.0\WebDiary.Frontend.exe
-C:\Users\Dock\Documents\Helpers\Projects\C#\WebDiary\webdiary.frontend\bin\Debug\net9.0\WebDiary.Frontend.dll
-C:\Users\Dock\Documents\Helpers\Projects\C#\WebDiary\webdiary.frontend\bin\Debug\net9.0\WebDiary.Frontend.pdb
-C:\Users\Dock\Documents\Helpers\Projects\C#\WebDiary\webdiary.frontend\bin\Debug\net9.0\Blazored.LocalStorage.dll
-C:\Users\Dock\Documents\Helpers\Projects\C#\WebDiary\webdiary.frontend\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
-C:\Users\Dock\Documents\Helpers\Projects\C#\WebDiary\webdiary.frontend\bin\Debug\net9.0\Microsoft.IdentityModel.JsonWebTokens.dll
-C:\Users\Dock\Documents\Helpers\Projects\C#\WebDiary\webdiary.frontend\bin\Debug\net9.0\Microsoft.IdentityModel.Logging.dll
-C:\Users\Dock\Documents\Helpers\Projects\C#\WebDiary\webdiary.frontend\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.dll
-C:\Users\Dock\Documents\Helpers\Projects\C#\WebDiary\webdiary.frontend\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
-C:\Users\Dock\Documents\Helpers\Projects\C#\WebDiary\webdiary.frontend\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
-C:\Users\Dock\Documents\Helpers\Projects\C#\WebDiary\webdiary.frontend\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll

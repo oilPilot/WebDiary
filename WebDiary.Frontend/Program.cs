@@ -4,6 +4,7 @@ using WebDiary.Frontend.Models.Auth;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using WebDiary.Frontend.Components;
+using Microsoft.AspNetCore.Localization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,7 +48,9 @@ app.UseAntiforgery();
 // add localization. If changed should also be changed in Backend (error messages are working with resources).
 var supportedCultures = new[] { "en", "de"};
 var localizationOptions = new RequestLocalizationOptions().
-    SetDefaultCulture(supportedCultures[0]).AddSupportedCultures(supportedCultures).AddSupportedUICultures(supportedCultures);
+    SetDefaultCulture(supportedCultures[0])
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
 app.MapControllers();
 app.UseRequestLocalization(localizationOptions);
 

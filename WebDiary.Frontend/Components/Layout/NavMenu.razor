@@ -1,10 +1,11 @@
 ﻿@using System.Security.Claims
+@using Blazored.LocalStorage
 @using WebDiary.Frontend.Models.Auth
 @inject DiaryGroupClient DiaryGroupClient
 @inject UserClient UserClient
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IStringLocalizer<Resources.LayoutResource> Localizator
-@inject IHttpContextAccessor HttpContextAccessor
+@inject ILocalStorageService localStorage
 @rendermode InteractiveServer
 
 <div class="top-row ps-3 navbar navbar-dark">
@@ -100,9 +101,10 @@
 
         if(firstRender) {
 
-            if(HttpContextAccessor.HttpContext?.Request.Cookies.ContainsKey("CookieAgreement") != true) {
+            if(await localStorage.GetItemAsync<bool>("CookieAgreement") != true) {
                 cookieAgreementModal?.Open();
             }
+
             var loggedUser = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
 
             if(loggedUser.Identity != null && loggedUser.Identity.IsAuthenticated) {

@@ -1,8 +1,11 @@
-﻿@using Microsoft.AspNetCore.Localization
+﻿@using Blazored.LocalStorage
+@using Microsoft.AspNetCore.Localization
 @using System.Globalization
 @inject NavigationManager NavigationManager
 @inject IStringLocalizer<Resources.LayoutResource> Localizator
 @inject IConfiguration config
+@inject ILocalStorageService localStorage
+@inject IJSRuntime IJSRuntime
 
 <div style="right: 10px;position: absolute;">
     @Localizator["LanguageText"]
@@ -16,17 +19,25 @@
     protected override void OnInitialized() {
         Culture = CultureInfo.CurrentCulture;
     }
-    private CultureInfo Culture {
-        get {
-            return CultureInfo.CurrentCulture;
-        }
-        set {
-            if(CultureInfo.CurrentCulture != value) {
-                var uri = new Uri(NavigationManager.Uri).GetComponents(UriComponents.AbsoluteUri, UriFormat.Unescaped);
-                var cultureEscaped = Uri.EscapeDataString(value.Name);
-                var uriEscaped = Uri.EscapeDataString(uri);
+    private async Task OnCultureChangedAsync(CultureInfo value)
+    {
+        var uri = new Uri(NavigationManager.Uri).GetComponents(UriComponents.AbsoluteUri, UriFormat.Unescaped);
+        var cultureEscaped = Uri.EscapeDataString(value.Name);
+        var uriEscaped = Uri.EscapeDataString(uri);
 
-                NavigationManager.NavigateTo($"{config["ApiConnection"]}/Language/Set?culture={cultureEscaped}&redirectUri={uriEscaped}", true);
+        await IJSRuntime.InvokeVoidAsync("eval", $"document.cookie = '.AspNetCore.Culture=c={value.Name}|uic={value.Name}; path=/';");
+        NavigationManager.NavigateTo($"{config["ApiConnection"]}/Language/Set?culture={cultureEscaped}&redirectUri={uriEscaped}", true);
+    }
+    private CultureInfo _culture = CultureInfo.CurrentCulture;
+    private CultureInfo Culture
+    {
+        get => _culture;
+        set
+        {
+            if (_culture != value)
+            {
+                _culture = value;
+                _ = OnCultureChangedAsync(value);
             }
         }
     }

@@ -1,9 +1,8 @@
-﻿@using WebDiary.Frontend.Models.Auth
+﻿@using Blazored.LocalStorage
+@using WebDiary.Frontend.Models.Auth
 @inject NavigationManager NavigationManager
-@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IStringLocalizer<Resources.LayoutResource> Localizator
-@inject IConfiguration config
-@inject IJSRuntime JSRuntime
+@inject ILocalStorageService localStorage
 
 
 <div class="modal" tabindex="-1" style="display: @ModalDisplay;">
@@ -40,9 +39,6 @@
         ShowBackdrop = false;
         ModalDisplay = "none;";
         StateHasChanged();
-
-        var uri = new Uri(NavigationManager.Uri).GetComponents(UriComponents.AbsoluteUri, UriFormat.Unescaped);
-        var uriEscaped = Uri.EscapeDataString(uri);
-        NavigationManager.NavigateTo($"{config["ApiConnection"]}/Cookie/AddCookieAgreement?redirectUri={uriEscaped}");
+        await localStorage.SetItemAsync("CookieAgreement", true);
     }
 }

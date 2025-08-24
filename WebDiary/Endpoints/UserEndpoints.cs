@@ -15,11 +15,14 @@ public static class UserEndpoints
         var group = app.MapGroup("users");
 
         // mapping GET methods
-        group.MapGet("/", async (DiariesContext dbContext) => await dbContext.users.Select(user => user.toDTO()).AsNoTracking().ToListAsync());
+        group.MapGet("/", async (DiariesContext dbContext) => {
+            Log.Information("Getting all users");
+            return await dbContext.users.Select(user => user.toDTO()).AsNoTracking().ToListAsync();
+            });
         group.MapGet("/{id}", async (int id, DiariesContext dbContext) => {
             var user = await dbContext.users.FindAsync(id);
-                Log.Error("Search of user by id '{ID}' was unsuccessful", id);
             if(user is null) {
+                Log.Error("Search of user by id '{ID}' was unsuccessful", id);
                 return Results.NotFound();
             }
 

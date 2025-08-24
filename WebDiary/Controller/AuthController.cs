@@ -155,17 +155,18 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
             // Logic to send Email
             try {
                 using (var client = new SmtpClient()) {
-                    await client.ConnectAsync("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
+                    await client.ConnectAsync("smtp.gmail.com", 465, SecureSocketOptions.SslOnConnect);
                     await client.AuthenticateAsync(config["EmailFromSend"], config["AppPaswordForEmailAuth"]);
                     await client.SendAsync(message);
                     await client.DisconnectAsync(true);
                 }
-            } catch(Exception Ex) {
-                Log.Error("Catched exception upon sending email: {Exception}", Ex);
-            }
 
             Log.Information("Has sended email to {Email} isvalidation email: {Isvalidation}", user.Email, email.IsValidation);
             return Ok("Email sended successfully");
+            } catch(Exception Ex) {
+                Log.Error("Catched exception upon sending email: {Exception}", Ex);
+                return StatusCode(500, localizer["EmailNotSended"].Value);
+            }
     }
     [HttpPost("ResetPassword")]
     public async Task<IActionResult> ResetPasswordAsync(resetPasswordForm resetPasswordForm) {

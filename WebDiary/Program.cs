@@ -10,9 +10,11 @@ using WebDiary.Endpoints;
 var builder = WebApplication.CreateBuilder(args);
 
 var connstring = builder.Configuration.GetConnectionString("DiariesConnection");
-builder.Services.AddDbContext<DiariesContext>(options => {
+builder.Services.AddDbContext<DiariesContext>(options =>
+{
     options.UseSqlServer(connstring);
 });
+Log.Information("Configured DbContext with connection string {ConnectionString}", connstring);
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options => 
         options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters() {

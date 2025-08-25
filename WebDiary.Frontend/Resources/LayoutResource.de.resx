@@ -45,4 +45,10 @@
 	<data name="CookieAgreeButtonText" xml:space="preserve">
 		<value>Okay</value>
 	</data>
+	<data name="PrivacyPolicy" xml:space="preserve">
+		<value>Datenschutzrichtlinie</value>
+	</data>
+	<data name="TermsOfService" xml:space="preserve">
+		<value>Servicebedingungen</value>
+	</data>
 </root>

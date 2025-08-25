@@ -9,12 +9,17 @@ using WebDiary.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
+using var log = new LoggerConfiguration().WriteTo.Console().CreateLogger();
+Log.Logger = log;
+Log.Information("Global logger has been configured");
+
 var connstring = builder.Configuration.GetConnectionString("DiariesConnection");
 builder.Services.AddDbContext<DiariesContext>(options =>
 {
     options.UseSqlServer(connstring);
 });
 Log.Information("Configured DbContext with connection string {ConnectionString}", connstring);
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options => 
         options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters() {
@@ -61,10 +66,6 @@ builder.Services.AddCors(options => {
 });
 
 var app = builder.Build();
-
-using var log = new LoggerConfiguration().WriteTo.Console().CreateLogger();
-Log.Logger = log;
-Log.Information("Global logger has been configured");
 
 app.UseAuthentication();
 app.UseAuthorization();

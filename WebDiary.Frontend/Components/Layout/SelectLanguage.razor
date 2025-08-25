@@ -7,7 +7,7 @@
 @inject ILocalStorageService localStorage
 @inject IJSRuntime IJSRuntime
 
-<div style="right: 10px;position: absolute;">
+<div class="d-flex align-items-center ms-4">
     @Localizator["LanguageText"]
     <InputSelect @bind-value="@Culture" style="width: 100px;">
         <option value="en">@Localizator["LanguageEng"]</option>

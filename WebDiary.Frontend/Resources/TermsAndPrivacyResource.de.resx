@@ -1,0 +1,525 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+	<data name="TermsStart1" xml:space="preserve">
+			<value>Nutzungsbedingungen</value>
+	</data>
+	<data name="TermsStart2" xml:space="preserve">
+			<value>Letzte Aktualisierung: 25. August 2025</value>
+	</data>
+	<data name="TermsStart3" xml:space="preserve">
+			<value>Willkommen bei Webdiary (dem „Dienst“). Diese Nutzungsbedingungen („Bedingungen“) regeln Ihre Nutzung des Dienstes. Durch den Zugriff auf oder die Nutzung des Dienstes erklären Sie sich mit diesen Bedingungen einverstanden. Wenn Sie nicht einverstanden sind, dürfen Sie den Dienst nicht nutzen.</value>
+	</data>
+	<data name="TermsMain1" xml:space="preserve">
+			<value>1. Zweck des Dienstes</value>
+	</data>
+	<data name="TermsMain2" xml:space="preserve">
+			<value>Der Dienst ist eine Anwendung zum persönlichen Tagebuch- und Notizschreiben, die als Bildungs- und Demonstrationsprojekt entwickelt wurde. Er ist ausschließlich für den persönlichen Gebrauch bestimmt und nicht als kommerzielles Produkt gedacht. Der Dienst kann unvollständig, experimentell oder instabil sein.</value>
+	</data>
+	<data name="TermsMain3" xml:space="preserve">
+			<value>2. Teilnahmeberechtigung</value>
+	</data>
+	<data name="TermsMain4" xml:space="preserve">
+			<value>Sie müssen mindestens 13 Jahre alt sein, um den Dienst nutzen zu können.</value>
+	</data>
+	<data name="TermsMain5" xml:space="preserve">
+			<value>Durch die Nutzung des Dienstes bestätigen Sie, dass Sie diese Altersvoraussetzung erfüllen und geschäftsfähig sind, diesen Bedingungen zuzustimmen.</value>
+	</data>
+	<data name="TermsMain6" xml:space="preserve">
+			<value>Wenn Sie unter 18 Jahre alt sind, benötigen Sie die Zustimmung eines Elternteils oder Erziehungsberechtigten.</value>
+	</data>
+	<data name="TermsMain7" xml:space="preserve">
+			<value>3. Benutzerkonten</value>
+	</data>
+	<data name="TermsMain8" xml:space="preserve">
+			<value>Durch die Nutzung des Dienstes erklären Sie sich damit einverstanden, Folgendes nicht zu tun:</value>
+	</data>
+	<data name="TermsMain9" xml:space="preserve">
+			<value>Den Dienst nicht für rechtswidrige Zwecke zu nutzen.</value>
+	</data>
+	<data name="TermsMain10" xml:space="preserve">
+			<value>Schadcode, Spam oder Inhalte hochzuladen, die den Dienst stören könnten.</value>
+	</data>
+	<data name="TermsMain11" xml:space="preserve">
+			<value>Den Dienst nicht zurückzuentwickeln, zu dekompilieren oder auszunutzen.</value>
+	</data>
+	<data name="TermsMain12" xml:space="preserve">
+			<value>Den Dienst nicht zu nutzen, um illegale, schädliche oder anstößige Inhalte zu speichern oder zu teilen.</value>
+	</data>
+	<data name="TermsMedium1" xml:space="preserve">
+		<value>5. Geistiges Eigentum</value>
+	</data>
+	<data name="TermsMedium2" xml:space="preserve">
+		<value>Der Dienst und die zugrunde liegende Software wurden als persönliches Projekt entwickelt und bleiben geistiges Eigentum des Entwicklers.</value>
+	</data>
+	<data name="TermsMedium3" xml:space="preserve">
+		<value>Sie dürfen den Dienst ohne ausdrückliche Genehmigung nicht kopieren, verändern, verbreiten oder abgeleitete Werke erstellen.</value>
+	</data>
+	<data name="TermsMedium4" xml:space="preserve">
+		<value>Sie behalten das Eigentum an den Inhalten, die Sie erstellen und in Ihrem Konto speichern.</value>
+	</data>
+	<data name="TermsMedium5" xml:space="preserve">
+		<value>6. Verfügbarkeit und Haftungsausschluss</value>
+	</data>
+	<data name="TermsMedium6" xml:space="preserve">
+		<value>Der Dienst wird „wie besehen“ und „wie verfügbar“ ohne jegliche Gewährleistung bereitgestellt.</value>
+	</data>
+	<data name="TermsMedium7" xml:space="preserve">
+		<value>Wir übernehmen keine Garantie für unterbrechungsfreien Zugriff, fehlerfreien Betrieb oder Datensicherheit.</value>
+	</data>
+	<data name="TermsMedium8" xml:space="preserve">
+		<value>Sie nehmen zur Kenntnis, dass dieser Dienst jederzeit und ohne Vorankündigung offline gehen, eingestellt werden oder Datenverlust auftreten kann.</value>
+	</data>
+	<data name="TermsMedium9" xml:space="preserve">
+		<value>Die Nutzung des Dienstes erfolgt auf eigene Gefahr.</value>
+	</data>
+	<data name="TermsMedium10" xml:space="preserve">
+		<value>7. Haftungsbeschränkung</value>
+	</data>
+	<data name="TermsMedium11" xml:space="preserve">
+		<value>Soweit gesetzlich zulässig:</value>
+	</data>
+	<data name="TermsMedium12" xml:space="preserve">
+		<value>Der Entwickler haftet nicht für Schäden, Verluste oder Folgen, die sich aus Ihrer Nutzung des Dienstes ergeben.</value>
+	</data>
+	<data name="TermsMedium13" xml:space="preserve">
+		<value>Dies umfasst unter anderem Datenverlust, Zugriffsverlust sowie indirekte, zufällige oder Folgeschäden.</value>
+	</data>
+	<data name="TermsMedium14" xml:space="preserve">
+		<value>8. Kündigung</value>
+	</data>
+	<data name="TermsMedium15" xml:space="preserve">
+		<value>Wir behalten uns das Recht vor, Ihren Zugang zum Dienst jederzeit und ohne Vorankündigung wegen Verstößen gegen diese Bedingungen oder aus technischen Gründen zu sperren oder zu beenden.</value>
+	</data>
+	<data name="TermsMedium16" xml:space="preserve">
+		<value>Mit der Kündigung erlischt Ihr Recht zur Nutzung des Dienstes sofort.</value>
+	</data>
+	<data name="TermsEnd1" xml:space="preserve">
+		<value>9. Änderungen der Bedingungen</value>
+	</data>
+	<data name="TermsEnd2" xml:space="preserve">
+		<value>Wir können diese Bedingungen jederzeit ändern, indem wir eine aktualisierte Version innerhalb des Dienstes veröffentlichen. Indem Sie den Dienst nach Veröffentlichung der Änderungen weiterhin nutzen, stimmen Sie den aktualisierten Bedingungen zu.</value>
+	</data>
+	<data name="TermsEnd3" xml:space="preserve">
+		<value>10. Geltendes Recht</value>
+	</data>
+	<data name="TermsEnd4" xml:space="preserve">
+		<value>Diese Bedingungen unterliegen dem ukrainischen Recht. Streitigkeiten werden vor den Gerichten in der Ukraine beigelegt.</value>
+	</data>
+	<data name="TermsEnd5" xml:space="preserve">
+		<value>11. Kontaktinformationen</value>
+	</data>
+	<data name="TermsEnd6" xml:space="preserve">
+		<value>Bei Fragen zu diesen Bedingungen wenden Sie sich bitte an:</value>
+	</data>
+	<data name="TermsEnd7" xml:space="preserve">
+		<value>📧 matveyeresko1@gmail.com</value>
+	</data>
+	<data name="PrivacyHeader1" xml:space="preserve">
+		<value>Datenschutzrichtlinie</value>
+	</data>
+	<data name="PrivacyHeader2" xml:space="preserve">
+		<value>Letzte Aktualisierung: 25. August 2025</value>
+	</data>
+	<data name="PrivacyHeader3" xml:space="preserve">
+		<value>Diese Datenschutzrichtlinie beschreibt unsere Richtlinien und Verfahren zur Erhebung, Verwendung und Offenlegung Ihrer Daten bei der Nutzung des Dienstes und informiert Sie über Ihre Datenschutzrechte und Ihren gesetzlichen Schutz.</value>
+	</data>
+	<data name="PrivacyHeader4" xml:space="preserve">
+		<value>Wir verwenden Ihre personenbezogenen Daten, um den Service bereitzustellen und zu verbessern. Durch die Nutzung des Service stimmen Sie der Erfassung und Verwendung von Informationen gemäß dieser Datenschutzrichtlinie zu.</value>
+	</data>
+	<data name="PrivacyHeader5" xml:space="preserve">
+		<value>Auslegung und Definitionen</value>
+	</data>
+	<data name="PrivacyInterpretation1" xml:space="preserve">
+		<value>Auslegung</value>
+	</data>
+	<data name="PrivacyInterpretation2" xml:space="preserve">
+		<value>Die Wörter, deren Anfangsbuchstabe groß geschrieben ist, haben unter den folgenden Bedingungen die definierte Bedeutung. Die folgenden Definitionen haben unabhängig von der Einzahl oder Mehrzahl die gleiche Bedeutung.</value>
+	</data>
+	<data name="PrivacyInterpretation3" xml:space="preserve">
+		<value>Definitionen</value>
+	</data>
+	<data name="PrivacyInterpretation4" xml:space="preserve">
+		<value>Im Sinne dieser Datenschutzerklärung:</value>
+	</data>
+	<data name="PrivacyInterpretation5" xml:space="preserve">
+		<value>Konto</value>
+	</data>
+	<data name="PrivacyInterpretation6" xml:space="preserve">
+		<value>Partner</value>
+	</data>
+	<data name="PrivacyInterpretation7" xml:space="preserve">
+		<value>Unternehmen</value>
+	</data>
+	<data name="PrivacyInterpretation8" xml:space="preserve">
+		<value>Cookies</value>
+	</data>
+	<data name="PrivacyInterpretation9" xml:space="preserve">
+		<value>Land</value>
+	</data>
+	<data name="PrivacyInterpretation10" xml:space="preserve">
+		<value>Gerät</value>
+	</data>
+	<data name="PrivacyInterpretation11" xml:space="preserve">
+		<value>Personenbezogene Daten</value>
+	</data>
+	<data name="PrivacyInterpretation12" xml:space="preserve">
+		<value>Dienst</value>
+	</data>
+	<data name="PrivacyInterpretation13" xml:space="preserve">
+		<value>Dienstanbieter</value>
+	</data>
+	<data name="PrivacyInterpretation14" xml:space="preserve">
+		<value>Nutzungsdaten</value>
+	</data>
+	<data name="PrivacyInterpretation15" xml:space="preserve">
+		<value>Website</value>
+	</data>
+	<data name="PrivacyInterpretation16" xml:space="preserve">
+		<value>Sie</value>
+	</data>
+	<data name="PrivacyInterpretation17" xml:space="preserve">
+		<value> bezeichnet ein für Sie erstelltes, individuelles Konto, mit dem Sie auf unseren Dienst oder Teile unseres Dienstes zugreifen können.</value>
+	</data>
+	<data name="PrivacyInterpretation18" xml:space="preserve">
+		<value> bezeichnet ein Unternehmen, das eine Partei kontrolliert, von ihr kontrolliert wird oder mit ihr unter gemeinsamer Kontrolle steht. „Kontrolle“ bezeichnet den Besitz von mindestens 50 % der Aktien, Beteiligungen oder sonstigen Wertpapiere, die zur Wahl von Direktoren oder anderen Leitungsorganen berechtigt sind.</value>
+	</data>
+	<data name="PrivacyInterpretation19" xml:space="preserve">
+		<value> (in dieser Vereinbarung als „das Unternehmen“, „Wir“, „Uns“ oder „Unser“ bezeichnet) bezieht sich auf Webdiary.</value>
+	</data>
+	<data name="PrivacyInterpretation20" xml:space="preserve">
+		<value> sind kleine Dateien, die von einer Website auf Ihrem Computer, Mobilgerät oder einem anderen Gerät abgelegt werden und unter anderem die Details Ihres Browserverlaufs auf dieser Website enthalten.</value>
+	</data>
+	<data name="PrivacyInterpretation21" xml:space="preserve">
+		<value> bezieht sich auf: Ukraine</value>
+	</data>
+	<data name="PrivacyInterpretation22" xml:space="preserve">
+		<value> bezeichnet jedes Gerät, das auf den Dienst zugreifen kann, z. B. einen Computer, ein Mobiltelefon oder ein Tablet.</value>
+	</data>
+	<data name="PrivacyInterpretation23" xml:space="preserve">
+		<value> bezeichnet alle Informationen, die sich auf eine identifizierte oder identifizierbare Person beziehen.</value>
+	</data>
+	<data name="PrivacyInterpretation24" xml:space="preserve">
+		<value> bezieht sich auf die Website.</value>
+	</data>
+	<data name="PrivacyInterpretation25" xml:space="preserve">
+		<value> bezeichnet jede natürliche oder juristische Person, die die Daten im Auftrag des Unternehmens verarbeitet. Es bezieht sich auf Drittunternehmen oder Einzelpersonen, die vom Unternehmen beauftragt werden, den Dienst zu ermöglichen, den Dienst im Namen des Unternehmens bereitzustellen, damit verbundene Dienstleistungen zu erbringen oder das Unternehmen bei der Analyse der Nutzung des Dienstes zu unterstützen.</value>
+	</data>
+	<data name="PrivacyInterpretation26" xml:space="preserve">
+		<value> bezieht sich auf automatisch erfasste Daten, die entweder durch die Nutzung des Dienstes oder durch die Dienstinfrastruktur selbst generiert werden (z. B. die Dauer eines Seitenbesuchs).</value>
+	</data>
+	<data name="PrivacyInterpretation27" xml:space="preserve">
+		<value> bezieht sich auf Webdiary, erreichbar über</value>
+	</data>
+	<data name="PrivacyInterpretation28" xml:space="preserve">
+		<value> bezeichnet die Person, die auf den Dienst zugreift oder ihn nutzt, bzw. das Unternehmen oder eine andere juristische Person, in deren Namen diese Person auf den Dienst zugreift oder ihn nutzt.</value>
+	</data>
+	<data name="PrivacyPersonalData1" xml:space="preserve">
+		<value>Erhebung und Verwendung Ihrer personenbezogenen Daten</value>
+	</data>
+	<data name="PrivacyPersonalData2" xml:space="preserve">
+		<value>Arten der erhobenen Daten</value>
+	</data>
+	<data name="PrivacyPersonalData3" xml:space="preserve">
+		<value>Personenbezogene Daten</value>
+	</data>
+	<data name="PrivacyPersonalData4" xml:space="preserve">
+		<value>Bei der Nutzung unseres Dienstes bitten wir Sie möglicherweise um die Angabe bestimmter personenbezogener Daten, die zur Kontaktaufnahme oder Identifizierung verwendet werden können. Personenbezogene Daten können unter anderem Folgendes umfassen:</value>
+	</data>
+	<data name="PrivacyPersonalData5" xml:space="preserve">
+		<value>E-Mail-Adresse</value>
+	</data>
+	<data name="PrivacyPersonalData6" xml:space="preserve">
+		<value>Nutzungsdaten</value>
+	</data>
+	<data name="PrivacyPersonalData7" xml:space="preserve">
+		<value>Nutzungsdaten werden bei der Nutzung des Dienstes automatisch erhoben.</value>
+	</data>
+	<data name="PrivacyPersonalData8" xml:space="preserve">
+		<value>Nutzungsdaten können Informationen wie die Internetprotokolladresse Ihres Geräts (z. B. IP-Adresse), den Browsertyp, die Browserversion, die von Ihnen besuchten Seiten unseres Dienstes, Uhrzeit und Datum Ihres Besuchs, die Verweildauer auf diesen Seiten, eindeutige Gerätekennungen und andere Diagnosedaten umfassen.</value>
+	</data>
+	<data name="PrivacyPersonalData9" xml:space="preserve">
+		<value>Wenn Sie über ein Mobilgerät auf den Dienst zugreifen, erfassen wir möglicherweise automatisch bestimmte Informationen, darunter den Typ des von Ihnen verwendeten Mobilgeräts, die eindeutige ID Ihres Mobilgeräts, die IP-Adresse Ihres Mobilgeräts, Ihr mobiles Betriebssystem, den Typ des von Ihnen verwendeten mobilen Internetbrowsers, eindeutige Gerätekennungen und andere Diagnosedaten.</value>
+	</data>
+	<data name="PrivacyPersonalData10" xml:space="preserve">
+		<value>Wir erfassen möglicherweise auch Informationen, die Ihr Browser sendet, wenn Sie unseren Dienst besuchen oder über ein Mobilgerät auf den Dienst zugreifen.</value>
+	</data>
+	<data name="PrivacyPersonalData11" xml:space="preserve">
+		<value>Tracking-Technologien und Cookies</value>
+	</data>
+	<data name="PrivacyPersonalData12" xml:space="preserve">
+		<value>Wir verwenden Cookies und ähnliche Tracking-Technologien, um die Aktivitäten auf unserem Dienst zu verfolgen und bestimmte Informationen zu speichern. Zu den verwendeten Tracking-Technologien gehören Beacons, Tags und Skripte, um Informationen zu sammeln und zu verfolgen sowie unseren Service zu verbessern und zu analysieren. Zu den von uns verwendeten Technologien gehören unter anderem:</value>
+	</data>
+	<data name="PrivacyPersonalData13" xml:space="preserve">
+		<value>Cookies oder Browser-Cookies.</value>
+	</data>
+	<data name="PrivacyPersonalData14" xml:space="preserve">
+		<value> Ein Cookie ist eine kleine Datei, die auf Ihrem Gerät gespeichert wird. Sie können Ihren Browser so einstellen, dass er alle Cookies ablehnt oder Sie benachrichtigt, wenn ein Cookie gesendet wird. Wenn Sie Cookies nicht akzeptieren, können Sie möglicherweise einige Teile unseres Service nicht nutzen. Sofern Sie Ihre Browsereinstellungen nicht so angepasst haben, dass Cookies abgelehnt werden, kann unser Service Cookies verwenden.</value>
+	</data>
+	<data name="PrivacyPersonalData15" xml:space="preserve">
+		<value>Web Beacons.</value>
+	</data>
+	<data name="PrivacyPersonalData16" xml:space="preserve">
+		<value>Bestimmte Bereiche unseres Dienstes und unserer E-Mails können kleine elektronische Dateien enthalten, sogenannte Web Beacons (auch Clear Gifs, Pixel Tags und Single-Pixel Gifs genannt). Diese ermöglichen es dem Unternehmen beispielsweise, die Anzahl der Besucher dieser Seiten oder das Öffnen einer E-Mail zu zählen und andere damit verbundene Website-Statistiken zu erstellen (z. B. die Beliebtheit eines bestimmten Bereichs zu erfassen und die System- und Serverintegrität zu überprüfen).</value>
+	</data>
+	<data name="PrivacyPersonalData17" xml:space="preserve">
+		<value>Cookies können „persistente“ oder „Session-Cookies“ sein. Persistente Cookies verbleiben auf Ihrem PC oder Mobilgerät, wenn Sie offline gehen, während Session-Cookies gelöscht werden, sobald Sie Ihren Webbrowser schließen. Weitere Informationen zu Cookies finden Sie auf </value>
+	</data>
+	<data name="PrivacyPersonalData18" xml:space="preserve">
+		<value>TermsFeed-Website</value>
+	</data>
+	<data name="PrivacyPersonalData19" xml:space="preserve">
+		<value>Artikel.</value>
+	</data>
+	<data name="PrivacyPersonalData20" xml:space="preserve">
+		<value>Wir verwenden sowohl Session- als auch Persistent-Cookies für die unten aufgeführten Zwecke:</value>
+	</data>
+	<data name="PrivacyPersonalData21" xml:space="preserve">
+		<value>Notwendige Cookies</value>
+	</data>
+	<data name="PrivacyPersonalData22" xml:space="preserve">
+		<value>Typ: Session-Cookies</value>
+	</data>
+	<data name="PrivacyPersonalData23" xml:space="preserve">
+		<value>Verwaltet von: Uns</value>
+	</data>
+	<data name="PrivacyPersonalData24" xml:space="preserve">
+		<value>Zweck: Diese Cookies sind unerlässlich, um Ihnen die über die Website verfügbaren Dienste bereitzustellen und Ihnen die Nutzung einiger Funktionen zu ermöglichen. Sie helfen bei der Authentifizierung von Nutzern und verhindern die betrügerische Nutzung von Nutzerkonten. Ohne diese Cookies können die von Ihnen angeforderten Dienste nicht bereitgestellt werden. Wir verwenden diese Cookies ausschließlich, um Ihnen diese Dienste bereitzustellen.</value>
+	</data>
+	<data name="PrivacyPersonalData25" xml:space="preserve">
+		<value>Cookies zur Cookie-Richtlinie/Zustimmungserklärung</value>
+	</data>
+	<data name="PrivacyPersonalData26" xml:space="preserve">
+		<value>Typ: Dauerhafte Cookies</value>
+	</data>
+	<data name="PrivacyPersonalData27" xml:space="preserve">
+		<value>Verwaltet von: Uns</value>
+	</data>
+	<data name="PrivacyPersonalData28" xml:space="preserve">
+		<value>Zweck: Diese Cookies identifizieren, ob Nutzer die Verwendung von Cookies auf der Website akzeptiert haben.</value>
+	</data>
+	<data name="PrivacyPersonalData29" xml:space="preserve">
+		<value>Funktionalitäts-Cookies</value>
+	</data>
+	<data name="PrivacyPersonalData30" xml:space="preserve">
+		<value>Typ: Dauerhafte Cookies</value>
+	</data>
+	<data name="PrivacyPersonalData31" xml:space="preserve">
+		<value>Verwaltet von: Uns</value>
+	</data>
+	<data name="PrivacyPersonalData32" xml:space="preserve">
+		<value>Zweck: Diese Cookies ermöglichen es uns, Ihre Auswahl bei der Nutzung der Website zu speichern, z. B. Ihre Anmeldedaten oder Ihre Spracheinstellungen. Diese Cookies dienen dazu, Ihnen ein persönlicheres Erlebnis zu bieten und zu vermeiden, dass Sie Ihre Einstellungen bei jeder Nutzung der Website erneut eingeben müssen.</value>
+	</data>
+	<data name="PrivacyPersonalData33" xml:space="preserve">
+		<value>Weitere Informationen zu den von uns verwendeten Cookies und Ihren Auswahlmöglichkeiten in Bezug auf Cookies finden Sie in unserer Cookie-Richtlinie oder im Abschnitt „Cookies“ unserer Datenschutzrichtlinie.</value>
+	</data>
+	<data name="PrivacyDataUsage1" xml:space="preserve">
+		<value>Verwendung Ihrer personenbezogenen Daten</value>
+	</data>
+	<data name="PrivacyDataUsage2" xml:space="preserve">
+		<value>Das Unternehmen kann personenbezogene Daten für folgende Zwecke verwenden:</value>
+	</data>
+	<data name="PrivacyDataUsage3" xml:space="preserve">
+		<value>Zur Bereitstellung und Aufrechterhaltung unseres Dienstes</value>
+	</data>
+	<data name="PrivacyDataUsage4" xml:space="preserve">
+		<value>, einschließlich zur Überwachung der Nutzung unseres Dienstes.</value>
+	</data>
+	<data name="PrivacyDataUsage5" xml:space="preserve">
+		<value>Zur Verwaltung Ihres Kontos:</value>
+	</data>
+	<data name="PrivacyDataUsage6" xml:space="preserve">
+		<value>Zur Verwaltung Ihrer Registrierung als Nutzer des Dienstes. Die von Ihnen bereitgestellten personenbezogenen Daten können Ihnen Zugriff auf verschiedene Funktionen des Dienstes ermöglichen, die Ihnen als registrierter Nutzer zur Verfügung stehen.</value>
+	</data>
+	<data name="PrivacyDataUsage7" xml:space="preserve">
+		<value>Zur Vertragserfüllung:</value>
+	</data>
+	<data name="PrivacyDataUsage8" xml:space="preserve">
+		<value> Die Entwicklung, Einhaltung und Durchführung des Kaufvertrags für die von Ihnen erworbenen Produkte, Artikel oder Dienstleistungen oder eines anderen Vertrags mit uns über den Service.</value>
+	</data>
+	<data name="PrivacyDataUsage9" xml:space="preserve">
+		<value>Um Sie zu kontaktieren:</value>
+	</data>
+	<data name="PrivacyDataUsage10" xml:space="preserve">
+		<value>Um Sie per E-Mail, Telefon, SMS oder anderen gleichwertigen Formen der elektronischen Kommunikation zu kontaktieren, z. B. Push-Benachrichtigungen einer mobilen Anwendung über Updates oder informative Mitteilungen zu den Funktionen, Produkten oder vertraglich vereinbarten Dienstleistungen, einschließlich Sicherheitsupdates, sofern dies für deren Implementierung erforderlich oder sinnvoll ist.</value>
+	</data>
+	<data name="PrivacyDataUsage11" xml:space="preserve">
+		<value>Um Ihnen Folgendes bereitzustellen:</value>
+	</data>
+	<data name="PrivacyDataUsage12" xml:space="preserve">
+		<value> mit Neuigkeiten, Sonderangeboten und allgemeinen Informationen zu anderen von uns angebotenen Waren, Dienstleistungen und Veranstaltungen, die denen ähneln, die Sie bereits gekauft oder nach denen Sie sich erkundigt haben, es sei denn, Sie haben sich gegen den Erhalt solcher Informationen entschieden.</value>
+	</data>
+	<data name="PrivacyDataUsage13" xml:space="preserve">
+		<value>Zur Bearbeitung Ihrer Anfragen:</value>
+	</data>
+	<data name="PrivacyDataUsage14" xml:space="preserve">
+		<value>Zur Bearbeitung und Bearbeitung Ihrer Anfragen an uns.</value>
+	</data>
+	<data name="PrivacyDataUsage15" xml:space="preserve">
+		<value>Für Unternehmensübertragungen:</value>
+	</data>
+	<data name="PrivacyDataUsage16" xml:space="preserve">
+		<value> Wir können Ihre Daten verwenden, um eine Fusion, Veräußerung, Umstrukturierung, Reorganisation, Auflösung oder sonstiger Verkauf oder Übertragung einiger oder aller unserer Vermögenswerte, sei es als fortgeführtes Unternehmen oder im Rahmen eines Insolvenz-, Liquidations- oder ähnlichen Verfahrens, bei dem die von uns über unsere Servicenutzer gespeicherten personenbezogenen Daten zu den übertragenen Vermögenswerten gehören.</value>
+	</data>
+	<data name="PrivacyDataUsage17" xml:space="preserve">
+		<value>Für andere Zwecke</value>
+	</data>
+	<data name="PrivacyDataUsage18" xml:space="preserve">
+		<value>: Wir können Ihre Daten für andere Zwecke verwenden, z. B. zur Datenanalyse, zur Ermittlung von Nutzungstrends, zur Bestimmung der Wirksamkeit unserer Werbekampagnen sowie zur Bewertung und Verbesserung unseres Dienstes, unserer Produkte, Dienstleistungen, unseres Marketings und Ihres Erlebnisses.</value>
+	</data>
+	<data name="PrivacyDataUsage19" xml:space="preserve">
+		<value>Wir können Ihre personenbezogenen Daten in folgenden Situationen weitergeben:</value>
+	</data>
+	<data name="PrivacyDataUsage20" xml:space="preserve">
+		<value>Mit Dienstleistern:</value>
+	</data>
+	<data name="PrivacyDataUsage21" xml:space="preserve">
+		<value>Wir geben Ihre personenbezogenen Daten möglicherweise an Dienstleister weiter, um die Nutzung unseres Dienstes zu überwachen und zu analysieren und um mit Ihnen Kontakt aufzunehmen.</value>
+	</data>
+	<data name="PrivacyDataUsage22" xml:space="preserve">
+		<value>Bei Unternehmensübertragungen:</value>
+	</data>
+	<data name="PrivacyDataUsage23" xml:space="preserve">
+		<value>Wir geben Ihre personenbezogenen Daten möglicherweise im Zusammenhang mit oder während der Verhandlungen über eine Fusion, den Verkauf von Unternehmensvermögen, eine Finanzierung oder den Erwerb unseres gesamten oder eines Teils unseres Unternehmens durch ein anderes Unternehmen weiter.</value>
+	</data>
+	<data name="PrivacyDataUsage24" xml:space="preserve">
+		<value>Mit verbundenen Unternehmen:</value>
+	</data>
+	<data name="PrivacyDataUsage25" xml:space="preserve">
+		<value> Wir können Ihre Daten an unsere Partner weitergeben. In diesem Fall verpflichten wir diese Partner zur Einhaltung dieser Datenschutzrichtlinie. Zu den verbundenen Unternehmen zählen unsere Muttergesellschaft und alle anderen Tochtergesellschaften, Joint-Venture-Partner oder andere Unternehmen, die wir kontrollieren oder die mit uns unter gemeinsamer Kontrolle stehen.</value>
+	</data>
+	<data name="PrivacyDataUsage26" xml:space="preserve">
+		<value>Mit Geschäftspartnern:</value>
+	</data>
+	<data name="PrivacyDataUsage27" xml:space="preserve">
+		<value> Wir können Ihre Daten an unsere Geschäftspartner weitergeben, um Ihnen bestimmte Produkte, Dienstleistungen oder Werbeaktionen anzubieten.</value>
+	</data>
+	<data name="PrivacyDataUsage28" xml:space="preserve">
+		<value>Mit anderen Nutzern:</value>
+	</data>
+	<data name="PrivacyDataUsage29" xml:space="preserve">
+		<value> Wenn Sie personenbezogene Daten weitergeben oder anderweitig in den öffentlichen Bereichen mit anderen Nutzern interagieren, können diese Informationen von allen Nutzern eingesehen und öffentlich verbreitet werden.</value>
+	</data>
+	<data name="PrivacyDataUsage30" xml:space="preserve">
+		<value>Mit Ihrer Einwilligung</value>
+	</data>
+	<data name="PrivacyDataUsage31" xml:space="preserve">
+		<value>: Mit Ihrer Einwilligung können wir Ihre personenbezogenen Daten für andere Zwecke weitergeben.</value>
+	</data>
+	<data name="PrivacyDataUsage32" xml:space="preserve">
+		<value>Aufbewahrung Ihrer personenbezogenen Daten</value>
+	</data>
+	<data name="PrivacyDataUsage33" xml:space="preserve">
+		<value>Das Unternehmen speichert Ihre personenbezogenen Daten nur so lange, wie es für die in dieser Datenschutzerklärung genannten Zwecke erforderlich ist. Wir speichern und verwenden Ihre personenbezogenen Daten, soweit dies zur Erfüllung unserer gesetzlichen Verpflichtungen (z. B. wenn wir Ihre Daten zur Einhaltung geltender Gesetze aufbewahren müssen), zur Beilegung von Streitigkeiten und zur Durchsetzung unserer rechtlichen Vereinbarungen und Richtlinien erforderlich ist.</value>
+	</data>
+	<data name="PrivacyDataUsage34" xml:space="preserve">
+		<value>Das Unternehmen speichert Nutzungsdaten auch für interne Analysezwecke. Nutzungsdaten werden grundsätzlich für einen kürzeren Zeitraum gespeichert, es sei denn, diese Daten werden zur Erhöhung der Sicherheit oder zur Verbesserung der Funktionalität unseres Dienstes verwendet oder wir sind gesetzlich verpflichtet, diese Daten länger aufzubewahren.</value>
+	</data>
+	<data name="PrivacyDataUsage35" xml:space="preserve">
+		<value>Übermittlung Ihrer personenbezogenen Daten</value>
+	</data>
+	<data name="PrivacyDataUsage36" xml:space="preserve">
+		<value>Ihre Daten, einschließlich personenbezogener Daten, werden in den Geschäftsräumen des Unternehmens und an allen anderen Orten verarbeitet, an denen sich die an der Verarbeitung beteiligten Parteien befinden. Dies bedeutet, dass diese Informationen auf Computer außerhalb Ihres Bundeslandes, Ihrer Provinz, Ihres Landes oder einer anderen Rechtsordnung übertragen und dort gespeichert werden können, wo die Datenschutzgesetze von denen Ihrer Rechtsordnung abweichen können.</value>
+	</data>
+	<data name="PrivacyDataUsage37" xml:space="preserve">
+		<value>Ihre Zustimmung zu dieser Datenschutzrichtlinie und die anschließende Übermittlung dieser Informationen stellen Ihre Zustimmung zu dieser Übertragung dar.</value>
+	</data>
+	<data name="PrivacyDataUsage38" xml:space="preserve">
+		<value>Das Unternehmen ergreift alle angemessenen Maßnahmen, um sicherzustellen, dass Ihre Daten sicher und in Übereinstimmung mit dieser Datenschutzrichtlinie behandelt werden. Ihre personenbezogenen Daten werden nur dann an Organisationen oder Länder übertragen, wenn angemessene Kontrollen, einschließlich der Sicherheit Ihrer Daten und anderer personenbezogener Daten, vorhanden sind.</value>
+	</data>
+	<data name="PrivacyDataUsage39" xml:space="preserve">
+		<value>Löschen Ihrer personenbezogenen Daten</value>
+	</data>
+	<data name="PrivacyDataUsage40" xml:space="preserve">
+		<value>Sie haben das Recht, die von uns über Sie erhobenen personenbezogenen Daten zu löschen oder unsere Unterstützung bei der Löschung zu verlangen.</value>
+	</data>
+	<data name="PrivacyDataUsage41" xml:space="preserve">
+		<value>Unser Service bietet Ihnen möglicherweise die Möglichkeit, bestimmte Informationen über Sie innerhalb des Services zu löschen.</value>
+	</data>
+	<data name="PrivacyDataUsage42" xml:space="preserve">
+		<value>Sie können Ihre Daten jederzeit aktualisieren, ändern oder löschen, indem Sie sich in Ihrem Konto anmelden (falls vorhanden) und den Bereich „Kontoeinstellungen“ aufrufen, in dem Sie Ihre personenbezogenen Daten verwalten können. Sie können uns auch kontaktieren, um Zugriff auf Ihre personenbezogenen Daten zu erhalten, diese zu korrigieren oder zu löschen.</value>
+	</data>
+	<data name="PrivacyDataUsage43" xml:space="preserve">
+		<value>Bitte beachten Sie jedoch, dass wir bestimmte Informationen möglicherweise aufbewahren müssen, wenn wir dazu gesetzlich verpflichtet sind oder eine Rechtsgrundlage dafür besteht.</value>
+	</data>
+	<data name="PrivacyDataUsage44" xml:space="preserve">
+		<value>Offenlegung Ihrer personenbezogenen Daten</value>
+	</data>
+	<data name="PrivacyDataUsage45" xml:space="preserve">
+		<value>Geschäftstransaktionen</value>
+	</data>
+	<data name="PrivacyDataUsage46" xml:space="preserve">
+		<value>Wenn das Unternehmen an einer Fusion, Übernahme oder einem Verkauf von Vermögenswerten beteiligt ist, können Ihre personenbezogenen Daten übertragen werden. Wir werden Sie benachrichtigen, bevor Ihre personenbezogenen Daten übertragen werden und einer anderen Datenschutzrichtlinie unterliegen.</value>
+	</data>
+	<data name="PrivacyDataUsage47" xml:space="preserve">
+		<value>Strafverfolgung</value>
+	</data>
+	<data name="PrivacyDataUsage48" xml:space="preserve">
+		<value>Unter bestimmten Umständen kann das Unternehmen verpflichtet sein, Ihre personenbezogenen Daten offenzulegen, wenn dies gesetzlich vorgeschrieben ist oder auf berechtigte Anfragen von Behörden (z. B. Gerichten oder Regierungsbehörde) reagiert.</value>
+	</data>
+	<data name="PrivacyDataUsage49" xml:space="preserve">
+		<value>Andere rechtliche Anforderungen</value>
+	</data>
+	<data name="PrivacyDataUsage50" xml:space="preserve">
+		<value>Das Unternehmen kann Ihre personenbezogenen Daten in dem guten Glauben offenlegen, dass dies erforderlich ist, um:</value>
+	</data>
+	<data name="PrivacyDataUsage51" xml:space="preserve">
+		<value>Erfüllung einer gesetzlichen Verpflichtung</value>
+	</data>
+	<data name="PrivacyDataUsage52" xml:space="preserve">
+		<value>Schutz und Verteidigung der Rechte und des Eigentums des Unternehmens</value>
+	</data>
+	<data name="PrivacyDataUsage53" xml:space="preserve">
+		<value>Verhinderung oder Untersuchung möglicher Verstöße im Zusammenhang mit dem Dienst</value>
+	</data>
+	<data name="PrivacyDataUsage54" xml:space="preserve">
+		<value>Schutz der persönlichen Sicherheit der Nutzer des Dienstes oder der Öffentlichkeit</value>
+	</data>
+	<data name="PrivacyDataUsage55" xml:space="preserve">
+		<value>Schutz vor rechtlicher Haftung</value>
+	</data>
+	<data name="PrivacyDataUsage56" xml:space="preserve">
+		<value>Sicherheit Ihrer personenbezogenen Daten</value>
+	</data>
+	<data name="PrivacyDataUsage57" xml:space="preserve">
+		<value>Die Sicherheit Ihrer personenbezogenen Daten ist uns wichtig. Bitte beachten Sie jedoch, dass keine Methode der Internetübertragung oder elektronischen Speicherung 100 % sicher ist. Wir bemühen uns zwar, Ihre personenbezogenen Daten mit kommerziell akzeptablen Mitteln zu schützen, können jedoch keine absolute Sicherheit garantieren.</value>
+	</data>
+	<data name="PrivacyEnd1" xml:space="preserve">
+		<value>Datenschutz für Kinder</value>
+	</data>
+	<data name="PrivacyEnd2" xml:space="preserve">
+		<value>Unser Service richtet sich nicht an Personen unter 13 Jahren. Wir erheben wissentlich keine personenbezogenen Daten von Personen unter 13 Jahren. Wenn Sie ein Elternteil oder Erziehungsberechtigter sind und wissen, dass Ihr Kind uns personenbezogene Daten übermittelt hat, kontaktieren Sie uns bitte. Sollten wir feststellen, dass wir personenbezogene Daten von Personen unter 13 Jahren ohne die Zustimmung der Eltern erhoben haben, ergreifen wir Maßnahmen, um diese Informationen von unseren Servern zu entfernen.</value>
+	</data>
+	<data name="PrivacyEnd3" xml:space="preserve">
+		<value>Wenn wir für die Verarbeitung Ihrer Daten auf die Einwilligung eines Elternteils angewiesen sind und in Ihrem Land die Einwilligung eines Elternteils erforderlich ist, benötigen wir möglicherweise die Einwilligung Ihres Elternteils, bevor wir diese Daten erheben und verwenden.</value>
+	</data>
+	<data name="PrivacyEnd4" xml:space="preserve">
+		<value>Links zu anderen Websites</value>
+	</data>
+	<data name="PrivacyEnd5" xml:space="preserve">
+		<value>Unser Service kann Links zu anderen Websites enthalten, die nicht von uns betrieben werden. Wenn Sie auf einen Link eines Drittanbieters klicken, werden Sie auf die Website dieses Drittanbieters weitergeleitet. Wir empfehlen Ihnen dringend, die Datenschutzrichtlinie jeder von Ihnen besuchten Website zu lesen.</value>
+	</data>
+	<data name="PrivacyEnd6" xml:space="preserve">
+		<value>Wir haben keine Kontrolle über die Inhalte, Datenschutzrichtlinien oder Praktiken von Websites oder Diensten Dritter und übernehmen keine Verantwortung dafür.</value>
+	</data>
+	<data name="PrivacyEnd7" xml:space="preserve">
+		<value>Änderungen dieser Datenschutzrichtlinie</value>
+	</data>
+	<data name="PrivacyEnd8" xml:space="preserve">
+		<value>Wir aktualisieren unsere Datenschutzrichtlinie gegebenenfalls von Zeit zu Zeit. Wir informieren Sie über Änderungen, indem wir die neue Datenschutzrichtlinie auf dieser Seite veröffentlichen.</value>
+	</data>
+	<data name="PrivacyEnd9" xml:space="preserve">
+		<value>Wir informieren Sie per E-Mail und/oder durch einen deutlich sichtbaren Hinweis auf unserem Dienst, bevor die Änderung in Kraft tritt, und aktualisieren die „Letzte Aktualisierung“. Datum oben in dieser Datenschutzerklärung.</value>
+	</data>
+	<data name="PrivacyEnd10" xml:space="preserve">
+		<value>Wir empfehlen Ihnen, diese Datenschutzerklärung regelmäßig auf Änderungen zu überprüfen. Änderungen dieser Datenschutzerklärung treten mit ihrer Veröffentlichung auf dieser Seite in Kraft.</value>
+	</data>
+	<data name="PrivacyEnd11" xml:space="preserve">
+		<value>Kontakt</value>
+	</data>
+	<data name="PrivacyEnd12" xml:space="preserve">
+		<value>Bei Fragen zu dieser Datenschutzerklärung können Sie uns kontaktieren:</value>
+	</data>
+	<data name="PrivacyEnd13" xml:space="preserve">
+		<value>Per E-Mail: matveyeresko1@gmail.com</value>
+	</data>
+</root>

@@ -101,6 +101,7 @@
     [EmailAddress]
     [Required(AllowEmptyStrings = true)]
     public string? newEmail { get; set; }
+    private string ButtonDisabled = "";
 
     protected override async Task OnInitializedAsync() {
         HeaderName = "Delete account?";
@@ -152,6 +153,7 @@
     }
 
     private async Task SaveOrDeleteAsync() {
+        ButtonDisabled = "disabled";
         if(isDeleting) {
             await UserClient.DeleteUserAsync(_loggedUserId);
             await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).LogoutUserAsync();

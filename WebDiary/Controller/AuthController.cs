@@ -20,11 +20,33 @@ using Serilog;
 
 namespace WebDiary.Controller;
 
+// Add an interface for SmtpClient
+public interface ISmtpClient : IDisposable
+{
+    Task ConnectAsync(string host, int port, SecureSocketOptions options);
+    Task AuthenticateAsync(string userName, string password);
+    Task SendAsync(MimeMessage message);
+    Task DisconnectAsync(bool quit);
+}
+
+// Implement the interface using MailKit's SmtpClient
+public class MailKitSmtpClient : ISmtpClient
+{
+    private readonly SmtpClient _client = new SmtpClient();
+    public Task ConnectAsync(string host, int port, SecureSocketOptions options) => _client.ConnectAsync(host, port, options);
+    public Task AuthenticateAsync(string userName, string password) => _client.AuthenticateAsync(userName, password);
+    public Task SendAsync(MimeMessage message) => _client.SendAsync(message);
+    public Task DisconnectAsync(bool quit) => _client.DisconnectAsync(quit);
+    public void Dispose() => _client.Dispose();
+}
+
 [Route("auth")]
 [ApiController]
 public class AuthController (DiariesContext dbContext, IConfiguration config,
-                            IStringLocalizer<ErrorResource> localizer) : ControllerBase
+                            IStringLocalizer<ErrorResource> localizer,
+                            ISmtpClient? smtpClient = null) : ControllerBase
 {
+
     [HttpPost("jwttoken/login")]
     public async Task<IActionResult> LoginAsync(LoginModel model) {
         User? user = dbContext.users.FirstOrDefault(user => user.UserName == model.Username);
@@ -129,44 +151,57 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
     }
 
     [HttpPost("sendEmail")]
-    public async Task<IActionResult> SendEmailAsync(sendEmailForm email) {
-            if(email.userId == null) return BadRequest("user id in input was null");
-            var user = await dbContext.users.FindAsync(email.userId);
-            if(user == null) return BadRequest("user was null");
-            // Forming message to send
-            MimeMessage message = new MimeMessage();
-            message.From.Add(new MailboxAddress("MyDiary", config["EmailFromSend"]));
-            message.To.Add(new MailboxAddress("", user.Email));
-            if(email.IsValidation) {
-                message.Subject = "Validating email";
-                message.Body = new TextPart(MimeKit.Text.TextFormat.Html) {
-                    Text = $"<p>Hello, {user.UserName} to MyDiary. Before starting using app you should validate your email, for that click" +
-                           $" <a href=\"{email.CallbackUrl}\">here</a> to reset." + $"After 300 minutes this url will not be usable anymore." + 
-                           $"If it wasn't you, ignore this message</p>"
-                };
-            } else {
-                message.Subject = "Resetting password";
-                message.Body = new TextPart(MimeKit.Text.TextFormat.Html) {
-                    Text = $"<p>Hello, {user.UserName}. We have received request to reset your password in \"MyDiary\" app, click <a href=\"{email.CallbackUrl}\">here</a>" +
-                        $" to reset. After 30 minutes this url will not be usable anymore. If it wasn't you, ignore this message</p>"
-                };
-            }
+    public async Task<IActionResult> SendEmailAsync(sendEmailForm email)
+    {
+        if (email.userId == null) return BadRequest("user id in input was null");
+        var user = await dbContext.users.FindAsync(email.userId);
+        if (user == null) return BadRequest("user was null");
+        // Forming message to send
+        MimeMessage message = new MimeMessage();
+        message.From.Add(new MailboxAddress("MyDiary", config["EmailFromSend"]));
+        message.To.Add(new MailboxAddress("", user.Email));
+        if (email.IsValidation)
+        {
+            message.Subject = "Validating email";
+            message.Body = new TextPart(MimeKit.Text.TextFormat.Html)
+            {
+                Text = $"<p>Hello, {user.UserName} to MyDiary. Before starting using app you should validate your email, for that click" +
+                       $" <a href=\"{email.CallbackUrl}\">here</a> to reset." + $"After 300 minutes this url will not be usable anymore." +
+                       $"If it wasn't you, ignore this message</p>"
+            };
+        }
+        else
+        {
+            message.Subject = "Resetting password";
+            message.Body = new TextPart(MimeKit.Text.TextFormat.Html)
+            {
+                Text = $"<p>Hello, {user.UserName}. We have received request to reset your password in \"MyDiary\" app, click <a href=\"{email.CallbackUrl}\">here</a>" +
+                    $" to reset. After 30 minutes this url will not be usable anymore. If it wasn't you, ignore this message</p>"
+            };
+        }
 
-            // Logic to send Email
-            try {
-                using (var client = new SmtpClient()) {
-                    await client.ConnectAsync("smtp.gmail.com", 465, SecureSocketOptions.SslOnConnect);
-                    await client.AuthenticateAsync(config["EmailFromSend"], config["AppPaswordForEmailAuth"]);
-                    await client.SendAsync(message);
-                    await client.DisconnectAsync(true);
-                }
+        // Logic to send Email
+        try
+        {
+//            using (var client = new SmtpClient())
+//            {
+                if(smtpClient == null)
+                    smtpClient = new MailKitSmtpClient();
+                await smtpClient.ConnectAsync("smtp.gmail.com", 465, SecureSocketOptions.SslOnConnect);
+                await smtpClient.AuthenticateAsync(config["EmailFromSend"], config["AppPaswordForEmailAuth"]);
+                await smtpClient.SendAsync(message);
+                await smtpClient.DisconnectAsync(true);
+//            }
 
             Log.Information("Has sended email to {Email} isvalidation email: {Isvalidation}", user.Email, email.IsValidation);
             return Ok("Email sended successfully");
-            } catch(Exception Ex) {
-                Log.Error("Catched exception upon sending email: {Exception}", Ex);
-                return StatusCode(500, localizer["EmailNotSended"].Value);
-            }
+        }
+        catch (Exception Ex)
+        {
+            Log.Error("Catched exception upon sending email: {Exception}", Ex);
+            return StatusCode(500, localizer["EmailNotSended"].Value);
+        }
+
     }
     [HttpPost("ResetPassword")]
     public async Task<IActionResult> ResetPasswordAsync(resetPasswordForm resetPasswordForm) {

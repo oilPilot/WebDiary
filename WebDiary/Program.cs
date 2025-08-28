@@ -14,9 +14,10 @@ Log.Logger = log;
 Log.Information("Global logger has been configured");
 
 var connstring = builder.Configuration.GetConnectionString("DiariesConnection");
-builder.Services.AddDbContext<DiariesContext>(options =>
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+builder.Services.AddDbContextPool<DiariesContext>(options =>
 {
-    options.UseSqlServer(connstring);
+    options.UseNpgsql(connstring);
 });
 Log.Information("Configured DbContext with connection string {ConnectionString}", connstring);
 
@@ -35,6 +36,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 builder.Services.AddLocalization();
 builder.Services.AddEndpointsApiExplorer();
+/*
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo()
@@ -54,6 +56,7 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+*/
 
 builder.Services.AddCors(options => {
     options.AddPolicy("MyPolicy", policy =>
@@ -91,11 +94,13 @@ try
     if (app.Environment.IsDevelopment())
     {
         await app.MigrateDbAsync();
+        /* // Swagger don't work with supabase API, instead use supabase c# client library (possibly in future)
         app.UseSwagger();
         app.UseSwaggerUI(c =>
         {
             c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyDiaryV1");
-        });
+        });*/
+        Log.Information("In Development environment");
         Log.Information("Migrated DB");
     }
 

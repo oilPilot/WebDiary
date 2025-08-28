@@ -2,26 +2,29 @@
 This is web application built with ASP.NET Core and Blazor that allows users to log daily experiences, categorize them and manage entries with timestamps.
 ### Features:
 * User authentication and registration
-* Categorized diary entries to where you want
+* Categorized diary entries to named categories that you are creating
 * Automatic timestamping
 * Input validation
 * Serilog-based logging
 * Unit tests
 
-## Deployment url (for normal usage): https://webdiary-frontend.onrender.com
+## Deployment url: https://webdiary-frontend.onrender.com
 
 ## 🧗 Installation on local machine
 ### Prerequisites:
 * .NET 9
-* SQL Server
+* Postgres SQL
 * Visual Studio / VS Code
 ### Installation
 1. Clone the repository:
 ```
 git clone https://github.com/oilPilot/WebDiary.git
-cd your-repo-name
+cd WebDiary
 ```
-2. Set up the database connection string in appsettings.json.
+2. Before running the backend, configure the following secrets (using `dotnet user-secrets` or environment variables):
+	- `Jwt:Key` – Secret key for Jwt signing.
+	- `ConnectionStrings:DiariesConnection` – Database connection string.
+	- `AppPaswordForEmailAuth` – gmail app password for email authentication (you should also probably change 'EmailFromSend' in appsettings.json).
 3. Database migrations will run automatically
 4. Run the backend at ../Webdiary:
 `dotnet run`

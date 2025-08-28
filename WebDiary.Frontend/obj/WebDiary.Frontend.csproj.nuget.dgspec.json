@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\webdiary.frontend\\WebDiary.Frontend.csproj": {}
+    "C:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\WebDiary.Frontend\\WebDiary.Frontend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\webdiary.frontend\\WebDiary.Frontend.csproj": {
+    "C:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\WebDiary.Frontend\\WebDiary.Frontend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\webdiary.frontend\\WebDiary.Frontend.csproj",
+        "projectUniqueName": "C:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\WebDiary.Frontend\\WebDiary.Frontend.csproj",
         "projectName": "WebDiary.Frontend",
-        "projectPath": "C:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\webdiary.frontend\\WebDiary.Frontend.csproj",
+        "projectPath": "C:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\WebDiary.Frontend\\WebDiary.Frontend.csproj",
         "packagesPath": "C:\\Users\\Dock\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\webdiary.frontend\\obj\\",
+        "outputPath": "C:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\WebDiary.Frontend\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

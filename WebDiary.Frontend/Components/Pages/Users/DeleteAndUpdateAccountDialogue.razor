@@ -9,7 +9,7 @@
 <div class="modal" tabindex="-1" style="display: @ModalDisplay;">
     <div class="modal-dialogue" role="document">
         <div class="modal-placement modal-content" style="top: 10%;">
-            <EditForm Model="newUser" OnValidSubmit="SaveAsync" FormName="AccountDialogueForm">
+            <EditForm Model="newUser" OnValidSubmit="SaveOrDeleteAsync" FormName="AccountDialogueForm">
                 <div class="modal-header">
                     <h4 class="modal-title">@HeaderName</h4>
                     <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" @onclick="() => Close()" />
@@ -151,7 +151,7 @@
         }
     }
 
-    private async Task SaveAsync() {
+    private async Task SaveOrDeleteAsync() {
         if(isDeleting) {
             await UserClient.DeleteUserAsync(_loggedUserId);
             await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).LogoutUserAsync();

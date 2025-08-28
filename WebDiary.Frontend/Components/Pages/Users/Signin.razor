@@ -37,7 +37,7 @@
                 <ValidationMessage For="() => user.Email" />
             </div>
             <div class="mt-3">
-                <button type="submit" class="btn btn-primary">@Localizator["SignIn"]</button>
+                <button type="submit" class="btn btn-primary @ButtonDisabled">@Localizator["SignIn"]</button>
             </div>
             <div class="text-nowrap">
                 <p class="fs-5 fw-semibold text-danger">@ErrorMessage</p>
@@ -53,8 +53,10 @@
     public User? user { get; set; }
     private string ErrorMessage = "";
     private string Message = "";
+    private string ButtonDisabled = "";
     
     public async Task SignIn() {
+        ButtonDisabled = "disabled";
         ErrorMessage = "";
         List<User> users = await UserClient.GetUsersAsync();
         if( users.Any(userDb => userDb.UserName == user!.UserName)) {

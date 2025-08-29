@@ -51,4 +51,7 @@
 	<data name="TermsOfService" xml:space="preserve">
 		<value>Terms of service</value>
 	</data>
+	<data name="AwakeningBackend" xml:space="preserve">
+		<value>Waking up backend, please wait...</value>
+	</data>
 </root>

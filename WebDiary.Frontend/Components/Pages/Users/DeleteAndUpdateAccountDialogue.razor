@@ -69,9 +69,9 @@
                     }
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="() => Close()">
+                    <button type="button" class="btn btn-secondary @ButtonDisabled" data-dismiss="modal" @onclick="() => Close()">
                         @Localizator["CancelButtonText"]</button>
-                    <button type="submit" class="btn btn-@(isDeleting ? "danger" : "primary")" data-dismiss="modal">
+                    <button type="submit" class="btn btn-@(isDeleting ? "danger" : "primary") @ButtonDisabled" data-dismiss="modal">
                         @(isDeleting ? Localizator["DeleteButtonText"] : Localizator["SaveButtonText"])</button>
                 </div>
             </EditForm>

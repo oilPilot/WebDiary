@@ -5,6 +5,7 @@ using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using WebDiary.Frontend.Components;
 using Microsoft.AspNetCore.Localization;
+using Blazored.SessionStorage;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,7 @@ builder.Services.AddScoped<DiaryGroupClient>();
 builder.Services.AddScoped<DiaryClient>();
 builder.Services.AddScoped<UserClient>();
 builder.Services.AddBlazoredLocalStorage();
+builder.Services.AddBlazoredSessionStorage();
 
 builder.Services.AddLocalization();
 builder.Services.AddControllers();

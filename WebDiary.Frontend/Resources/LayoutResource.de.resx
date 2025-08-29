@@ -51,4 +51,7 @@
 	<data name="TermsOfService" xml:space="preserve">
 		<value>Servicebedingungen</value>
 	</data>
+	<data name="AwakeningBackend" xml:space="preserve">
+		<value>Backend wird aktiviert, bitte warten...</value>
+	</data>
 </root>

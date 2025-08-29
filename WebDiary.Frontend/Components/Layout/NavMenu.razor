@@ -97,8 +97,6 @@
     }
 
     protected async override Task OnAfterRenderAsync(bool firstRender) {
-        await base.OnAfterRenderAsync(firstRender);
-
         if(firstRender) {
 
             if(await localStorage.GetItemAsync<bool>("CookieAgreement") != true) {
@@ -121,6 +119,7 @@
 
             StateHasChanged();
         }
+        await base.OnAfterRenderAsync(firstRender);
     }
 
 }

@@ -80,7 +80,7 @@ var localizationOptions = new RequestLocalizationOptions().
 app.UseRequestLocalization(localizationOptions);
 Log.Information("Added Localization to app");
 
-app.MapGet("/", () => "Hello World!");
+app.MapGet("/health", () => "Healthy!");
 
 app.AddDiariesEndpoints();
 app.AddGroupsEndpoints();

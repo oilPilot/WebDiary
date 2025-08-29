@@ -99,8 +99,6 @@
         await base.OnParametersSetAsync();
     }
     protected async override Task OnAfterRenderAsync(bool firstRender) {
-        await base.OnAfterRenderAsync(firstRender);
-
         if(firstRender) {
 
             var loggedUser = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
@@ -115,6 +113,7 @@
 
             StateHasChanged();
         }
+        await base.OnAfterRenderAsync(firstRender);
     }
 
     private void RedirectTo404() {

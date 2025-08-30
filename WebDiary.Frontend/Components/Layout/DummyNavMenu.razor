@@ -1,0 +1,29 @@
+﻿@inject IStringLocalizer<Resources.LayoutResource> Localizator
+
+<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">Web-diary</a>
+    </div>
+</div>
+
+<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+
+<div class="nav-scrollable">
+    <nav class="nav flex-column">
+        <div class="nav-item px-3 d-flex">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> @Localizator["HomeTitle"]
+            </NavLink>
+        </div>
+        <div class="nav-item px-3 d-flex">
+            <NavLink class="nav-link" href="/Users/Signin" Match="NavLinkMatch.All">
+                <span class="bi bi-person-add-nav-menu" aria-hidden="true"></span> @Localizator["SigninTitle"]
+            </NavLink>
+        </div>
+        <div class="nav-item px-3 d-flex">
+            <NavLink class="nav-link" href="/Users/Login" Match="NavLinkMatch.All">
+                <span class="bi bi-person-check-nav-menu" aria-hidden="true"></span> @Localizator["LoginTitle"]
+            </NavLink>
+        </div>
+    </nav>
+</div>

@@ -59,9 +59,14 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
         NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
     }
     public async Task LogoutUserAsync() {
-        await _localStorage.RemoveItemAsync("token");
-        await _localStorage.RemoveItemAsync("refreshToken");
-        NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+        try {
+            await _localStorage.RemoveItemAsync("token");
+            await _localStorage.RemoveItemAsync("refreshToken");
+            NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+        } catch (Exception ex)
+        {
+            Console.WriteLine($"Logout error: {ex.Message}");
+        }
     }
 
     public async Task<bool> CheckTokenExpiration() {

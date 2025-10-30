@@ -415,7 +415,6 @@ C:\Users\Dock\Documents\Helpers\Projects\C#\WebDiary\WebDiary.Frontend\obj\Debug
 C:\Users\Dock\Documents\Helpers\Projects\C#\WebDiary\WebDiary.Frontend\obj\Debug\net9.0\compressed\9r0r98btet-a4up2uw0tv.gz
 C:\Users\Dock\Documents\Helpers\Projects\C#\WebDiary\WebDiary.Frontend\obj\Debug\net9.0\compressed\89ck7ou394-kpd7afrm3x.gz
 C:\Users\Dock\Documents\Helpers\Projects\C#\WebDiary\WebDiary.Frontend\obj\Debug\net9.0\compressed\ozn1lep45v-qld0oq7jqb.gz
-C:\Users\Dock\Documents\Helpers\Projects\C#\WebDiary\WebDiary.Frontend\obj\Debug\net9.0\compressed\0xf8g64pek-puidgft5hc.gz
 C:\Users\Dock\Documents\Helpers\Projects\C#\WebDiary\WebDiary.Frontend\obj\Debug\net9.0\compressed\9fkz0issx5-bqjiyaj88i.gz
 C:\Users\Dock\Documents\Helpers\Projects\C#\WebDiary\WebDiary.Frontend\obj\Debug\net9.0\compressed\4s8mar1kas-c2jlpeoesf.gz
 C:\Users\Dock\Documents\Helpers\Projects\C#\WebDiary\WebDiary.Frontend\obj\Debug\net9.0\compressed\apg5cbkg4x-erw9l3u2r3.gz
@@ -472,3 +471,7 @@ C:\Users\Dock\Documents\Helpers\Projects\C#\WebDiary\WebDiary.Frontend\obj\Debug
 C:\Users\Dock\Documents\Helpers\Projects\C#\WebDiary\WebDiary.Frontend\obj\Debug\net9.0\WebDiary.Frontend.pdb
 C:\Users\Dock\Documents\Helpers\Projects\C#\WebDiary\WebDiary.Frontend\obj\Debug\net9.0\WebDiary.Frontend.genruntimeconfig.cache
 C:\Users\Dock\Documents\Helpers\Projects\C#\WebDiary\WebDiary.Frontend\obj\Debug\net9.0\ref\WebDiary.Frontend.dll
+C:\Users\Dock\Documents\Helpers\Projects\C#\WebDiary\webdiary.frontend\bin\Debug\net9.0\Blazored.TextEditor.dll
+C:\Users\Dock\Documents\Helpers\Projects\C#\WebDiary\webdiary.frontend\obj\Debug\net9.0\compressed\vy897fugvk-dj4raj0v6v.gz
+C:\Users\Dock\Documents\Helpers\Projects\C#\WebDiary\webdiary.frontend\obj\Debug\net9.0\compressed\6b8qd2c12s-06wjpxauos.gz
+C:\Users\Dock\Documents\Helpers\Projects\C#\WebDiary\webdiary.frontend\obj\Debug\net9.0\compressed\0xf8g64pek-8a943yixqv.gz

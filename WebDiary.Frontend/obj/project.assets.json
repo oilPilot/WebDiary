@@ -26,6 +26,25 @@
           "lib/net7.0/Blazored.SessionStorage.dll": {}
         }
       },
+      "Blazored.TextEditor/1.1.3": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNetCore.Components": "3.1.0",
+          "Microsoft.AspNetCore.Components.Web": "3.1.0"
+        },
+        "compile": {
+          "lib/net9.0/Blazored.TextEditor.dll": {}
+        },
+        "runtime": {
+          "lib/net9.0/Blazored.TextEditor.dll": {}
+        },
+        "build": {
+          "buildTransitive/Blazored.TextEditor.props": {}
+        },
+        "buildMultiTargeting": {
+          "buildMultiTargeting/Blazored.TextEditor.props": {}
+        }
+      },
       "BootstrapBlazor/9.4.2": {
         "type": "package",
         "dependencies": {
@@ -766,6 +785,27 @@
         "icon.png",
         "lib/net6.0/Blazored.SessionStorage.dll",
         "lib/net7.0/Blazored.SessionStorage.dll"
+      ]
+    },
+    "Blazored.TextEditor/1.1.3": {
+      "sha512": "0uCJwccQhuTP3bJ4jyYxLyXhKlxLhGXYt+NEWohuMtOGGDCvbKFKBVtQNjT86dUguNAYQi5V2p5v2l/BtFLXig==",
+      "type": "package",
+      "path": "blazored.texteditor/1.1.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "blazored.texteditor.1.1.3.nupkg.sha512",
+        "blazored.texteditor.nuspec",
+        "build/Blazored.TextEditor.props",
+        "build/Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+        "build/Microsoft.AspNetCore.StaticWebAssets.props",
+        "buildMultiTargeting/Blazored.TextEditor.props",
+        "buildTransitive/Blazored.TextEditor.props",
+        "icon.png",
+        "lib/net9.0/Blazored.TextEditor.dll",
+        "lib/netstandard2.0/Blazored.TextEditor.dll",
+        "staticwebassets/Blazored-BlazorQuill.js",
+        "staticwebassets/quill-blot-formatter.min.js"
       ]
     },
     "BootstrapBlazor/9.4.2": {
@@ -1890,6 +1930,7 @@
     "net9.0": [
       "Blazored.LocalStorage >= 4.5.0",
       "Blazored.SessionStorage >= 2.4.0",
+      "Blazored.TextEditor >= 1.1.3",
       "BootstrapBlazor >= 9.4.2",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 9.0.2",
       "Microsoft.AspNetCore.Components.Authorization >= 9.0.3"
@@ -1902,11 +1943,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\WebDiary.Frontend\\WebDiary.Frontend.csproj",
+      "projectUniqueName": "C:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\webdiary.frontend\\WebDiary.Frontend.csproj",
       "projectName": "WebDiary.Frontend",
-      "projectPath": "C:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\WebDiary.Frontend\\WebDiary.Frontend.csproj",
+      "projectPath": "C:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\webdiary.frontend\\WebDiary.Frontend.csproj",
       "packagesPath": "C:\\Users\\Dock\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\WebDiary.Frontend\\obj\\",
+      "outputPath": "C:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\webdiary.frontend\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -1952,6 +1993,10 @@
           "Blazored.SessionStorage": {
             "target": "Package",
             "version": "[2.4.0, )"
+          },
+          "Blazored.TextEditor": {
+            "target": "Package",
+            "version": "[1.1.3, )"
           },
           "BootstrapBlazor": {
             "target": "Package",

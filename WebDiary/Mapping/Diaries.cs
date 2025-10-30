@@ -11,7 +11,8 @@ public static class Diaries
             Text = diaryDTO.Text,
             Date = DateOnly.FromDateTime(DateTime.Now),
             Time = TimeOnly.FromDateTime(DateTime.Now),
-            GroupId = diaryDTO.GroupId
+            GroupId = diaryDTO.GroupId,
+            mood = diaryDTO.mood ?? ""
         };
     }
     public static DiaryDTO ToDTO(this Diary diary) {
@@ -20,7 +21,8 @@ public static class Diaries
             Text = diary.Text,
             Date = diary.Date,
             Time = diary.Time,
-            GroupId = diary.GroupId
+            GroupId = diary.GroupId,
+            mood = diary.mood
         };
     }
 }

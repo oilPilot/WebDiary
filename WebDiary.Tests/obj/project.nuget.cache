@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "1pk1zNVSDbQ=",
+  "dgSpecHash": "Z/Ci+gwXEqA=",
   "success": true,
   "projectFilePath": "C:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\WebDiary.Tests\\WebDiary.Tests.csproj",
   "expectedPackageFiles": [
@@ -9,6 +9,7 @@
     "C:\\Users\\Dock\\.nuget\\packages\\anglesharp.diffing\\1.0.0\\anglesharp.diffing.1.0.0.nupkg.sha512",
     "C:\\Users\\Dock\\.nuget\\packages\\blazored.localstorage\\4.5.0\\blazored.localstorage.4.5.0.nupkg.sha512",
     "C:\\Users\\Dock\\.nuget\\packages\\blazored.sessionstorage\\2.4.0\\blazored.sessionstorage.2.4.0.nupkg.sha512",
+    "C:\\Users\\Dock\\.nuget\\packages\\blazored.texteditor\\1.1.3\\blazored.texteditor.1.1.3.nupkg.sha512",
     "C:\\Users\\Dock\\.nuget\\packages\\bootstrapblazor\\9.4.2\\bootstrapblazor.9.4.2.nupkg.sha512",
     "C:\\Users\\Dock\\.nuget\\packages\\bouncycastle.cryptography\\2.5.1\\bouncycastle.cryptography.2.5.1.nupkg.sha512",
     "C:\\Users\\Dock\\.nuget\\packages\\bunit\\1.39.5\\bunit.1.39.5.nupkg.sha512",

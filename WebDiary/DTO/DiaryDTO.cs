@@ -9,6 +9,7 @@ public record class DiaryDTO
     public DateOnly Date { get; set; }
     public TimeOnly Time { get; set; }
     public int GroupId { get; set; }
+    public required string mood { get; set; }
 }
 
 public record class CreateDiaryDTO
@@ -17,4 +18,6 @@ public record class CreateDiaryDTO
     public required string Text { get; set; }
     [Required]
     public int GroupId { get; set; } = 1;
+    [Required]
+    public required string mood { get; set; }
 }

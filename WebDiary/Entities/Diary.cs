@@ -11,4 +11,5 @@ public class Diary
     public TimeOnly Time { get; set; }
     public int GroupId { get; set; }
     public DiaryGroup? Group { get; set; }
+    public required string mood { get; set; }
 }

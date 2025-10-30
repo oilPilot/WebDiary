@@ -9,4 +9,5 @@ public class Diary
     public DateOnly Date { get; set; }
     public TimeOnly Time { get; set; }
     public required int GroupId { get; set; }
+    public string? mood { get; set; }
 }

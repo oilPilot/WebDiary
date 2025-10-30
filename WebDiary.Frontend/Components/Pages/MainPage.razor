@@ -29,12 +29,12 @@
                             @foreach(var diary in diaries.Where(diary => diary.Date == date)) {
                                 <li class="ms-2 collapse nonumeration" id="@date">
                                     <ol>
-                                        <p>@diary.Time
+                                        <p>@diary.Time @diary.mood
                                         <button class="btn btn-outline-secondary" data-bs-toggle="collapse"
                                             data-bs-target="#@diary.Id">@Localizator["CollapseInMainPage"]</button>
                                         </p>
                                         <li class="ms-4 nonumeration collapse" id="@diary.Id">
-                                            <p class="new-line-work">@diary.Text</p>
+                                            <p class="new-line-work">@((MarkupString)diary.Text)</p>
                                         </li>
                                     </ol>
                                 </li>
@@ -43,9 +43,57 @@
                         }
                     </div>
                     <EditForm Model="diary" OnValidSubmit="AddDiaryAsync" FormName="SendDiary" class="footer">
-                        <div class="d-flex mb-2 me-2 ms-2" style="height: 60px;">
-                            <InputTextArea @bind-value="diary!.Text" class="form-control bg-secondary no-resize" style="--bs-bg-opacity: .33;" />
-                            <button class="btn btn-secondary ms-2" type="submit">@Localizator["MainPageButtonText"]</button>
+                        <div class="mb-2 me-2 ms-2" style="height: 100px;">
+                            <BlazoredTextEditor @ref="@richEditor" Placeholder="Please, enter what you think currently">
+                                <ToolbarContent>
+                                    <select class="ql-header">
+                                        <option selected=""></option>
+                                        <option value="1"></option>
+                                        <option value="2"></option>
+                                        <option value="5"></option>
+                                    </select>
+                                    <span class="ql-formats">
+                                        <button class="ql-bold"></button>
+                                        <button class="ql-italic"></button>
+                                        <button class="ql-underline"></button>
+                                        <button class="ql-strike"></button>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <select class="ql-color"></select>
+                                        <select class="ql-background"></select>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <button class="ql-list" value="ordered"></button>
+                                        <button class="ql-list" value="bullet"></button>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <button class="ql-link"></button>
+                                    </span>
+                                </ToolbarContent>
+                                <EditorContent>
+                                    
+                                </EditorContent>
+                            </BlazoredTextEditor>
+                            <div>
+                                <button class="btn btn-secondary ms-2" type="submit">@Localizator["MainPageButtonText"]</button>
+                                <select @bind="diary.mood">
+                                    <option value="—">you can select mood</option>
+                                    <option value="🙂">🙂</option>
+                                    <option value="😁">😁</option>
+                                    <option value="😌">😌</option>
+                                    <option value="🤔">🤔</option>
+                                    <option value="😴">😴</option>
+                                    <option value="😐">😐</option>
+                                    <option value="😥">😥</option>
+                                    <option value="😳">😳</option>
+                                    <option value="😔">😔</option>
+                                    <option value="😤">😤</option>
+                                    <option value="😱">😱</option>
+                                    <option value="🤬">🤬</option>
+                                    <option value="(^▽^)">(^▽^)</option>
+                                    <option value="(づ｡ ◕‿‿◕｡) づ">(づ｡ ◕‿‿◕｡) づ</option>
+                                </select>
+                            </div>
                         </div>
                     </EditForm>
                 } else {
@@ -66,6 +114,7 @@
 @code {
     [Parameter]
     public int? id { get; set; }
+    public BlazoredTextEditor richEditor { get; set;}
     private WebDiary.Frontend.Components.Pages.CheckPinGroupDialogue? modalPin;
 
     private List<Diary>? diaries;
@@ -132,6 +181,7 @@
         PageTitle = group.Name;
     }
     async Task AddDiaryAsync() {
+        diary.Text = await richEditor.GetHTML();
         await DiaryClient.AddDiaryAsync(diary!);
         StateHasChanged();
         NavigationManager.Refresh(true);

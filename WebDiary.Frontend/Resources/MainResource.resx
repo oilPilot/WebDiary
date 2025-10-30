@@ -99,4 +99,19 @@
   	<data name="ErrorPageMainTextPart6" xml:space="preserve">
 		<value>and restarting the app.</value>
 	</data>
+  	<data name="ChangePinGroup1" xml:space="preserve">
+		<value>Set PIN-Code of this group (Warning: you can't later change it if you forget it):</value>
+	</data>
+  	<data name="ChangePinGroup2" xml:space="preserve">
+		<value>Confirm current set PIN-Code:</value>
+	</data>
+  	<data name="ChangePinGroup3" xml:space="preserve">
+		<value>Previus PIN-Code are different. Did you correctly writed it?</value>
+	</data>
+  	<data name="CheckPinGroup1" xml:space="preserve">
+		<value>This group have PIN-Code, please enter it to see material.</value>
+	</data>
+  	<data name="EnterButtonText" xml:space="preserve">
+		<value>Try</value>
+	</data>
 </root>

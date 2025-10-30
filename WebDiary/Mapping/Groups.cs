@@ -16,13 +16,15 @@ public static class Groups
         return new DiaryGroup() {
             Id = id,
             Name = newGroup.Name,
-            UserId = userId
+            UserId = userId,
+            PinCode = newGroup.PinCode ?? ""
         };
     }
     public static GroupDTO toDTO(this DiaryGroup group) {
         return new GroupDTO {
             Id = group.Id,
-            Name = group.Name
+            Name = group.Name,
+            PinCode = group.PinCode ?? ""
         };
     }
 }

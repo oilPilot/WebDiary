@@ -16,11 +16,6 @@
             <p>@Localizator["ManageAccountName"]@context.User.Identity!.Name</p>
             <p>@Localizator["ManageAccountRole"]@context.User.FindFirstValue(ClaimTypes.Role)</p>
             <p>@Localizator["ManageAccountDesc"]@context.User.FindFirstValue(ClaimTypes.UserData)</p>
-            @if(@isValidated) {
-                <p>@Localizator["ManageAccountValid"]</p>
-            } else {
-                <p>@Localizator["ManageAccountNotValid"]</p>
-            }
             <button type="button" class="btn btn-outline-secondary" @onclick="Login">@Localizator["IntoAnotherAcc"]</button>
             <button type="button" class="btn btn-outline-secondary" @onclick="() => modalAccount!.OpenForUpdatingAsync(loggedUserId)"
                 >@Localizator["ModifyAcc"]</button>
@@ -30,6 +25,11 @@
             <AuthorizeView Roles="Admin" Context="AdminContext">
                 <Authorized>
                     <p>You are Admin!</p>
+                    @if(@isValidated) {
+                        <p>@Localizator["ManageAccountValid"]</p>
+                    } else {
+                        <p>@Localizator["ManageAccountNotValid"]</p>
+                    }
                 </Authorized>
             </AuthorizeView>
         } else {

@@ -1,8 +1,7 @@
 ﻿@using System.Security.Claims
+@using System.Text.RegularExpressions
 @inject DiaryGroupClient DiaryGroupClient
 @inject NavigationManager NavigationManager
-@inject AuthenticationStateProvider AuthenticationStateProvider
-@inject UserClient UserClient
 @inject IStringLocalizer<Resources.MainResource> Localizator
 
 <div class="modal" tabindex="-1" style="display: @ModalDisplay;">
@@ -13,21 +12,19 @@
                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" @onclick="() => Close()" />
             </div>
             <div class="modal-body">
-                @if(!isDeleting) {
-                    <p>@Localizator["CreateGroupVar1"]</p>
-                    <InputText class="full-width" @bind-Value="group!.Name"></InputText>
-                } else{
-                    <p class="fs-5 fw-semibold text-danger">@Localizator["DeleteGroupPart1"]@group!.Name@Localizator["DeleteGroupPart2"]</p>
+                <p>@Localizator["ChangePinGroup1"]</p>
+                <InputText type="password"  class="full-width" @bind-Value="group!.PinCode"></InputText>
+                @if(!String.IsNullOrEmpty(firstPin)) {
+                    <p>@Localizator["ChangePinGroup2"]</p>
+                    <InputText type="password" class="full-width" @bind-Value="writedFirstPin"></InputText>
                 }
             </div>
             <div class="modal-footer">
-                @if(!@isValidated) {
-                    <p>@Localizator["NotValidatedText"]</p>
-                }
+                <p class="fs-5 fw-semibold text-danger">@ErrorMessage</p>
                 <button type="button" class="btn btn-secondary"
                     data-dismiss="modal" @onclick="() => Close()">@Localizator["CancelButtonText"]</button>
-                <button type="button" class="btn btn-@(isDeleting ? "danger" : "primary") @(isValidated ? "" : "disabled")"
-                    @onclick="SaveAsync">@(isDeleting ? Localizator["DeleteButtonText"] : Localizator["SaveButtonText"])</button>
+                <button type="button" class="btn btn-primary @(isValidated ? "" : "disabled")"
+                    @onclick="SaveAsync">@Localizator["SaveButtonText"]</button>
             </div>
         </div>
     </div>
@@ -44,17 +41,19 @@
     public string ModalDisplay = "none;";
     public bool ShowBackdrop = false;
     private string? HeaderName;
-    private bool isDeleting;
-    private bool isValidated;
+    private bool isValidated = true;
+    private string firstPin;
+    private string? writedFirstPin;
+    private string? ErrorMessage;
 
     protected async override Task OnInitializedAsync() {
         group = new() {
             Name = ""
         };
-        isDeleting = false;
 
         await base.OnInitializedAsync();
     }
+    /* No need to extract validation (not exists)
     protected async override Task OnAfterRenderAsync(bool firstRender) {
         if(firstRender) {
 
@@ -71,50 +70,34 @@
         
         await base.OnAfterRenderAsync(firstRender);
     }
+    */
 
     private async Task SaveAsync() {
         ArgumentNullException.ThrowIfNull(group);
-        if(HeaderName == "Add thematic group") {
-            await DiaryGroupClient.AddGroupAsync(group);
-            NavigationManager.NavigateTo("/", true);
-        } else if(isDeleting) {
-            await DiaryGroupClient.DeleteGroupAsync(group.Id);
-            NavigationManager.NavigateTo("/", true);
-        } else {
-            await DiaryGroupClient.UpdateGroupAsync(group);
-            NavigationManager.Refresh(true);
+
+        ErrorMessage = "";
+        if(!String.IsNullOrEmpty(firstPin)) {
+            if(writedFirstPin != firstPin) {
+                ErrorMessage = Localizator["ChangePinGroup3"];
+                return;
+            }
         }
+        await DiaryGroupClient.UpdateGroupAsync(group);
+        NavigationManager.NavigateTo("/", true);
     }
 
-    public void Open(int loggedUserId) {
+    public void Open(DiaryGroup _group) {
         ModalDisplay = "block;";
         ShowBackdrop = true;
-        HeaderName = "Add thematic group";
-        group = new() {
-            Name = "",
-            UserId = loggedUserId
-        };
-        StateHasChanged();
-    }
-    public void OpenForEditing(DiaryGroup _group) {
-        ModalDisplay = "block;";
-        ShowBackdrop = true;
+        HeaderName = "Add pin to group";
+        firstPin = _group.PinCode ?? "";
         group = _group;
-        HeaderName = $"Editing group \"{group.Name}\"";
-        StateHasChanged();
-    }
-    public void OpenForDeleting(DiaryGroup _group) {
-        ModalDisplay = "block;";
-        ShowBackdrop = true;
-        group = _group;
-        isDeleting = true;
-        HeaderName = $"Deleting group \"{group.Name}\"";
+        group.PinCode = "";
         StateHasChanged();
     }
     private void Close() {
         ModalDisplay = "none;";
         ShowBackdrop = false;
-        isDeleting = false;
         StateHasChanged();
     }
 

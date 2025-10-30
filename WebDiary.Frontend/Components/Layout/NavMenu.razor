@@ -49,6 +49,7 @@
                                 <p class="mt-3">@group.Name</p>
                             }
                             <div class="d-flex position-buttons">
+                                <button type="button" class="btn btn-secondary bi bi-pin-code" @onclick="() => modalPin!.Open(group)" />
                                 <button type="button" class="btn btn-secondary bi bi-pencil-square-black-nav-menu" @onclick="() => modal!.OpenForEditing(group)" />
                                 <button type="button" class="btn btn-danger btn-close" @onclick="() => modal!.OpenForDeleting(group)" />
                             </div>
@@ -77,6 +78,7 @@
         </AuthorizeView>
         
         <WebDiary.Frontend.Components.Pages.ChangeGroupDialogue @ref="modal" />
+        <WebDiary.Frontend.Components.Pages.AddPinGroupDialogue @ref="modalPin" />
         <WebDiary.Frontend.Components.Pages.Users.LogoutDialogue @ref="modalLogout" />
         <CookieAgreenmentDialogue @ref="cookieAgreementModal" />
 
@@ -88,6 +90,7 @@
     int loggedUserId;
     private string? topName;
     private WebDiary.Frontend.Components.Pages.ChangeGroupDialogue? modal;
+    private WebDiary.Frontend.Components.Pages.AddPinGroupDialogue? modalPin;
     private WebDiary.Frontend.Components.Pages.Users.LogoutDialogue? modalLogout;
     private WebDiary.Frontend.Components.Layout.CookieAgreenmentDialogue? cookieAgreementModal;
 

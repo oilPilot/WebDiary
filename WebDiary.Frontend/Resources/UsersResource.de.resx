@@ -150,4 +150,7 @@
 	<data name="PrerenderedTextUponLoading" xml:space="preserve">
 		<value>Daten werden geladen, warten Sie einen Moment...</value>
 	</data>
+	<data name="DontForgetToSavePassword" xml:space="preserve">
+		<value>Sie können Ihr Passwort nicht zurücksetzen, bewahren Sie es daher an einem sicheren Ort auf.</value>
+	</data>
 </root>

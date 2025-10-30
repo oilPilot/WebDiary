@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WebDiary.Data;
@@ -11,9 +12,11 @@ using WebDiary.Data;
 namespace WebDiary.Migrations
 {
     [DbContext(typeof(DiariesContext))]
-    partial class DiariesContextModelSnapshot : ModelSnapshot
+    [Migration("20251030112441_PinCodesAdded")]
+    partial class PinCodesAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

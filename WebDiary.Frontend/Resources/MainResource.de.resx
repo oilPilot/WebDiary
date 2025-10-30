@@ -99,4 +99,19 @@
   	<data name="ErrorPageMainTextPart6" xml:space="preserve">
 		<value>und die App neu starten.</value>
 	</data>
+  	<data name="ChangePinGroup1" xml:space="preserve">
+		<value>Legen Sie einen PIN-Code für diese Gruppe fest (Achtung: Sie können ihn später nicht mehr ändern, falls Sie ihn vergessen):</value>
+	</data>
+  	<data name="ChangePinGroup2" xml:space="preserve">
+		<value>Aktuellen PIN-Code bestätigen:</value>
+	</data>
+  	<data name="ChangePinGroup3" xml:space="preserve">
+		<value>Die vorherigen PIN-Codes sind unterschiedlich. Haben Sie ihn richtig eingegeben?</value>
+	</data>
+  	<data name="CheckPinGroup1" xml:space="preserve">
+		<value>Diese Gruppe hat einen PIN-Code. Bitte geben Sie ihn ein, um das Material zu sehen.</value>
+	</data>
+  	<data name="EnterButtonText" xml:space="preserve">
+		<value>Versuchen</value>
+	</data>
 </root>

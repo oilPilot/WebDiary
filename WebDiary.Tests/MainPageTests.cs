@@ -119,6 +119,7 @@ public class MainPageTests : TestContext
             new Claim("userId", fakeUser.Id.ToString())
         });
         authContext.SetAuthorized(fakeUser.UserName);
+        JSInterop.Setup<object>("QuillFunctions.createQuill", _ => true);
 
         // Act
         var cut = RenderComponent<MainPage>(parameters => parameters.Add(p => p.id, 7));

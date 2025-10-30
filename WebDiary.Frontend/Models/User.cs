@@ -18,8 +18,8 @@ public class User {
     public string? Password { get; set; }
     public string? Description { get; set; } = "";
     public string? Role { get; set; }
-    [EmailAddress]
-    public string? Email { get; set; }
+    //[EmailAddress]
+    //public string? Email { get; set; }
     [AllowNull]
     public byte[]? ActionToken { get; set; }
     [AllowNull]

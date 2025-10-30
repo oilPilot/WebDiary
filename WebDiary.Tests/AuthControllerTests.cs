@@ -66,7 +66,7 @@ public class AuthControllerTests
         var user = new User {
             UserName = "NewUser",
             Password = new PasswordHasher<User>().HashPassword(null!, "correct"),
-            Email = "New@gmail.com",
+        //    Email = "New@gmail.com",
             Role = "Default",
             IsValidated = false,
             Description = ""
@@ -91,7 +91,7 @@ public class AuthControllerTests
         var user = new User {
             UserName = "NewUser",
             Password = new PasswordHasher<User>().HashPassword(null!, "correct"),
-            Email = "New@gmail.com",
+        //    Email = "New@gmail.com",
             Role = "Default",
             IsValidated = false,
             Description = ""
@@ -124,7 +124,9 @@ public class AuthControllerTests
         var result = await controller.IsUniqueEmailAsync("NotexistEmail@gmail.not");
 
         // Assert
-        Assert.IsType<BadRequestObjectResult>(result);
+        // Assert.IsType<BadRequestObjectResult>(result); - THERE ARE NONE EMAILS!
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        Assert.Equal("NO EMAILS", okResult.Value);
     }
     [Fact]
     public async Task IsUniqueEmailAsync_ReturnOkWhenEmailExist() {
@@ -133,7 +135,7 @@ public class AuthControllerTests
         var user = new User {
             UserName = "NewUser",
             Password = new PasswordHasher<User>().HashPassword(null!, "correct"),
-            Email = "New@gmail.com",
+        //    Email = "New@gmail.com",
             Role = "Default",
             IsValidated = false,
             Description = ""
@@ -147,7 +149,8 @@ public class AuthControllerTests
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
-        Assert.Equal("Are exist", okResult.Value);
+        // Assert.Equal("Are exist", okResult.Value); NO EMAILS OTHER MESSAGE
+        Assert.Equal("NO EMAILS", okResult.Value);
     }
 
     [Fact]
@@ -157,7 +160,7 @@ public class AuthControllerTests
         var user = new User {
             UserName = "NewUser",
             Password = new PasswordHasher<User>().HashPassword(null!, "correct"),
-            Email = "New@gmail.com",
+        //    Email = "New@gmail.com",
             Role = "Default",
             IsValidated = false,
             Description = ""
@@ -223,7 +226,7 @@ public class AuthControllerTests
         var user = new User() {
             Id = 1,
             UserName = "user",
-            Email = "email@example.com",
+        //    Email = "email@example.com",
             ActionToken = tokenBytes,
             ActionDateEnd = DateTime.Now.AddMinutes(10),
             IsValidated = false,
@@ -245,6 +248,7 @@ public class AuthControllerTests
         var result = await controller.ValidateEmailAsync(form);
 
         // Assert
+        /* NO EMAIL NO NEEDED VALIDATION
         var okResult = Assert.IsType<OkObjectResult>(result);
         Assert.Equal("Validated successfully", okResult.Value);
 
@@ -252,6 +256,9 @@ public class AuthControllerTests
         Assert.True(updatedUser!.IsValidated);
         Assert.Null(updatedUser.ActionDateEnd);
         Assert.Null(updatedUser.ActionToken);
+        */
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        Assert.Equal("Validated successfully", okResult.Value);
     }
     [Fact]
     public async Task ValidateEmailAsync_InvalidToken_ReturnsBadRequest()
@@ -267,7 +274,7 @@ public class AuthControllerTests
         {
             Id = 1,
             UserName = "user",
-            Email = "email@example.com",
+        //    Email = "email@example.com",
             ActionToken = correctToken,
             ActionDateEnd = DateTime.Now.AddMinutes(10),
             IsValidated = false,
@@ -290,8 +297,12 @@ public class AuthControllerTests
         var result = await controller.ValidateEmailAsync(form);
 
         // Assert
+        /* NO EMAIL NO VALIDATION PROBLEMS
         var badRequest = Assert.IsType<BadRequestObjectResult>(result);
         Assert.Equal("Tokens don't match", badRequest.Value);
+        */
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        Assert.Equal("Validated successfully", okResult.Value);
     }
 
     [Fact]
@@ -306,7 +317,7 @@ public class AuthControllerTests
         {
             Id = 1,
             UserName = "user",
-            Email = "email@example.com",
+        //    Email = "email@example.com",
             ActionToken = tokenBytes,
             ActionDateEnd = DateTime.Now.AddMinutes(-1),
             IsValidated = false,
@@ -329,8 +340,12 @@ public class AuthControllerTests
         var result = await controller.ValidateEmailAsync(form);
 
         // Assert
+        /* NO EMAIL NO VALIDATION PROBLEMS
         var badRequest = Assert.IsType<BadRequestObjectResult>(result);
         Assert.Equal("Token expired", badRequest.Value);
+        */
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        Assert.Equal("Validated successfully", okResult.Value);
     }
 
     [Fact]
@@ -354,8 +369,12 @@ public class AuthControllerTests
         var result = await controller.ValidateEmailAsync(form);
 
         // Assert
+        /* NO EMAIL NO VALIDATION PROBLEMS
         var notFound = Assert.IsType<NotFoundObjectResult>(result);
         Assert.Equal("User not found", notFound.Value);
+        */
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        Assert.Equal("Validated successfully", okResult.Value);
     }
 
 }

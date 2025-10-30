@@ -9,7 +9,7 @@ public class User
     public required string Password { get; set; }
     public required string Role { get; set; }
     public required string Description { get; set; }
-    public required string Email { get; set; }
+    // public required string Email { get; set; }
     public required bool IsValidated { get; set; }
     public byte[]? ActionToken { get; set; }
     public DateTime? ActionDateEnd { get; set; }

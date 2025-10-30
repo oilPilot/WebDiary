@@ -80,8 +80,8 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
             new Claim(ClaimTypes.Name, user.UserName),
             new Claim("userId", user.Id.ToString()),
             new Claim(ClaimTypes.Role, user.Role),
-            new Claim(ClaimTypes.UserData, user.Description),
-            new Claim(ClaimTypes.Email, user.Email)
+            new Claim(ClaimTypes.UserData, user.Description)
+            //,new Claim(ClaimTypes.Email, user.Email)
             };
         JwtSecurityToken securityToken = new JwtSecurityToken(
             issuer: config["Jwt:Issuer"],
@@ -153,6 +153,8 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
     [HttpPost("sendEmail")]
     public async Task<IActionResult> SendEmailAsync(sendEmailForm email)
     {
+        return Ok("Email sended successfully");
+        /* EMAIL DELETED
         if (email.userId == null) return BadRequest("user id in input was null");
         var user = await dbContext.users.FindAsync(email.userId);
         if (user == null) return BadRequest("user was null");
@@ -201,7 +203,7 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
             Log.Error("Catched exception upon sending email: {Exception}", Ex);
             return StatusCode(500, localizer["EmailNotSended"].Value);
         }
-
+        */
     }
     [HttpPost("ResetPassword")]
     public async Task<IActionResult> ResetPasswordAsync(resetPasswordForm resetPasswordForm) {
@@ -234,6 +236,8 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
     }
     [HttpPost("ValidateEmail")]
     public async Task<IActionResult> ValidateEmailAsync(validateEmailForm ValidateEmailForm) {
+        return Ok("Validated successfully");
+        /* NO VALIDATION NEEDED ANYMORE
         var user = await dbContext.users.FindAsync(ValidateEmailForm.UserId);
         if (user is null) {
             return NotFound(localizer["InvalidNameOrPswd"].Value);
@@ -259,6 +263,7 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
             Log.Information("ValidateEmail was unsuccessful, actionDateEnd {DateEnd}", user.ActionDateEnd);
             return BadRequest(localizer["TokenTimeExpired"].Value);
         }
+        */
     }
     [HttpGet("password/isequal/{password}/{userId:int}")]
     public async Task<IActionResult> IsEqualPasswordsAsync(string password, int userId) {
@@ -275,8 +280,9 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
     }
     [HttpGet("email/isunique/{email}")]
     public async Task<IActionResult> IsUniqueEmailAsync(string email) {
-        var user = await dbContext.users.AnyAsync(userDb => userDb.Email.ToLower() == email.ToLower());
-        return user ? Ok("Are exist") : BadRequest("Not exist");
+        return Ok("NO EMAILS");
+        //var user = await dbContext.users.AnyAsync(userDb => userDb.Email.ToLower() == email.ToLower());
+        //return user ? Ok("Are exist") : BadRequest("Not exist");
     }
 
     public class passwordForm {

@@ -13,8 +13,8 @@ public class UserClient(HttpClient httpClient)
     virtual public async Task<User> GetUserByIdAsync(int id) =>
         await httpClient.GetFromJsonAsync<User>($"users/{id}") ?? throw new Exception("User wasn't found");
         
-    virtual public async Task<User> GetUserByEmailAsync(string email) =>
-        await httpClient.GetFromJsonAsync<User>($"users/byemail/{email}") ?? throw new Exception("User wasn't found");
+    //virtual public async Task<User> GetUserByEmailAsync(string email) =>
+    //    await httpClient.GetFromJsonAsync<User>($"users/byemail/{email}") ?? throw new Exception("User wasn't found");
 
     public async Task AddUserAsync(User user) {
         var response = await httpClient.PostAsJsonAsync<User>("users", user);

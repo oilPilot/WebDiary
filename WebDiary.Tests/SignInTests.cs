@@ -54,7 +54,7 @@ public class SigninTests : TestContext
         RegisterMocks(skipUserClient: true);
 
         var cut = RenderComponent<Signin>();
-        cut.Instance.user = new User { UserName = "existing", Password = "123", Email = "test@example.com" };
+        cut.Instance.user = new User { UserName = "existing", Password = "123" }; //, Email = "test@example.com"
 
         // Act
         await cut.InvokeAsync(() => cut.Instance.SignIn());
@@ -78,13 +78,12 @@ public class SigninTests : TestContext
         Services.AddSingleton<HttpClient>(httpClient);
         var mockUserClient = new Mock<UserClient>(httpClient);
         mockUserClient.Setup(u => u.GetUsersAsync()).ReturnsAsync(new List<User>());
-        mockUserClient.Setup(u => u.GetUserByEmailAsync(It.IsAny<string>())).ReturnsAsync(new User { Id = 123, UserName = "" });
 
         Services.AddSingleton<UserClient>(mockUserClient.Object);
         RegisterMocks(skipUserClient: true, skipHttpClient: true);
 
         var cut = RenderComponent<Signin>();
-        cut.Instance.user = new User { UserName = "newuser", Password = "pass", Email = "unique@example.com" };
+        cut.Instance.user = new User { UserName = "newuser", Password = "pass" }; //, Email = "unique@example.com"
 
         // Act
         await cut.InvokeAsync(() => cut.Instance.SignIn());

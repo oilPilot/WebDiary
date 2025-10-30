@@ -145,7 +145,7 @@
 		<value>Ihre E-Mail wird bereits von einem anderen Benutzer verwendet.</value>
 	</data>
 	<data name="ValidateMust" xml:space="preserve">
-		<value>Um Ihr Konto zu nutzen, müssen Sie es zunächst per E-Mail bestätigen. Sie haben dafür 5 Stunden Zeit. Die Nachricht wird in Kürze an Ihre E-Mail-Adresse gesendet.</value>
+		<value>Konto erfolgreich erstellt, bitte melden Sie sich über die Anmeldeseite an.</value>
 	</data>
 	<data name="PrerenderedTextUponLoading" xml:space="preserve">
 		<value>Daten werden geladen, warten Sie einen Moment...</value>

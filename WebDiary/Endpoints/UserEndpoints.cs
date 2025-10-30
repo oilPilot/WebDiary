@@ -19,15 +19,18 @@ public static class UserEndpoints
             Log.Information("Getting all users");
             return await dbContext.users.Select(user => user.toDTO()).AsNoTracking().ToListAsync();
             });
-        group.MapGet("/{id}", async (int id, DiariesContext dbContext) => {
+        group.MapGet("/{id}", async (int id, DiariesContext dbContext) =>
+        {
             var user = await dbContext.users.FindAsync(id);
-            if(user is null) {
+            if (user is null)
+            {
                 Log.Error("Search of user by id '{ID}' was unsuccessful", id);
                 return Results.NotFound();
             }
 
             return Results.Ok(user.toDTO());
         }).WithName(getUserRoute);
+        /* NO ANYMORE EMAILS
         group.MapGet("/byemail/{email}", async (string email, DiariesContext dbContext) => {
             var user = await dbContext.users.AsNoTracking().Where(user => user.Email == email).ToListAsync();
             if(user.FirstOrDefault() is null) {
@@ -37,6 +40,7 @@ public static class UserEndpoints
             
             return Results.Ok(user.FirstOrDefault()!.toDTO());
         });
+        */
         
         // mapping POST methods
         group.MapPost("/", async (CreateUserDTO newUser, DiariesContext dbContext) => {

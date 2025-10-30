@@ -32,11 +32,6 @@
                 <ValidationMessage For="() => user.Description" />
             </div>
             <div class="mt-3">
-                @Localizator["AskEmail"]
-                <InputText class="form-full-width" @bind-value="user.Email" />
-                <ValidationMessage For="() => user.Email" />
-            </div>
-            <div class="mt-3">
                 <button type="submit" class="btn btn-primary @ButtonDisabled">@Localizator["SignIn"]</button>
             </div>
             <div class="text-nowrap">
@@ -49,6 +44,13 @@
 }
 
 @code {
+    /*
+            <div class="mt-3">
+                @Localizator["AskEmail"]
+                <InputText class="form-full-width" @bind-value="user.Email" />
+                <ValidationMessage For="() => user.Email" />
+            </div>
+    */
     [SupplyParameterFromForm]
     public User? user { get; set; }
     private string ErrorMessage = "";
@@ -63,11 +65,13 @@
             ErrorMessage = Localizator["UsernameAlreadyUsed"];
             return;
         }
+        /*
         var response = await HttpClient.GetAsync($"/auth/email/isunique/{user!.Email}");
         if( response.IsSuccessStatusCode ) {
             ErrorMessage = Localizator["EmailAlreadyUsed"];
             return;
         }
+        */
         // Adding changes to DB
         var token = RandomNumberGenerator.GetBytes(32);
         user!.ActionToken = token;
@@ -75,20 +79,22 @@
         await UserClient.AddUserAsync(user!);
 
         // Seeing in DB id of new user
-        user = await UserClient.GetUserByEmailAsync(user.Email!);
+        //user = await UserClient.GetUserByEmailAsync(user.Email!);
 
         // Creating callbackUrl
         var Base64Token = Convert.ToBase64String(token).Replace('+', '-').Replace('/', '_');
         var callbackUrl = NavigationManager.GetUriWithQueryParameters(NavigationManager.BaseUri + "Users/Validate",
             new Dictionary<string, object?>() { {"token", Base64Token}, {"userId", user.Id} });
 
+        /* NO EMAILS MORE
         // using backend to send email
         _ = HttpClient.PostAsJsonAsync("/auth/sendEmail", new { userId = user.Id, CallbackUrl = callbackUrl, IsValidation = true })
             .ContinueWith(exception => {
                 Console.WriteLine(exception);
                 ErrorMessage = Localizator["WrongOnBackend"]; }
             , TaskContinuationOptions.OnlyOnFaulted);
-        // Now show that everything is fine.
+        // Now show that everything is fine. 
+        */
         Message = Localizator["ValidateMust"];
     }
 

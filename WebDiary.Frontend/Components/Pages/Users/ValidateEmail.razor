@@ -17,6 +17,8 @@
 
     protected override async Task OnInitializedAsync() {
         await base.OnInitializedAsync();
+        NavigationManager.NavigateTo("/Users/Login");
+        /* NO ANYMORE VALIDATION NEEDED
         NameValueCollection? query = System.Web.HttpUtility.ParseQueryString(new UriBuilder(NavigationManager.Uri).Query);
         var response = await HttpClient.PostAsJsonAsync($"/auth/ValidateEmail?culture={CultureInfo.CurrentCulture}", new
             { Token = query!["token"], UserId = Convert.ToInt32(query["userId"]) });
@@ -25,6 +27,7 @@
         }
         var msg = await response.Content.ReadAsStringAsync();
         Message = msg;
+        */
 //        Message = Localizator["ValidationErrorText"];
     }
 }

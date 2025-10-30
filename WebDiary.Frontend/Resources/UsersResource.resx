@@ -145,7 +145,7 @@
 		<value>Your email is already used by another user.</value>
 	</data>
 	<data name="ValidateMust" xml:space="preserve">
-		<value>To use account you first must validate it in email. For that you have 5 hours. Message will soon come to your email.</value>
+		<value>Successfully created account, login through login page.</value>
 	</data>
 	<data name="PrerenderedTextUponLoading" xml:space="preserve">
 		<value>Loading data, await some time...</value>

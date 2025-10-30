@@ -16,7 +16,6 @@
             <p>@Localizator["ManageAccountName"]@context.User.Identity!.Name</p>
             <p>@Localizator["ManageAccountRole"]@context.User.FindFirstValue(ClaimTypes.Role)</p>
             <p>@Localizator["ManageAccountDesc"]@context.User.FindFirstValue(ClaimTypes.UserData)</p>
-            <p>@Localizator["ManageAccountEmail"]@context.User.FindFirstValue(ClaimTypes.Email)</p>
             @if(@isValidated) {
                 <p>@Localizator["ManageAccountValid"]</p>
             } else {
@@ -40,6 +39,7 @@
 </AuthorizeView>
 
 @code {
+    // <p>@Localizator["ManageAccountEmail"]@context.User.FindFirstValue(ClaimTypes.Email)</p>
     private int loggedUserId;
     private bool isValidated;
     private bool isHadRendered = false;

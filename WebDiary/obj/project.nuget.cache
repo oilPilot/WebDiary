@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "GvezAQQTPpg=",
+  "dgSpecHash": "2qrLq9pnEvE=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\webdiary\\WebDiary.csproj",
+  "projectFilePath": "C:\\Users\\Dock\\Documents\\Helpers\\Projects\\C#\\WebDiary\\WebDiary\\WebDiary.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Dock\\.nuget\\packages\\bouncycastle.cryptography\\2.5.1\\bouncycastle.cryptography.2.5.1.nupkg.sha512",
     "C:\\Users\\Dock\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",

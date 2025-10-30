@@ -69,7 +69,9 @@ public class MainPageTests : TestContext
         var cut = RenderComponent<MainPage>(parameters => parameters.Add(p => p.id, 5));
 
         // Assert
-        cut.MarkupMatches(@"<p>Await, diaries and groups are loading...</p>");
+        // Now it have also Dialog for PIN-Code
+        // cut.MarkupMatches(@"<p>Await, diaries and groups are loading...</p>");
+        Assert.Contains(@"<p>Await, diaries and groups are loading...</p>", cut.Markup);
     }
 
     [Fact]

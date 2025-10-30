@@ -13,44 +13,46 @@
 <AuthorizeView Context="diaryContext">
     <Authorized>
         <WebDiary.Frontend.Components.Pages.CheckPinGroupDialogue @ref="modalPin" OnSuccess="CorrectPin" />
-        @if(PageTitle != "PIN") {
-            @if(diaries is null) {
-                <p>@Localizator["LoadingDiaries"]</p>
-            } else if(@isValidated) {
-                <h1>@PageTitle</h1>
-                <div>
-                    @foreach(var date in diaries.GroupBy(diary => diary.Date).Select(diary => diary.First().Date)) {
-                        <ol>
-                            <p>@date
-                            <button class="btn btn-outline-primary" data-bs-toggle="collapse"
-                                data-bs-target="#@date">@Localizator["CollapseInMainPage"]</button>
-                            </p>
-                        @foreach(var diary in diaries.Where(diary => diary.Date == date)) {
-                            <li class="ms-2 collapse nonumeration" id="@date">
-                                <ol>
-                                    <p>@diary.Time
-                                    <button class="btn btn-outline-secondary" data-bs-toggle="collapse"
-                                        data-bs-target="#@diary.Id">@Localizator["CollapseInMainPage"]</button>
-                                    </p>
-                                    <li class="ms-4 nonumeration collapse" id="@diary.Id">
-                                        <p class="new-line-work">@diary.Text</p>
-                                    </li>
-                                </ol>
-                            </li>
+        @if(diaries is null) {
+            <p>@Localizator["LoadingDiaries"]</p>
+        } else {
+            @if(PageTitle != "PIN") {
+                if(@isValidated) {
+                    <h1>@PageTitle</h1>
+                    <div>
+                        @foreach(var date in diaries.GroupBy(diary => diary.Date).Select(diary => diary.First().Date)) {
+                            <ol>
+                                <p>@date
+                                <button class="btn btn-outline-primary" data-bs-toggle="collapse"
+                                    data-bs-target="#@date">@Localizator["CollapseInMainPage"]</button>
+                                </p>
+                            @foreach(var diary in diaries.Where(diary => diary.Date == date)) {
+                                <li class="ms-2 collapse nonumeration" id="@date">
+                                    <ol>
+                                        <p>@diary.Time
+                                        <button class="btn btn-outline-secondary" data-bs-toggle="collapse"
+                                            data-bs-target="#@diary.Id">@Localizator["CollapseInMainPage"]</button>
+                                        </p>
+                                        <li class="ms-4 nonumeration collapse" id="@diary.Id">
+                                            <p class="new-line-work">@diary.Text</p>
+                                        </li>
+                                    </ol>
+                                </li>
+                            }
+                            </ol>
                         }
-                        </ol>
-                    }
-                </div>
-                <EditForm Model="diary" OnValidSubmit="AddDiaryAsync" FormName="SendDiary" class="footer">
-                    <div class="d-flex mb-2 me-2 ms-2" style="height: 60px;">
-                        <InputTextArea @bind-value="diary!.Text" class="form-control bg-secondary no-resize" style="--bs-bg-opacity: .33;" />
-                        <button class="btn btn-secondary ms-2" type="submit">@Localizator["MainPageButtonText"]</button>
                     </div>
-                </EditForm>
-            } else {
-                <PageTitle>Diary - @Localizator["NotValidatedTitle"]</PageTitle>
-                <h1>@Localizator["NotValidatedTitle"]</h1>
-                <p>@Localizator["NotValidatedText"]</p>
+                    <EditForm Model="diary" OnValidSubmit="AddDiaryAsync" FormName="SendDiary" class="footer">
+                        <div class="d-flex mb-2 me-2 ms-2" style="height: 60px;">
+                            <InputTextArea @bind-value="diary!.Text" class="form-control bg-secondary no-resize" style="--bs-bg-opacity: .33;" />
+                            <button class="btn btn-secondary ms-2" type="submit">@Localizator["MainPageButtonText"]</button>
+                        </div>
+                    </EditForm>
+                } else {
+                    <PageTitle>Diary - @Localizator["NotValidatedTitle"]</PageTitle>
+                    <h1>@Localizator["NotValidatedTitle"]</h1>
+                    <p>@Localizator["NotValidatedText"]</p>
+                }
             }
         }
     </Authorized>

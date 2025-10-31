@@ -1,12 +1,13 @@
-3. Export functionality - Export entries as PDF/Markdown.
 4. Statistics dashboard - Show charts (entries per week, mood trends, word counts).
-5. Themes - Add light mode/different color palettes to make UI more customizable.
+7. Fully change Home UI (It will become settings, both normal and Experimental features (Export or AI for auto-fill empty diary emojis))
 
 !!! VERY IMPORTANT: FIX TIMES DIFFERENCES LOCAL AND ON SERVER
 
 Finished, but not polished:
     1. Mood tracking - Add a quick emoji/mood scale at the end of diary entries to track emotional trends.
     Polishing:  1.At midnight all empty mood states will be send to AI for setting emoji — ¯\_(ツ)_/¯
+    3. Exporting to PDF file
+    Polishing:  1.Add Authorize component for Privacy
     2. Rich text support - Allow formatting (bold, italic, bullet lists) in diary entries.
     Polishing:  1.AUTO-SAVES!!! (as cookies?)
     6. Privacy - Add ability to lock specific groups/entries with a PIN.

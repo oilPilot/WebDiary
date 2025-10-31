@@ -150,6 +150,59 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
         return new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>() { new Claim(ClaimTypes.Name, "") }));
     }
 
+    [HttpPost("ResetPassword")]
+    public async Task<IActionResult> ResetPasswordAsync(resetPasswordForm resetPasswordForm) {
+        var user = await dbContext.users.FindAsync(resetPasswordForm.UserId);
+        if (user is null) {
+            return NotFound(localizer["InvalidNameOrPswd"].Value);
+        }
+        if(user.ActionDateEnd != null && user.ActionDateEnd > DateTime.Now) {
+            var Base64Token = Convert.FromBase64String( resetPasswordForm.Token.Replace('-', '+').Replace('_', '/') );
+            if(user.ActionToken != null && CryptographicOperations.FixedTimeEquals(user.ActionToken, Base64Token) ) {
+                var hasher = new PasswordHasher<User>();
+                var newUser = user;
+                newUser.Password = hasher.HashPassword(newUser, resetPasswordForm.newPassword);
+                newUser.ActionDateEnd = null;
+                newUser.ActionToken = null;
+                
+                dbContext.users.Entry(user).CurrentValues.SetValues(newUser);
+                await dbContext.SaveChangesAsync();
+
+                return Ok("Resetted successfully");
+            } else {
+                Log.Error("ResetPassword was unsuccessful, token {token}, base64Token {base64Token}",
+                                user.ActionToken, Base64Token);
+                return BadRequest(localizer["TokenNotEqual"].Value);
+            }
+        } else {
+            Log.Information("ResetPassword was unsuccessful, actionDateEnd {DateEnd}", user.ActionDateEnd);
+            return BadRequest(localizer["TokenTimeExpired"].Value);
+        }
+    }
+    [HttpGet("password/isequal/{password}/{userId:int}")]
+    public async Task<IActionResult> IsEqualPasswordsAsync(string password, int userId)
+    {
+        var user = await dbContext.users.FindAsync(userId);
+        if (user == null)
+        {
+            return NotFound("Not found");
+        }
+        var hasher = new PasswordHasher<User>();
+        var verify = hasher.VerifyHashedPassword(user, user.Password, password);
+        if (verify == PasswordVerificationResult.Success)
+        {
+            return Ok("Are equal");
+        }
+        return BadRequest(localizer["PasswordsNotEqual"].Value);
+    }
+    
+    // THERE ARE GOES METHODS THAT REQUIRE EMAILS
+    [HttpGet("email/isunique/{email}")]
+    public async Task<IActionResult> IsUniqueEmailAsync(string email) {
+        return Ok("NO EMAILS");
+        //var user = await dbContext.users.AnyAsync(userDb => userDb.Email.ToLower() == email.ToLower());
+        //return user ? Ok("Are exist") : BadRequest("Not exist");
+    }
     [HttpPost("sendEmail")]
     public async Task<IActionResult> SendEmailAsync(sendEmailForm email)
     {
@@ -204,85 +257,6 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
             return StatusCode(500, localizer["EmailNotSended"].Value);
         }
         */
-    }
-    [HttpPost("ResetPassword")]
-    public async Task<IActionResult> ResetPasswordAsync(resetPasswordForm resetPasswordForm) {
-        var user = await dbContext.users.FindAsync(resetPasswordForm.UserId);
-        if (user is null) {
-            return NotFound(localizer["InvalidNameOrPswd"].Value);
-        }
-        if(user.ActionDateEnd != null && user.ActionDateEnd > DateTime.Now) {
-            var Base64Token = Convert.FromBase64String( resetPasswordForm.Token.Replace('-', '+').Replace('_', '/') );
-            if(user.ActionToken != null && CryptographicOperations.FixedTimeEquals(user.ActionToken, Base64Token) ) {
-                var hasher = new PasswordHasher<User>();
-                var newUser = user;
-                newUser.Password = hasher.HashPassword(newUser, resetPasswordForm.newPassword);
-                newUser.ActionDateEnd = null;
-                newUser.ActionToken = null;
-                
-                dbContext.users.Entry(user).CurrentValues.SetValues(newUser);
-                await dbContext.SaveChangesAsync();
-
-                return Ok("Resetted successfully");
-            } else {
-                Log.Error("ResetPassword was unsuccessful, token {token}, base64Token {base64Token}",
-                                user.ActionToken, Base64Token);
-                return BadRequest(localizer["TokenNotEqual"].Value);
-            }
-        } else {
-            Log.Information("ResetPassword was unsuccessful, actionDateEnd {DateEnd}", user.ActionDateEnd);
-            return BadRequest(localizer["TokenTimeExpired"].Value);
-        }
-    }
-    [HttpPost("ValidateEmail")]
-    public async Task<IActionResult> ValidateEmailAsync(validateEmailForm ValidateEmailForm) {
-        return Ok("Validated successfully");
-        /* NO VALIDATION NEEDED ANYMORE
-        var user = await dbContext.users.FindAsync(ValidateEmailForm.UserId);
-        if (user is null) {
-            return NotFound(localizer["InvalidNameOrPswd"].Value);
-        }
-        if(user.ActionDateEnd != null && user.ActionDateEnd > DateTime.Now) {
-            var Base64Token = Convert.FromBase64String( ValidateEmailForm.Token.Replace('-', '+').Replace('_', '/') );
-            if(user.ActionToken != null && CryptographicOperations.FixedTimeEquals(user.ActionToken, Base64Token) ) {
-                var newUser = user;
-                newUser.IsValidated = true;
-                newUser.ActionDateEnd = null;
-                newUser.ActionToken = null;
-                
-                dbContext.users.Entry(user).CurrentValues.SetValues(newUser);
-                await dbContext.SaveChangesAsync();
-
-                return Ok("Validated successfully");
-            } else {
-                Log.Error("ValidateEmail was unsuccessful, token {token}, base64Token {base64Token}",
-                                user.ActionToken, Base64Token);
-                return BadRequest(localizer["TokenNotEqual"].Value);
-            }
-        } else {
-            Log.Information("ValidateEmail was unsuccessful, actionDateEnd {DateEnd}", user.ActionDateEnd);
-            return BadRequest(localizer["TokenTimeExpired"].Value);
-        }
-        */
-    }
-    [HttpGet("password/isequal/{password}/{userId:int}")]
-    public async Task<IActionResult> IsEqualPasswordsAsync(string password, int userId) {
-        var user = await dbContext.users.FindAsync(userId);
-        if(user == null) {
-            return NotFound("Not found");
-        }
-        var hasher = new PasswordHasher<User>();
-        var verify = hasher.VerifyHashedPassword(user, user.Password, password);
-        if(verify == PasswordVerificationResult.Success) {
-            return Ok("Are equal");
-        }
-        return BadRequest(localizer["PasswordsNotEqual"].Value);
-    }
-    [HttpGet("email/isunique/{email}")]
-    public async Task<IActionResult> IsUniqueEmailAsync(string email) {
-        return Ok("NO EMAILS");
-        //var user = await dbContext.users.AnyAsync(userDb => userDb.Email.ToLower() == email.ToLower());
-        //return user ? Ok("Are exist") : BadRequest("Not exist");
     }
 
     public class passwordForm {

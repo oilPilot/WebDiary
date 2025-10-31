@@ -51,7 +51,7 @@ namespace WebDiary.Migrations
 
                     b.HasIndex("GroupId");
 
-                    b.ToTable("diaries");
+                    b.ToTable("diaries", (string)null);
                 });
 
             modelBuilder.Entity("WebDiary.Entities.DiaryGroup", b =>
@@ -74,7 +74,7 @@ namespace WebDiary.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("diaryGroups");
+                    b.ToTable("diaryGroups", (string)null);
                 });
 
             modelBuilder.Entity("WebDiary.Entities.User", b =>
@@ -118,7 +118,7 @@ namespace WebDiary.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("users");
+                    b.ToTable("users", (string)null);
                 });
 
             modelBuilder.Entity("WebDiary.Entities.Diary", b =>

@@ -18,6 +18,8 @@
         <a href="/privacy-policy">@Localizator["PrivacyPolicy"]</a>
         <a href="/terms-of-service"class="ms-4">@Localizator["TermsOfService"]</a>
         <SelectLanguage />
+        <BootstrapBlazor.Components.SwitchButton ToggleState="@(currentTheme == "dark" ? true : false)" class="btn btn-secondary"
+            OnText="Dark theme" OffText="Light theme" @onclick="ChangeTheme" />
     </div>
         @Body
     </main>
@@ -47,6 +49,7 @@
 </div>
 
 @code {
+    private string currentTheme = "dark";
     private bool? AwakenedBackend = null;
     override protected async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -64,8 +67,20 @@
                 await SessionStorage.SetItemAsync("AwakenedBackend", true);
                 AwakenedBackend = true;
             }
+
+            currentTheme = await JS.InvokeAsync<string>("getAndSetLastTheme");
             StateHasChanged();
         }
         await base.OnAfterRenderAsync(firstRender);
+    }
+    private async Task ChangeTheme() {
+        if(currentTheme == "dark") {
+            currentTheme = "light";
+        }
+        else {
+            currentTheme = "dark";
+        }
+        await JS.InvokeVoidAsync("toggleTheme", currentTheme);
+        StateHasChanged();
     }
 }

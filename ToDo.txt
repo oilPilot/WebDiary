@@ -1,4 +1,5 @@
 4. Statistics dashboard - Show charts (entries per week, mood trends, word counts).
+7. Some code have hard-coded text, should fix later.
 
 !!! VERY IMPORTANT: FIX TIMES DIFFERENCES LOCAL AND ON SERVER
 
@@ -13,7 +14,6 @@ Finished, but not polished:
     Polishing:  1.Users should be able to set a PIN at creation optionally (simple UX improvement).
                 2.Add visibility indicator (e.g., lock icon 🔒 on group list).
                 3.Consider a "global master password" that can unlock all groups in session — to prevent repeated input annoyance.
-!!!                4.Encrypt diary text server-side if you store PINs hashed (never plaintext).
 
 UI Improvements (WHEN AND WHICH?)
 

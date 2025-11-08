@@ -3,6 +3,7 @@
 @inject DiaryGroupClient DiaryGroupClient
 @inject NavigationManager NavigationManager
 @inject IStringLocalizer<Resources.MainResource> Localizator
+@inject HttpClient HttpClient
 
 <div class="modal" tabindex="-1" style="display: @ModalDisplay;">
     <div class="modal-dialogue" role="document">
@@ -14,7 +15,7 @@
             <div class="modal-body">
                 <p>@Localizator["ChangePinGroup1"]</p>
                 <InputText type="password"  class="full-width" @bind-Value="group!.PinCode"></InputText>
-                @if(!String.IsNullOrEmpty(firstPin)) {
+                @if(firstPinExists) {
                     <p>@Localizator["ChangePinGroup2"]</p>
                     <InputText type="password" class="full-width" @bind-Value="writedFirstPin"></InputText>
                 }
@@ -42,7 +43,7 @@
     public bool ShowBackdrop = false;
     private string? HeaderName;
     private bool isValidated = true;
-    private string firstPin;
+    private bool firstPinExists;
     private string? writedFirstPin;
     private string? ErrorMessage;
 
@@ -76,11 +77,13 @@
         ArgumentNullException.ThrowIfNull(group);
 
         ErrorMessage = "";
-        if(!String.IsNullOrEmpty(firstPin)) {
-            if(writedFirstPin != firstPin) {
+        if(firstPinExists) {
+            var response = (await HttpClient.GetAsync($"/auth/pincode/isequal/{writedFirstPin}/{group!.Id}?culture={CultureInfo.CurrentCulture}"));
+            if(!response.IsSuccessStatusCode) {
                 ErrorMessage = Localizator["ChangePinGroup3"];
                 return;
             }
+            
         }
         await DiaryGroupClient.UpdateGroupAsync(group);
         NavigationManager.NavigateTo("/", true);
@@ -90,7 +93,7 @@
         ModalDisplay = "block;";
         ShowBackdrop = true;
         HeaderName = "Add pin to group";
-        firstPin = _group.PinCode ?? "";
+        firstPinExists = !string.IsNullOrEmpty(_group.PinCode);
         group = _group;
         group.PinCode = "";
         StateHasChanged();

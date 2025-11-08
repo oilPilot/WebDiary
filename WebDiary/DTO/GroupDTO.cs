@@ -14,6 +14,7 @@ public record class CreateGroupDTO
     [Required]
     public required string Name { get; set; }
     public int UserId { get; set; }
+    public string? PinCode { get; set; }
 }
 
 public record class UpdateGroupDTO

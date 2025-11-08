@@ -16,6 +16,8 @@
                 @if(!isDeleting) {
                     <p>@Localizator["CreateGroupVar1"]</p>
                     <InputText class="full-width" @bind-Value="group!.Name"></InputText>
+                    <p>@Localizator["ChangePinGroup1"]</p>
+                    <InputText type="password"  class="full-width" @bind-Value="group!.PinCode"></InputText>
                 } else{
                     <p class="fs-5 fw-semibold text-danger">@Localizator["DeleteGroupPart1"]@group!.Name@Localizator["DeleteGroupPart2"]</p>
                 }

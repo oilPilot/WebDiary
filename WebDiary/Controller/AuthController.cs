@@ -195,6 +195,25 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
         }
         return BadRequest(localizer["PasswordsNotEqual"].Value);
     }
+    [HttpGet("pincode/isequal/{pin}/{groupId:int}")]
+    public async Task<IActionResult> IsEqualPinsAsync(string pin, int groupId)
+    {
+        var group = await dbContext.diaryGroups.FindAsync(groupId);
+        if (group == null)
+        {
+            return NotFound("Not found");
+        }
+        var hasher = new PasswordHasher<DiaryGroup>();
+        if(string.IsNullOrEmpty(group.PinCode)) {
+            return Ok("Pin is not present");
+        }
+        var verify = hasher.VerifyHashedPassword(group, group.PinCode, pin);
+        if (verify == PasswordVerificationResult.Success)
+        {
+            return Ok("Are equal");
+        }
+        return BadRequest(localizer["PasswordsNotEqual"].Value);
+    }
     
     // THERE ARE GOES METHODS THAT REQUIRE EMAILS
     [HttpGet("email/isunique/{email}")]

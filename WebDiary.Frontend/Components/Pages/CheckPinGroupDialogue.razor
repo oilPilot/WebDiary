@@ -3,6 +3,7 @@
 @inject DiaryGroupClient DiaryGroupClient
 @inject NavigationManager NavigationManager
 @inject IStringLocalizer<Resources.MainResource> Localizator
+@inject HttpClient HttpClient
 
 <div class="modal" tabindex="-1" style="display: @ModalDisplay;">
     <div class="modal-dialogue" role="document">
@@ -69,10 +70,12 @@
     private async Task SaveAsync() {
         ArgumentNullException.ThrowIfNull(group);
 
-        if(group.PinCode != PinCode) {
+        var response = (await HttpClient.GetAsync($"/auth/pincode/isequal/{PinCode}/{group!.Id}?culture={CultureInfo.CurrentCulture}"));
+        if(!response.IsSuccessStatusCode) {
             ErrorMessage = "PIN-Code is Incorrect.";
             return;
         }
+
         await OnSuccess.InvokeAsync();
         Close();
     }

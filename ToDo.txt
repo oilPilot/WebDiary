@@ -1,5 +1,4 @@
 4. Statistics dashboard - Show charts (entries per week, mood trends, word counts).
-7. Fully change Home UI (It will become settings, both normal and Experimental features (Export or AI for auto-fill empty diary emojis))
 
 !!! VERY IMPORTANT: FIX TIMES DIFFERENCES LOCAL AND ON SERVER
 
@@ -7,14 +6,14 @@ Finished, but not polished:
     1. Mood tracking - Add a quick emoji/mood scale at the end of diary entries to track emotional trends.
     Polishing:  1.At midnight all empty mood states will be send to AI for setting emoji — ¯\_(ツ)_/¯
     3. Exporting to PDF file
-    Polishing:  1.Add Authorize component for Privacy
+!!!    Polishing:  1.Add Authorize component for Privacy (Anybody can download some-body's Diaries)
     2. Rich text support - Allow formatting (bold, italic, bullet lists) in diary entries.
     Polishing:  1.AUTO-SAVES!!! (as cookies?)
     6. Privacy - Add ability to lock specific groups/entries with a PIN.
     Polishing:  1.Users should be able to set a PIN at creation optionally (simple UX improvement).
                 2.Add visibility indicator (e.g., lock icon 🔒 on group list).
                 3.Consider a "global master password" that can unlock all groups in session — to prevent repeated input annoyance.
-                4.Encrypt diary text server-side if you store PINs hashed (never plaintext).
+!!!                4.Encrypt diary text server-side if you store PINs hashed (never plaintext).
 
 UI Improvements (WHEN AND WHICH?)
 

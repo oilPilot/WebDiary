@@ -2,18 +2,16 @@
 @using Microsoft.AspNetCore.Localization
 @using System.Globalization
 @inject NavigationManager NavigationManager
-@inject IStringLocalizer<Resources.LayoutResource> Localizator
 @inject IConfiguration config
 @inject ILocalStorageService localStorage
 @inject IJSRuntime IJSRuntime
+@inject IStringLocalizer<Resources.SettingsResource> Localizator
 
-<div class="d-flex align-items-center ms-4">
-    @Localizator["LanguageText"]
-    <InputSelect @bind-value="@Culture" style="width: 100px;">
-        <option value="en">@Localizator["LanguageEng"]</option>
-        <option value="de">@Localizator["LanguageGer"]</option>
-    </InputSelect>
-</div>
+<p class="align-items-center fw-bold" style="margin-top: 10px;">@Localizator["LanguageText"]</p>
+<InputSelect class="ms-2" @bind-value="@Culture" style="width: 100px;">
+    <option value="en">@Localizator["LanguageEng"]</option>
+    <option value="de">@Localizator["LanguageGer"]</option>
+</InputSelect>
 
 @code {
     protected override void OnInitialized() {

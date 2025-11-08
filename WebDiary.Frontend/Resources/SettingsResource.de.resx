@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+	<data name="LanguageEng" xml:space="preserve">
+		<value>🇬🇧 Englisch</value>
+	</data>
+	<data name="LanguageGer" xml:space="preserve">
+		<value>🇩🇪 Deutsch</value>
+	</data>
+	<data name="LanguageText" xml:space="preserve">
+		<value>Spreche: </value>
+	</data>
+</root>

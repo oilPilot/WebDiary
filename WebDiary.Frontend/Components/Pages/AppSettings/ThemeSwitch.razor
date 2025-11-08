@@ -1,0 +1,27 @@
+﻿@inject IJSRuntime JS
+
+<BootstrapBlazor.Components.SwitchButton ToggleState="@(currentTheme == "dark" ? true : false)" class="btn"
+    OnText="Dark theme" OffText="Light theme" @onclick="ChangeTheme" />
+
+@code {
+    private string currentTheme = "dark";
+    
+    protected async override Task OnAfterRenderAsync(bool firstRender) {
+        if(firstRender) {
+            currentTheme = await JS.InvokeAsync<string>("getTheme");
+            StateHasChanged();
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async Task ChangeTheme() {
+        if(currentTheme == "dark") {
+            currentTheme = "light";
+        }
+        else {
+            currentTheme = "dark";
+        }
+        await JS.InvokeVoidAsync("toggleTheme", currentTheme);
+        StateHasChanged();
+    }
+}

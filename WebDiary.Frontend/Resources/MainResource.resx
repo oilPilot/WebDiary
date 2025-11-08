@@ -1,14 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <root>
-	<data name="HomePageTitleAuth" xml:space="preserve">
-    	<value>Welcome, </value>
-	</data>
-  	<data name="HomePageTitleNoAuth" xml:space="preserve">
-		<value>Home</value>
-	</data>
-	<data name="HomePageText" xml:space="preserve">
-		<value>This is main page of Web-diary app, here is no functionality to be realistic, and i, as developer don't know what to add here. Just ignore this page, it's useless.</value>
-	</data>
   	<data name="404Title" xml:space="preserve">
 		<value>404 - Not found</value>
 	</data>
@@ -113,5 +104,20 @@
 	</data>
   	<data name="EnterButtonText" xml:space="preserve">
 		<value>Try</value>
+	</data>
+  	<data name="HomeHeadAuth" xml:space="preserve">
+		<value>Welcome, </value>
+	</data>
+  	<data name="HomeHeadNonAuth" xml:space="preserve">
+		<value>Home</value>
+	</data>
+  	<data name="SettingsText" xml:space="preserve">
+		<value>Settings:</value>
+	</data>
+  	<data name="ExperimentalSettingsText" xml:space="preserve">
+		<value>Experimental Features and Settings:</value>
+	</data>
+  	<data name="ExperimentalSettingsNonAuth" xml:space="preserve">
+		<value>All experimental featureas are only for Authorized users (none works without authorization).</value>
 	</data>
 </root>

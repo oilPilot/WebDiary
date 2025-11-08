@@ -1,14 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <root>
-	<data name="HomePageTitleAuth" xml:space="preserve">
-    	<value>Willkommen, </value>
-	</data>
-  	<data name="HomePageTitleNoAuth" xml:space="preserve">
-		<value>Heim</value>
-	</data>
-	<data name="HomePageText" xml:space="preserve">
-		<value>Dies ist die Hauptseite der Web-Tagebuch-App. Sie bietet keine realistische Funktionalität, und ich als Entwickler weiß nicht, was ich hier hinzufügen soll. Ignoriere diese Seite einfach, sie ist nutzlos.</value>
-	</data>
   	<data name="404Title" xml:space="preserve">
 		<value>404 – Nicht gefunden</value>
 	</data>

@@ -87,7 +87,7 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
             issuer: config["Jwt:Issuer"],
             audience: config["Jwt:Audience"],
             claims: claims,
-            expires: DateTime.Now.AddMinutes(15),
+            expires: DateTime.UtcNow.AddMinutes(30),
             signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]!)), SecurityAlgorithms.HmacSha256)
         );
         Log.Information("Generated jwt token for user {Name}", user.UserName);

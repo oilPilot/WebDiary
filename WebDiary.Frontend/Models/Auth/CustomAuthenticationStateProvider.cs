@@ -40,10 +40,10 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
                 var jwtToken = handler.ReadJwtToken(token);
                 identity = new ClaimsIdentity(jwtToken.Claims, "jwt");
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                /*
-                if(jwtToken.ValidTo < DateTime.Now) {
+                /**/
+                if(jwtToken.ValidTo < DateTime.UtcNow) {
                     await CheckTokenExpiration();
-                } - it is a bad idea      */
+                } // - it is a bad idea       // Why though? I will fix it. 10.11.25
             }
         } catch(Exception ex) {
             Console.WriteLine($"Token exception message: {ex}");

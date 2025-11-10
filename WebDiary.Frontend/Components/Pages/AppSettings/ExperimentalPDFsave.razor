@@ -6,7 +6,7 @@
 
 <p style="margin-top: 10px;">@Localizator["SavePDFText"]</p>
 <select class="ms-2" @bind="selectedGroupId">
-    <option value="-1">@Localizator["MainSavePDFOption"]</option>
+    <option value="0">@Localizator["MainSavePDFOption"]</option>
     @if(groups != null) {
         @foreach(DiaryGroup group in groups) {
             <option value="@group.Id">@group.Name</option>
@@ -36,9 +36,14 @@
 
     private async Task SaveAsPdf() {
         if(selectedGroupId == 0) {
-            await JS.InvokeVoidAsync("open", $"{HttpClient.BaseAddress}export/all/{loggedUserId}", "_blank");
+//            await JS.InvokeVoidAsync("open", $"{HttpClient.BaseAddress}export/all/{loggedUserId}", "_blank");
+            var url = $"{HttpClient.BaseAddress}export/all/{loggedUserId}";
+            await JS.InvokeVoidAsync("downloadDiaryPdf", url);
+
         } else {
-            await JS.InvokeVoidAsync("open", $"{HttpClient.BaseAddress}export/certain/{selectedGroupId}", "_blank");
+//            await JS.InvokeVoidAsync("open", $"{HttpClient.BaseAddress}export/certain/{selectedGroupId}", "_blank");
+            var url = $"{HttpClient.BaseAddress}export/certain/{selectedGroupId}";
+            await JS.InvokeVoidAsync("downloadDiaryPdf", url);
         }
     }
 }

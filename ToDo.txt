@@ -2,12 +2,13 @@
 7. Some code have hard-coded text, should fix later.
 
 !!! VERY IMPORTANT: FIX TIMES DIFFERENCES LOCAL AND ON SERVER
+Shall make it as following:
+    Save DateTime in UTC, and offset. By using offset onto DateTime will set needed Date and Time, whilst DateTime and offset will BE saved for (logs, moderation, legal needs), Skew detection and policy;
+
 
 Finished, but not polished:
     1. Mood tracking - Add a quick emoji/mood scale at the end of diary entries to track emotional trends.
     Polishing:  1.At midnight all empty mood states will be send to AI for setting emoji — ¯\_(ツ)_/¯
-    3. Exporting to PDF file
-!!!    Polishing:  1.Add Authorize component for Privacy (Anybody can download some-body's Diaries)
     2. Rich text support - Allow formatting (bold, italic, bullet lists) in diary entries.
     Polishing:  1.AUTO-SAVES!!! (as cookies?)
     6. Privacy - Add ability to lock specific groups/entries with a PIN.
@@ -15,5 +16,5 @@ Finished, but not polished:
                 2.Add visibility indicator (e.g., lock icon 🔒 on group list).
                 3.Consider a "global master password" that can unlock all groups in session — to prevent repeated input annoyance.
 
-UI Improvements (WHEN AND WHICH?)
+UI Improvements (WHEN AND WHICH? If any...)
 

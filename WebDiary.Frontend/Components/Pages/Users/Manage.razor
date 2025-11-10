@@ -24,11 +24,11 @@
             <WebDiary.Frontend.Components.Pages.Users.DeleteAndUpdateAccountDialogue @ref="modalAccount" />
             <AuthorizeView Roles="Admin" Context="AdminContext">
                 <Authorized>
-                    <p>You are Admin!</p>
+                    <p>You are Admin! Here we show some special data (ONLY ENGLISH! with some exceptions):</p>
                     @if(@isValidated) {
-                        <p>@Localizator["ManageAccountValid"]</p>
+                        <p>Your account Status (German exists): @Localizator["ManageAccountValid"]</p>
                     } else {
-                        <p>@Localizator["ManageAccountNotValid"]</p>
+                        <p>Your account Status (German exists)@Localizator["ManageAccountNotValid"] - (BUT IT SHOULD BE, WHAT HAVE YOU DONE?)</p>
                     }
                 </Authorized>
             </AuthorizeView>

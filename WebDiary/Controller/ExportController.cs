@@ -7,7 +7,8 @@ using WebDiary.Entities;
 [ApiController]
 public class ExportController(DiariesContext dbContext) : ControllerBase
 {
-    [HttpGet("all/{userId}")]
+    [HttpGet("all/{userId:int}")]
+    [Authorize]
     public IActionResult ExportAllDiaryGroup(int? userId = null)
     {
         List<Diary> diaries;
@@ -24,7 +25,7 @@ public class ExportController(DiariesContext dbContext) : ControllerBase
         
     }
     
-    [HttpGet("certain/{groupId}")]
+    [HttpGet("certain/{groupId:int}")]
     public IActionResult ExportCertainDiaryGroup(int? groupId = null)
     {
         List<Diary> entries;

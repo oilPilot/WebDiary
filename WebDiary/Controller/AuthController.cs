@@ -277,6 +277,38 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
         }
         */
     }
+    
+    [HttpPost("ValidateEmail")]
+    public async Task<IActionResult> ValidateEmailAsync(validateEmailForm ValidateEmailForm) {
+        return Ok("Validated successfully");
+        /* NO VALIDATION NEEDED ANYMORE
+        var user = await dbContext.users.FindAsync(ValidateEmailForm.UserId);
+        if (user is null) {
+            return NotFound(localizer["InvalidNameOrPswd"].Value);
+        }
+        if(user.ActionDateEnd != null && user.ActionDateEnd > DateTime.Now) {
+            var Base64Token = Convert.FromBase64String( ValidateEmailForm.Token.Replace('-', '+').Replace('_', '/') );
+            if(user.ActionToken != null && CryptographicOperations.FixedTimeEquals(user.ActionToken, Base64Token) ) {
+                var newUser = user;
+                newUser.IsValidated = true;
+                newUser.ActionDateEnd = null;
+                newUser.ActionToken = null;
+                
+                dbContext.users.Entry(user).CurrentValues.SetValues(newUser);
+                await dbContext.SaveChangesAsync();
+
+                return Ok("Validated successfully");
+            } else {
+                Log.Error("ValidateEmail was unsuccessful, token {token}, base64Token {base64Token}",
+                                user.ActionToken, Base64Token);
+                return BadRequest(localizer["TokenNotEqual"].Value);
+            }
+        } else {
+            Log.Information("ValidateEmail was unsuccessful, actionDateEnd {DateEnd}", user.ActionDateEnd);
+            return BadRequest(localizer["TokenTimeExpired"].Value);
+        }
+        */
+    }
 
     public class passwordForm {
         public string? Password { get; set; }

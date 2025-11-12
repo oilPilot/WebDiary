@@ -7,10 +7,13 @@ namespace WebDiary.Mapping;
 public static class Diaries
 {
     public static Diary ToEntity(this CreateDiaryDTO diaryDTO) {
+        DateTime localTime = diaryDTO.CreatedUtc.AddMinutes(diaryDTO.UtcOffsetMinutes);
         return new Diary {
             Text = diaryDTO.Text,
-            Date = DateOnly.FromDateTime(DateTime.Now),
-            Time = TimeOnly.FromDateTime(DateTime.Now),
+            Date = DateOnly.FromDateTime(localTime),
+            Time = TimeOnly.FromDateTime(localTime),
+            CreatedUtc = diaryDTO.CreatedUtc,
+            UtcOffsetMinutes = diaryDTO.UtcOffsetMinutes,
             GroupId = diaryDTO.GroupId,
             mood = diaryDTO.mood ?? ""
         };

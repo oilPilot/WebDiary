@@ -1,11 +1,13 @@
 ﻿@page "/Diary/{id:int}"
 @using System.Security.Claims
+@using System.Text.Json
 
 @inject DiaryClient DiaryClient
 @inject DiaryGroupClient DiaryGroupClient
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserClient UserClient
+@inject IJSRuntime JS
 @inject IStringLocalizer<Resources.MainResource> Localizator
 
 <PageTitle>MyDiary</PageTitle>
@@ -20,7 +22,8 @@
                 if(@isValidated) {
                     <h1>@PageTitle</h1>
                     <div>
-                        @foreach(var date in diaries.GroupBy(diary => diary.Date).Select(diary => diary.First().Date)) {
+                        @foreach(var date in diaries.GroupBy(diary => diary.Date).OrderBy(date => date.Key)
+                                                        .Select(diary => diary.First().Date)) {
                             <ol>
                                 <p>@date
                                 <button class="btn btn-outline-primary" data-bs-toggle="collapse"
@@ -181,7 +184,16 @@
         PageTitle = group.Name;
     }
     async Task AddDiaryAsync() {
+        var js = await JS.InvokeAsync<JsonElement>("getClientTime");
+        var isoUtc = js.GetProperty("isoUtc").GetString();
+        
+        var offset = js.GetProperty("offsetMinutes").GetInt32();
+        var utc = DateTime.Parse(isoUtc, null, System.Globalization.DateTimeStyles.AdjustToUniversal);
+        
         diary.Text = await richEditor.GetHTML();
+        diary.CreatedUtc = utc;
+        diary.UtcOffsetMinutes = offset;
+        
         await DiaryClient.AddDiaryAsync(diary!);
         StateHasChanged();
         NavigationManager.Refresh(true);

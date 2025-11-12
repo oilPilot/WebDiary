@@ -20,4 +20,8 @@ public record class CreateDiaryDTO
     public int GroupId { get; set; } = 1;
     [Required]
     public required string mood { get; set; }
+    [Required]
+    public DateTime CreatedUtc { get; set; }
+    [Required]
+    public int UtcOffsetMinutes { get; set; }
 }

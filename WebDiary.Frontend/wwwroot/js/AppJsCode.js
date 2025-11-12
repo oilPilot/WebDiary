@@ -23,6 +23,15 @@ function getAndSetLastTheme() {
         return lastTheme;
     }
 
+// Code for Time Managing (Retrieve Local)
+function getClientTime() {
+    const now = new Date();
+    return {
+        isoUtc: now.toISOString(),
+        offsetMinutes: -now.getTimezoneOffset()
+    };
+}
+
 // Code for Export
 
 async function downloadDiaryPdf(url) {

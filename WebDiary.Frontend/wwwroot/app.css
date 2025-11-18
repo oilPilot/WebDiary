@@ -17,6 +17,16 @@ li.nonumeration {
     top: 25%;
 }
 
+.table-wrapper-scroll-y {
+    display: block;
+}
+
+.my-custom-scrollbar {
+    position: relative;
+    height: 480px;
+    overflow: auto;
+}
+
 .form-full-width {
     width: 80%;
 }

@@ -9,7 +9,7 @@ namespace WebDiary.Frontend.Models;
 
 public class User {
     public int Id { get; set; }
-    [MinLength(3)]
+    [MinLength(2)]
     [MaxLength(24)]
     public required string UserName { get; set; }
     public bool IsValidated { get; set; }

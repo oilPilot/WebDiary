@@ -21,6 +21,12 @@
 	<data name="LogoutTitle" xml:space="preserve">
 		<value>Ausloggen</value>
 	</data>
+	<data name="AdminPanelTitle" xml:space="preserve">
+		<value>Admin</value>
+	</data>
+	<data name="StatisticsTitle" xml:space="preserve">
+		<value>Statistiken</value>
+	</data>
 	<data name="NewDiaryGroupTitle" xml:space="preserve">
 		<value>Neue Tagebuchgruppe erstellen</value>
 	</data>
@@ -53,5 +59,11 @@
 	</data>
 	<data name="AwakeningBackend" xml:space="preserve">
 		<value>Backend wird aktiviert, bitte warten...</value>
+	</data>
+	<data name="DarkThemeText" xml:space="preserve">
+		<value>Dunkles Design</value>
+	</data>
+	<data name="LightThemeText" xml:space="preserve">
+		<value>Helles Design</value>
 	</data>
 </root>

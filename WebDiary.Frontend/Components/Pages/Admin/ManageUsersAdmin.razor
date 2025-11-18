@@ -1,0 +1,76 @@
+@using global::WebDiary.Frontend.Clients
+@using global::WebDiary.Frontend.Models
+@inject UserClient userClient
+@inject IStringLocalizer<Resources.AdminResource> Localizator
+
+<div class="mt-4 mb-4">
+    <div class="mt-2 d-flex">
+        @Localizator["FilterSet1"]
+        <InputText type="text" class="form-full-width ms-2" @bind-value="userNameFilter" />
+    </div>
+    <div class="mt-2 d-flex">
+        @Localizator["FilterSet2"]
+        <InputText type="text" class="form-full-width ms-2" @bind-value="RoleFilter" />
+    </div>
+    <div class="mt-2">
+        <button type="submit" class="btn btn-secondary" @onclick="() => UpdateSearch()">@Localizator["FilterSet3"]</button>
+    </div>
+</div>
+
+<TableTemplate Items="usersSearching">
+    <TableHeader>
+        <th>Id</th>
+        <th>User name</th>
+        <th>Is Activated</th>
+        <th>Role</th>
+        <th>Description</th>
+        <th>Actions with user</th>
+    </TableHeader>
+    <RowTemplate Context="user">
+        <td>@user.Id</td>
+        <td>@user.UserName</td>
+        <td>@user.IsValidated</td>
+        <td>@user.Role</td>
+        <td>@user.Description</td>
+        <th>
+            <button class="btn btn-secondary ms-1 mb-1" @onclick="() => ChangeActive(user)">@(user.IsValidated ? @"Dea" : @"A")ctivate account</button>
+            <button class="btn btn-secondary ms-2 mb-1" @onclick="() => ResetPassword(user)">Reset password</button>
+            @if(user.Role != "Admin") {
+                <button class="btn btn-secondary ms-2 mb-1" @onclick="() => giveAdminRights.Open(user)">Give admin rights</button>
+            }
+        </th>
+    </RowTemplate>
+
+</TableTemplate>
+<GiveAdminRightsDialogue @ref="giveAdminRights" />
+
+@code {
+    List<User>? users { get; set; }
+    List<User>? usersSearching { get; set; }
+    private GiveAdminRightsDialogue giveAdminRights { get; set; }
+    private string userNameFilter = "";
+    private string RoleFilter = "";
+
+    protected async override Task OnInitializedAsync()
+    {
+        base.OnInitialized();
+        users = await userClient.GetUsersAsync();
+        UpdateSearch();
+    }
+
+    private async Task ChangeActive(User user) {
+        var newUser = user;
+        newUser.IsValidated = !newUser.IsValidated;
+        await userClient.UpdateUserAsync(newUser);
+    }
+    private async Task ResetPassword(User user) {
+        var newUser = user;
+        newUser.Password = String.Empty;
+        await userClient.UpdateUserAsync(newUser);
+    }
+
+    private void UpdateSearch() {
+        usersSearching = users.Where(user => user.UserName.Contains(userNameFilter))
+                                .Where(user => user.Role.Contains(RoleFilter)).ToList();
+    }
+}

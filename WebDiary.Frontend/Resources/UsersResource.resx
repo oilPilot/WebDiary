@@ -153,4 +153,19 @@
 	<data name="DontForgetToSavePassword" xml:space="preserve">
 		<value>You can't reset your password, so save your password in safe place.</value>
 	</data>
+	<data name="DeactivatedAccount" xml:space="preserve">
+		<value>Your account have been deactivated by admin.</value>
+	</data>
+	<data name="RemoveAdminRights" xml:space="preserve">
+		<value>Remove Admin rights from yourself</value>
+	</data>
+	<data name="RemoveAdminRightsHeader" xml:space="preserve">
+		<value>Remove Admin Rights</value>
+	</data>
+	<data name="RemoveAdminRightsSure" xml:space="preserve">
+		<value>You are going to remove Admin rights from yourself, are you sure?</value>
+	</data>
+	<data name="Continue" xml:space="preserve">
+		<value>Yes, continue</value>
+	</data>
 </root>

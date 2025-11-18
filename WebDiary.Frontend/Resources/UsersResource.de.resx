@@ -153,4 +153,19 @@
 	<data name="DontForgetToSavePassword" xml:space="preserve">
 		<value>Sie können Ihr Passwort nicht zurücksetzen, bewahren Sie es daher an einem sicheren Ort auf.</value>
 	</data>
+	<data name="DeactivatedAccount" xml:space="preserve">
+		<value>Ihr Konto wurde vom Administrator deaktiviert.</value>
+	</data>
+	<data name="RemoveAdminRights" xml:space="preserve">
+		<value>Entferne dir selbst die Administratorrechte</value>
+	</data>
+	<data name="RemoveAdminRightsHeader" xml:space="preserve">
+		<value>Administratorrechte entfernen</value>
+	</data>
+	<data name="RemoveAdminRightsSure" xml:space="preserve">
+		<value>Sie wollen sich selbst die Administratorrechte entziehen, sind Sie sich sicher?</value>
+	</data>
+	<data name="Continue" xml:space="preserve">
+		<value>Ja, weiter</value>
+	</data>
 </root>

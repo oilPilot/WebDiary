@@ -6,6 +6,10 @@ This is web application built with ASP.NET Core and Blazor that allows users to 
 * Automatic timestamping
 * Input validation
 * Serilog-based logging
+* Rich text formatting
+* Export to PDF
+* Light and Dark Mode
+* quick emoji scale at each diary entry;
 * Unit tests
 
 ## Deployment url: https://webdiary-frontend.onrender.com
@@ -24,7 +28,6 @@ cd WebDiary
 2. Before running the backend, configure the following secrets (using `dotnet user-secrets` or environment variables):
 	- `Jwt:Key` – Secret key for Jwt signing.
 	- `ConnectionStrings:DiariesConnection` – Database connection string.
-	- `AppPaswordForEmailAuth` – gmail app password for email authentication (you should also probably change 'EmailFromSend' in appsettings.json).
 3. Database migrations will run automatically
 4. Run the backend at ../Webdiary:
 `dotnet run`

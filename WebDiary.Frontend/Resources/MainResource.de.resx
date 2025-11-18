@@ -105,4 +105,22 @@
   	<data name="EnterButtonText" xml:space="preserve">
 		<value>Versuchen</value>
 	</data>
+  	<data name="AddPinHeader" xml:space="preserve">
+		<value>Pin zur Gruppe hinzufügen</value>
+	</data>
+  	<data name="IncorrectPinText" xml:space="preserve">
+		<value>Der PIN-Code ist falsch.</value>
+	</data>
+  	<data name="CheckPinHeader" xml:space="preserve">
+		<value>PIN für Gruppe prüfen</value>
+	</data>
+  	<data name="AddThematicGroup" xml:space="preserve">
+		<value>Add thematic group</value>
+	</data>
+  	<data name="EditingGroupHeader" xml:space="preserve">
+		<value>Redaktionsgruppe </value>
+	</data>
+  	<data name="DeletingGroupHeader" xml:space="preserve">
+		<value>Gruppe löschen </value>
+	</data>
 </root>

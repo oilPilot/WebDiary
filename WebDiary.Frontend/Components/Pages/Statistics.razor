@@ -1,0 +1,44 @@
+@page "/Statistics"
+
+@inject UserClient userClient
+@inject DiaryGroupClient groupClient
+@inject DiaryClient diaryClient
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<AuthorizeView>
+    <Authorized>
+        <p>That's statistics page, it's unfinished</p>
+        <p>I should add:</p>
+        <uo>
+            <li>Mood Chart (what and how to make chart)</li>
+            <li>Entries per week/month and their symbol amount and medium amount of symbols per entry.</li>
+            <li>Previus is realized via Table for year (chosen), which is filled with some values
+            (1:week/month,2:entry amount,3:symbol amount,4: medium amount of symbols per entry)</li>
+        </uo>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    List<DiaryGroup>? groups;
+    int loggedUserId;
+
+    protected async override Task OnAfterRenderAsync(bool firstRender) {
+        if(firstRender) {
+            var loggedUser = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
+
+            if(loggedUser.Identity != null && loggedUser.Identity.IsAuthenticated) {
+                loggedUserId = Convert.ToInt32(loggedUser.FindFirstValue("userId"));
+                try {
+                    await userClient.GetUserByIdAsync(loggedUserId);
+                } catch (Exception Ex) {
+                    Console.WriteLine("Exception of user nonexistance?: " + Ex);
+                    await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).LogoutUserAsync();
+                }
+                groups = await groupClient.GetGroupsOfUserAsync(loggedUserId);
+            }
+
+            StateHasChanged();
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+}

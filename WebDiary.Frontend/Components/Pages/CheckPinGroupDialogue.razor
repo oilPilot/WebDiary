@@ -72,7 +72,7 @@
 
         var response = (await HttpClient.GetAsync($"/auth/pincode/isequal/{PinCode}/{group!.Id}?culture={CultureInfo.CurrentCulture}"));
         if(!response.IsSuccessStatusCode) {
-            ErrorMessage = "PIN-Code is Incorrect.";
+            ErrorMessage = Localizator["IncorrectPinText"];
             return;
         }
 
@@ -83,7 +83,7 @@
     public void Open(DiaryGroup _group) {
         ModalDisplay = "block;";
         ShowBackdrop = true;
-        HeaderName = "Check pin for group";
+        HeaderName = Localizator["CheckPinHeader"];
         group = _group;
         StateHasChanged();
     }

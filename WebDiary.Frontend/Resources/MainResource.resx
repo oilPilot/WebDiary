@@ -120,4 +120,22 @@
   	<data name="ExperimentalSettingsNonAuth" xml:space="preserve">
 		<value>All experimental featureas are only for Authorized users (none works without authorization).</value>
 	</data>
+  	<data name="AddPinHeader" xml:space="preserve">
+		<value>Add pin to group</value>
+	</data>
+  	<data name="IncorrectPinText" xml:space="preserve">
+		<value>PIN-Code is Incorrect.</value>
+	</data>
+  	<data name="CheckPinHeader" xml:space="preserve">
+		<value>Check pin for group</value>
+	</data>
+  	<data name="AddThematicGroup" xml:space="preserve">
+		<value>Add thematic group</value>
+	</data>
+  	<data name="EditingGroupHeader" xml:space="preserve">
+		<value>Editing group </value>
+	</data>
+  	<data name="DeletingGroupHeader" xml:space="preserve">
+		<value>Deleting group </value>
+	</data>
 </root>

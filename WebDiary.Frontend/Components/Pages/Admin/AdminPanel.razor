@@ -1,0 +1,78 @@
+@page "/AdminPanel"
+@inject IStringLocalizer<Resources.AdminResource> Localizator
+@inject NavigationManager NavigationManager
+
+
+<AuthorizeView Roles="Admin" Context="AdminContext">
+    <div class="mt-4 d-flex align-items-center">
+        <button class="ms-2 btn btn-@(openedFunction == 1 ? @"primary" : @"secondary")"
+            @onclick="() => openedFunction = 1">@Localizator["AdminAction1"]</button>
+        <button class="ms-2 btn btn-@(openedFunction == 2 ? @"primary" : @"secondary")"
+            @onclick="() => openedFunction = 2">@Localizator["AdminAction2"]</button>
+        <button class="ms-2 btn btn-@(openedFunction == 3 ? @"primary" : @"secondary")"
+            @onclick="() => openedFunction = 3">@Localizator["AdminAction3"]</button>
+        <button class="ms-2 btn btn-@(openedFunction == 4 ? @"primary" : @"secondary")"
+            @onclick="() => openedFunction = 4">@Localizator["AdminAction4"]</button>
+        <button class="ms-2 btn btn-@(openedFunction == 5 ? @"primary" : @"secondary")"
+            @onclick="() => openedFunction = 5">@Localizator["AdminAction5"]</button>
+        @*<button class="btn btn-@(openedFunction == 6 ? @"primary" : @"secondary")"
+            @onclick="() => openedFunction = 6">User Impersonation (Admin can “log in as user” for debugging.)</button>*@
+    </div>
+    @if(openedFunction == 1) {
+        <ManageUsersAdmin />
+    } else if (openedFunction == 2) {
+        <p>Opened Diary Group Management</p>
+        <p>I should add:</p>
+        <uo>
+            <li>List all diary groups</li>
+            <li>Delete inappropriate groups</li>
+            <li>Rename or reassign ownership</li>
+            <li>View group statistics (entries count, creation date)</li>
+        </uo>
+    } else if (openedFunction == 3) {
+        <p>Opened Entry Moderation</p>
+        <p>I should add:</p>
+        <uo>
+            <li>View all diary entries (or filtered)</li>
+            <li>Delete entries</li>
+            <li>See if content violates rules</li>
+            <li>Search through entries</li>
+        </uo>
+    } else if (openedFunction == 4) {
+        <p>Opened System Logs</p>
+        <p>I should add:</p>
+        <uo>
+            <li>Show recent errors/warnings</li>
+            <li>Show user login attempts</li>
+            <li>Show admin actions</li>
+        </uo>
+    } else if (openedFunction == 5) {
+        <p>Opened Admin Statistics</p>
+        <p>I should add:</p>
+        <uo>
+            <li>Total users</li>
+            <li>Total diary entries</li>
+            <li>Activity per day</li>
+            <li>New users per week</li>
+        </uo>
+    }
+
+</AuthorizeView>
+
+
+@code {
+    int openedFunction = 0;
+    [CascadingParameter] protected Task<AuthenticationState>? AuthStat { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        base.OnInitialized();
+        var user = (await AuthStat!).User;
+        if(!user.IsInRole("Admin"))
+        {
+            NavigationManager.NavigateTo("");
+        }
+    }
+
+    
+}

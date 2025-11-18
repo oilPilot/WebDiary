@@ -76,7 +76,7 @@
 
     private async Task SaveAsync() {
         ArgumentNullException.ThrowIfNull(group);
-        if(HeaderName == "Add thematic group") {
+        if(HeaderName == Localizator["AddThematicGroup"]) {
             await DiaryGroupClient.AddGroupAsync(group);
             NavigationManager.NavigateTo("/", true);
         } else if(isDeleting) {
@@ -91,7 +91,7 @@
     public void Open(int loggedUserId) {
         ModalDisplay = "block;";
         ShowBackdrop = true;
-        HeaderName = "Add thematic group";
+        HeaderName = Localizator["AddThematicGroup"];
         group = new() {
             Name = "",
             UserId = loggedUserId
@@ -102,7 +102,7 @@
         ModalDisplay = "block;";
         ShowBackdrop = true;
         group = _group;
-        HeaderName = $"Editing group \"{group.Name}\"";
+        HeaderName = $"{Localizator["EditingGroupHeader"]}\"{group.Name}\"";
         StateHasChanged();
     }
     public void OpenForDeleting(DiaryGroup _group) {
@@ -110,7 +110,7 @@
         ShowBackdrop = true;
         group = _group;
         isDeleting = true;
-        HeaderName = $"Deleting group \"{group.Name}\"";
+        HeaderName = $"{Localizator["DeletingGroupHeader"]}\"{group.Name}\"";
         StateHasChanged();
     }
     private void Close() {

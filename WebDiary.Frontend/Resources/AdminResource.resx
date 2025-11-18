@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+	<data name="AdminAction1" xml:space="preserve">
+		<value>Manage Users</value>
+	</data>
+	<data name="AdminAction2" xml:space="preserve">
+		<value>Groups Management</value>
+	</data>
+	<data name="AdminAction3" xml:space="preserve">
+		<value>Entry Moderation</value>
+	</data>
+	<data name="AdminAction4" xml:space="preserve">
+		<value>Logs</value>
+	</data>
+	<data name="AdminAction5" xml:space="preserve">
+		<value>Additional Statistics</value>
+	</data>
+	<data name="FilterSet1" xml:space="preserve">
+		<value>Username filter:</value>
+	</data>
+	<data name="FilterSet2" xml:space="preserve">
+		<value>Role filter:</value>
+	</data>
+	<data name="FilterSet3" xml:space="preserve">
+		<value>Filter table</value>
+	</data>
+	<data name="GiveAdminRightsDialogue1" xml:space="preserve">
+		<value>Give Admin Rights</value>
+	</data>
+	<data name="GiveAdminRightsDialogue2" xml:space="preserve">
+		<value>You are going to give </value>
+	</data>
+	<data name="GiveAdminRightsDialogue3" xml:space="preserve">
+		<value> Admin rights, are you sure?</value>
+	</data>
+	<data name="ContinueButton" xml:space="preserve">
+		<value>Yes, continue</value>
+	</data>
+	<data name="CancelButtonText" xml:space="preserve">
+		<value>Cancel</value>
+	</data>
+</root>

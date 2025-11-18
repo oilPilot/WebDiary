@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+	<data name="AdminAction1" xml:space="preserve">
+		<value>Benutzer verwalten</value>
+	</data>
+	<data name="AdminAction2" xml:space="preserve">
+		<value>Gruppenmanagement</value>
+	</data>
+	<data name="AdminAction3" xml:space="preserve">
+		<value>Teilnahmemoderation</value>
+	</data>
+	<data name="AdminAction4" xml:space="preserve">
+		<value>Logs</value>
+	</data>
+	<data name="AdminAction5" xml:space="preserve">
+		<value>Zusätzliche Statistiken</value>
+	</data>
+	<data name="FilterSet1" xml:space="preserve">
+		<value>Benutzerfilter:</value>
+	</data>
+	<data name="FilterSet2" xml:space="preserve">
+		<value>Rollenfilter:</value>
+	</data>
+	<data name="FilterSet3" xml:space="preserve">
+		<value>Filtertabelle</value>
+	</data>
+	<data name="GiveAdminRightsDialogue1" xml:space="preserve">
+		<value>Administratorrechte erteilen</value>
+	</data>
+	<data name="GiveAdminRightsDialogue2" xml:space="preserve">
+		<value>Sie werden Administratorrechte zu </value>
+	</data>
+	<data name="GiveAdminRightsDialogue3" xml:space="preserve">
+		<value> vergeben, sind Sie sich sicher?</value>
+	</data>
+	<data name="ContinueButton" xml:space="preserve">
+		<value>Ja, weiter</value>
+	</data>
+	<data name="CancelButtonText" xml:space="preserve">
+		<value>Absagen</value>
+	</data>
+</root>

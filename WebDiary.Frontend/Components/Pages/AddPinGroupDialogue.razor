@@ -92,7 +92,7 @@
     public void Open(DiaryGroup _group) {
         ModalDisplay = "block;";
         ShowBackdrop = true;
-        HeaderName = "Add pin to group";
+        HeaderName = Localizator["AddPinHeader"];
         firstPinExists = !string.IsNullOrEmpty(_group.PinCode);
         group = _group;
         group.PinCode = "";

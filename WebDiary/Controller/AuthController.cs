@@ -56,7 +56,7 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
         var hasher = new PasswordHasher<User>();
         var verify = hasher.VerifyHashedPassword(user, user.Password, model.Password!);
         if(verify == PasswordVerificationResult.Success) {
-            Log.Information("User {Name} tries to login with correct password", user.UserName);
+            Log.Information("User {Name} tries to login with correct password at {currentTime}", user.UserName, DateTime.Now);
             return await CreatingTokens(user);
         }
         return Unauthorized(localizer["InvalidNameOrPswd"].Value);

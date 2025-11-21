@@ -1,5 +1,5 @@
 
-namespace WebDiary.Frontend.Helpers;
+namespace WebDiary.Helpers;
 
 public static class MoodHelper
 {

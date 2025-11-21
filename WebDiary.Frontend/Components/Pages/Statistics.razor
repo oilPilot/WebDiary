@@ -1,44 +1,165 @@
 @page "/Statistics"
+@using Plotly.Blazor
+@using Plotly.Blazor.LayoutLib
+@using Plotly.Blazor.Traces
+@using System.Drawing
 
-@inject UserClient userClient
-@inject DiaryGroupClient groupClient
-@inject DiaryClient diaryClient
-@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject HttpClient HttpClient
 
 <AuthorizeView>
     <Authorized>
-        <p>That's statistics page, it's unfinished</p>
-        <p>I should add:</p>
-        <uo>
-            <li>Mood Chart (what and how to make chart)</li>
-            <li>Entries per week/month and their symbol amount and medium amount of symbols per entry.</li>
-            <li>Previus is realized via Table for year (chosen), which is filled with some values
-            (1:week/month,2:entry amount,3:symbol amount,4: medium amount of symbols per entry)</li>
-        </uo>
+        <h3>Statistics Page</h3>
+        <div class="d-flex">
+            <p>Pick date range to get statistics from:</p>
+            <DateRangePicker class="ms-2 form-control-sm" @bind-StartDate="startDate" @bind-EndDate="endDate" />
+            <button class="btn btn-primary ms-2" @onclick="LoadStatsForDates">Load Stats</button>
+        </div>
+        @if(statsForDates != null)
+        {
+            <p class="mt-3">Stats for dates:</p>
+            <TableTemplate Items="statsForDates">
+                <TableHeader>
+                    <th>Date</th>
+                    <th>Entries count</th>
+                    <th>Symbols count</th>
+                    <th>Average symbols per entry</th>
+                    <th>Total mood of day</th>
+                </TableHeader>
+                <RowTemplate Context="statsForDay">
+                    <td>@statsForDay.Date</td>
+                    <td>@statsForDay.EntriesCount</td>
+                    <td>@statsForDay.SymbolsCount</td>
+                    <td>@statsForDay.AvgSymbolsPerEntry</td>
+                    <td>@statsForDay.MoodPointChange</td>
+                </RowTemplate>
+                <TableBottom>
+                    <td><strong>Totals:</strong></td>
+                    <td><strong>@totalStats?.EntriesCount</strong></td>
+                    <td><strong>@totalStats?.SymbolsCount</strong></td>
+                    <td><strong>@totalStats?.AvgSymbolsPerEntry</strong></td>
+                    <td><strong>@totalStats?.MoodPointChange</strong></td>
+                </TableBottom>
+            </TableTemplate>
+            @if(statsForDates.Count == 0)
+            {
+                <p class="mt-3 text-danger">No statistics found for the selected date range.</p>
+            }
+            @if(statsForDates.Count > 5)
+            {
+                <div class="mt-5 d-flex" style="min-height: 400px;">
+                    <button class="btn btn-secondary ms-2" @onclick="LoadLinearChart">Load statistics onto chart</button>
+                    @if(data != null)
+                    {
+                        <PlotlyChart @bind-Config="config" @bind-Layout="layout" @bind-Data="data" @ref="chart"></PlotlyChart>
+                    }
+                </div>
+            } else {
+                <p class="mt-3 text-warning">Not enough data points to generate a meaningful chart.</p>
+            }
+        }
     </Authorized>
 </AuthorizeView>
 
 @code {
-    List<DiaryGroup>? groups;
     int loggedUserId;
+    List<StatsDay>? statsForDates;
+    DateTimeOffset? startDate = DateTime.Now.AddMonths(-1);
+    DateTimeOffset? endDate = DateTime.Now;
+    StatsDay? totalStats;
+    [CascadingParameter] protected Task<AuthenticationState>? AuthStat { get; set; }
+    PlotlyChart? chart;
+    Config? config;
+    Layout? layout;
+    IList<ITrace>? data;
 
-    protected async override Task OnAfterRenderAsync(bool firstRender) {
-        if(firstRender) {
-            var loggedUser = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
+    protected async override Task OnInitializedAsync()
+    {
+        base.OnInitialized();
 
-            if(loggedUser.Identity != null && loggedUser.Identity.IsAuthenticated) {
-                loggedUserId = Convert.ToInt32(loggedUser.FindFirstValue("userId"));
-                try {
-                    await userClient.GetUserByIdAsync(loggedUserId);
-                } catch (Exception Ex) {
-                    Console.WriteLine("Exception of user nonexistance?: " + Ex);
-                    await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).LogoutUserAsync();
-                }
-                groups = await groupClient.GetGroupsOfUserAsync(loggedUserId);
-            }
-
-            StateHasChanged();
+        var user = (await AuthStat!).User;
+        if(user.Identity != null && user.Identity.IsAuthenticated)
+        {
+            loggedUserId = Convert.ToInt32(user.FindFirstValue("userId"));
         }
-        await base.OnAfterRenderAsync(firstRender);
+    }
+    private async Task LoadStatsForDates()
+    {
+        try {
+            var requestUri = $"stats/fordates?userId={loggedUserId}&startDate={startDate?.ToString("yyyy-MM-dd")}&endDate={endDate?.ToString("yyyy-MM-dd")}";
+            var response = await HttpClient.GetAsync(requestUri);
+            if(response.IsSuccessStatusCode)
+            {
+                statsForDates = await response.Content.ReadFromJsonAsync<List<StatsDay>>();
+                totalStats = new StatsDay
+                {
+                    Date = DateOnly.FromDateTime(DateTime.MinValue),
+                    EntriesCount = statsForDates!.Sum(s => s.EntriesCount),
+                    SymbolsCount = statsForDates!.Sum(s => s.SymbolsCount),
+                    AvgSymbolsPerEntry = statsForDates!.Sum(s => s.EntriesCount) != 0 ? statsForDates!.Sum(s => s.SymbolsCount) / statsForDates!.Sum(s => s.EntriesCount) : 0,
+                    MoodPointChange = statsForDates!.Sum(s => s.MoodPointChange)
+                };
+            }
+        }
+        catch(Exception ex)
+        {
+            System.Console.WriteLine("Exception occurred while loading stats for dates.");
+        }
+    }
+
+    private void LoadLinearChart()
+    {
+        // Initialize chart properties
+        config = new Config();
+        config.Responsive = true;
+        config.DisplayLogo = false;
+
+        // Define layout properties as needed
+        layout = new Layout();
+        //layout.Title = new Title { Text = "Linear Chart Example", Color = Color.DarkBlue };
+        // Define data
+        List<object> dates = statsForDates.Select(s => s.Date.ToString("yyyy-MM-dd")).Cast<object>().ToList();
+        List<object> entriesCounts = statsForDates.Select(s => s.EntriesCount).Cast<object>().ToList();
+        var symbolsCounts = statsForDates.Select(s => s.SymbolsCount).Cast<object>().ToList();
+        var avgSymbolsPerEntry = statsForDates.Select(s => s.AvgSymbolsPerEntry).Cast<object>().ToList();
+        var moodPointChanges = statsForDates.Select(s => s.MoodPointChange).Cast<object>().ToList();
+
+        Scatter scatterEntries = new Scatter() {
+            Name = "Entries count in day",
+            Mode = Plotly.Blazor.Traces.ScatterLib.ModeFlag.Lines | Plotly.Blazor.Traces.ScatterLib.ModeFlag.Markers,
+            X = dates,
+            Y = entriesCounts,
+            FillColor = Color.Green
+        };
+        Scatter scatterSymbols = new Scatter() {
+            Name = "Symbols count in day",
+            Mode = Plotly.Blazor.Traces.ScatterLib.ModeFlag.Lines | Plotly.Blazor.Traces.ScatterLib.ModeFlag.Markers,
+            X = dates,
+            Y = symbolsCounts,
+            FillColor = Color.Black
+        };
+
+        Scatter scatterAvgSymbols = new Scatter() {
+            Name = "Average symbols per Entry in day",
+            Mode = Plotly.Blazor.Traces.ScatterLib.ModeFlag.Lines | Plotly.Blazor.Traces.ScatterLib.ModeFlag.Markers,
+            X = dates,
+            Y = avgSymbolsPerEntry,
+            FillColor = Color.Azure
+        };
+
+        Scatter scatterMood = new Scatter() {
+            Name = "Total mood point in day",
+            Mode = Plotly.Blazor.Traces.ScatterLib.ModeFlag.Lines | Plotly.Blazor.Traces.ScatterLib.ModeFlag.Markers,
+            X = dates,
+            Y = moodPointChanges,
+            FillColor = Color.Orange
+        };
+
+        data = new List<ITrace>
+        {
+            scatterEntries,
+            scatterSymbols,
+            scatterAvgSymbols,
+            scatterMood
+        };
     }
 }

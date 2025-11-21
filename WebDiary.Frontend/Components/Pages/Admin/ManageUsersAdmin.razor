@@ -1,27 +1,25 @@
-@using global::WebDiary.Frontend.Clients
-@using global::WebDiary.Frontend.Models
 @inject UserClient userClient
 @inject IStringLocalizer<Resources.AdminResource> Localizator
 
-<div class="mt-4 mb-4">
-    <div class="mt-2 d-flex">
-        @Localizator["FilterSet1"]
-        <InputText type="text" class="form-full-width ms-2" @bind-value="userNameFilter" />
-    </div>
-    <div class="mt-2 d-flex">
-        @Localizator["FilterSet2"]
-        <InputText type="text" class="form-full-width ms-2" @bind-value="RoleFilter" />
-    </div>
+<div class="mt-4 mb-4 d-flex">
     <div class="mt-2">
+        @Localizator["FilterSet1"]
+        <InputText type="text" class="form-full-width ms-2" @bind-value="userNameFilter" aria-placeholder="@Localizator[@"FilterSet1"]" style="width: auto;" />
+    </div>
+    <div class="mt-2 ms-2">
+        @Localizator["FilterSet2"]
+        <InputText type="text" class="form-full-width ms-2" @bind-value="RoleFilter" aria-placeholder="@Localizator[@"FilterSet2"]" style="width: auto;" />
+    </div>
+    <div class="mt-2 ms-2">
         <button type="submit" class="btn btn-secondary" @onclick="() => UpdateSearch()">@Localizator["FilterSet3"]</button>
     </div>
 </div>
 
-<TableTemplate Items="usersSearching">
+<TableTemplate Items="usersSearching" CssClassesToAdd="table-to-bottom-scroll-y" >
     <TableHeader>
         <th>Id</th>
         <th>User name</th>
-        <th>Is Activated</th>
+        <th>Activated</th>
         <th>Role</th>
         <th>Description</th>
         <th>Actions with user</th>
@@ -29,14 +27,15 @@
     <RowTemplate Context="user">
         <td>@user.Id</td>
         <td>@user.UserName</td>
-        <td>@user.IsValidated</td>
+        <td>@(user.IsValidated ? @"Yes" : @"No")</td>
         <td>@user.Role</td>
         <td>@user.Description</td>
         <th>
             <button class="btn btn-secondary ms-1 mb-1" @onclick="() => ChangeActive(user)">@(user.IsValidated ? @"Dea" : @"A")ctivate account</button>
-            <button class="btn btn-secondary ms-2 mb-1" @onclick="() => ResetPassword(user)">Reset password</button>
+            <button class="btn btn-danger ms-2 mb-1" @onclick="() => ResetPassword(user)">Reset password</button>
             @if(user.Role != "Admin") {
-                <button class="btn btn-secondary ms-2 mb-1" @onclick="() => giveAdminRights.Open(user)">Give admin rights</button>
+                <button class="btn btn-success ms-2 mb-1" @onclick="() => giveAdminRights!.Open(user)">Give admin rights</button>
+                <button class="btn btn-danger ms-2 mb-1" @onclick="() => DeleteUser(user)">Delete user</button>
             }
         </th>
     </RowTemplate>
@@ -47,7 +46,7 @@
 @code {
     List<User>? users { get; set; }
     List<User>? usersSearching { get; set; }
-    private GiveAdminRightsDialogue giveAdminRights { get; set; }
+    private GiveAdminRightsDialogue? giveAdminRights { get; set; }
     private string userNameFilter = "";
     private string RoleFilter = "";
 
@@ -65,8 +64,11 @@
     }
     private async Task ResetPassword(User user) {
         var newUser = user;
-        newUser.Password = String.Empty;
+        newUser.Password = "RESET_PASSWORD";
         await userClient.UpdateUserAsync(newUser);
+    }
+    private async Task DeleteUser(User user) {
+        await userClient.DeleteUserAsync(user.Id);
     }
 
     private void UpdateSearch() {

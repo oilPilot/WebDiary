@@ -1,0 +1,47 @@
+﻿@using BootstrapBlazor.Components
+
+<div class="modal" tabindex="-1" style="display: @ModalDisplay;">
+    <div class="modal-dialogue" role="document">
+        <div class="modal-placement modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">@HeaderText</h4>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" @onclick="() => Close()" />
+            </div>
+            <div class="modal-body">
+                @BodyTemplate
+            </div>
+            <div class="modal-footer">
+                @FooterTemplate
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (ShowBackdrop)
+{
+    <div class="modal-backdrop fade show"></div>
+}
+
+@code {
+    [Parameter]
+    public string HeaderText { get; set; }
+    [Parameter]
+    public RenderFragment BodyTemplate { get; set; }
+    [Parameter]
+    public RenderFragment FooterTemplate { get; set; }
+
+    public string ModalDisplay = "none;";
+    public bool ShowBackdrop = false;
+
+    public void Open() {
+        ModalDisplay = "block;";
+        ShowBackdrop = true;
+        StateHasChanged();
+    }
+    private void Close() {
+        ModalDisplay = "none;";
+        ShowBackdrop = false;
+        StateHasChanged();
+    }
+
+}

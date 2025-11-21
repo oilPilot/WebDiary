@@ -5,6 +5,8 @@ using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 using PdfSharp.Fonts;
 
+namespace WebDiary.Helpers;
+
 public class DiaryPdfExporter
 {
     public byte[] Export(IEnumerable<Diary> diaries, string Header = "All diary entries from MyDiary:")

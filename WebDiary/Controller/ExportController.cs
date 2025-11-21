@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebDiary.Data;
 using WebDiary.Entities;
+using WebDiary.Helpers;
 
 [Route("export")]
 [ApiController]

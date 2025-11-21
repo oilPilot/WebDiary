@@ -1,6 +1,6 @@
 @typeparam TItem
 
-<div class="table-wrapper-scroll-y my-custom-scrollbar">
+<div class="table-wrapper-scroll-y my-custom-scrollbar@(CssClassesToAdd != null ? " " + CssClassesToAdd : "")">
     <table class="table table-bordered table-stripped mb-0">
         <thead>
             <tr>
@@ -18,6 +18,14 @@
                 }
             }
         </tbody>
+        @if(TableBottom != null)
+        {
+            <tfoot>
+                <tr>
+                    @TableBottom
+                </tr>
+            </tfoot>
+        }
     </table>
 </div>
 
@@ -27,6 +35,10 @@
     [Parameter]
     public RenderFragment<TItem> RowTemplate { get; set; }
     [Parameter]
+    public RenderFragment? TableBottom { get; set; }
+    [Parameter]
     public IReadOnlyList<TItem> Items { get; set; }
+    [Parameter]
+    public string? CssClassesToAdd { get; set; }
 
 }

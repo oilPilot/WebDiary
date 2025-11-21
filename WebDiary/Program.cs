@@ -36,6 +36,9 @@ builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 builder.Services.AddLocalization();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddScoped<IStatsService, StatsService>();
+
+Log.Information("Added Authentication, Authorization, Controllers and Localization to services");
 /*
 builder.Services.AddSwaggerGen(c =>
 {

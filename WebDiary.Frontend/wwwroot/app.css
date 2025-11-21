@@ -13,6 +13,7 @@ li.nonumeration {
 .modal-placement {
     width: 50% !important;
     position: fixed !important;
+    z-index: 2000 !important;
     left: 25%;
     top: 25%;
 }
@@ -23,8 +24,12 @@ li.nonumeration {
 
 .my-custom-scrollbar {
     position: relative;
-    height: 480px;
+    max-height: 400px;
     overflow: auto;
+}
+
+.table-to-bottom-scroll-y {
+    max-height: 82vh;
 }
 
 .form-full-width {

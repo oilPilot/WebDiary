@@ -44,7 +44,10 @@ Also you can run tests with this command: `dotnet test`
 * Git for version control
 
 ## 📈 Planned Improvements
-* Look into ToDo.txt, there are all plans, for features and for their polishing.
+* Improve Admin panel
+* Realize more statistics
+* Realize messaging between users
+* Fix glitches
 
 ## 🤝 Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.

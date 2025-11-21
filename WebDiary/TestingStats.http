@@ -1,0 +1,5 @@
+GET http://localhost:5281/stats/fordates?userId=30&startDate=2025-10-19&endDate=2025-11-19
+
+### Response 200 OK, but with wrong data passed into
+###
+

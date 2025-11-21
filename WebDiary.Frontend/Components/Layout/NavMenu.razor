@@ -36,17 +36,17 @@
                         <span class="biLocal bi-person-dash-nav-menu" aria-hidden="true"></span> @Localizator["LogoutTitle"]
                     </NavLink>
                 </div>
+                <div class="nav-item px-3 d-flex">
+                    <NavLink class="nav-link" href="/Statistics" Match="NavLinkMatch.All">
+                        <span class="bi bi-bar-chart-line me-3" aria-hidden="true"></span>   @Localizator["StatisticsTitle"]
+                    </NavLink>
+                </div>
 
                 <AuthorizeView Roles="Admin">
                     <Authorized>
                         <div class="nav-item px-3 d-flex">
                             <NavLink class="nav-link" href="/AdminPanel" Match="NavLinkMatch.All">
                                 <span class="bi bi-award-fill me-3" aria-hidden="true"></span>   @Localizator["AdminPanelTitle"]
-                            </NavLink>
-                        </div>
-                        <div class="nav-item px-3 d-flex">
-                            <NavLink class="nav-link" href="/Statistics" Match="NavLinkMatch.All">
-                                <span class="bi bi-bar-chart-line me-3" aria-hidden="true"></span>   @Localizator["StatisticsTitle"]
                             </NavLink>
                         </div>
                     </Authorized>

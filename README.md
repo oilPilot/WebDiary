@@ -10,6 +10,8 @@ This is web application built with ASP.NET Core and Blazor that allows users to 
 * Export to PDF
 * Light and Dark Mode
 * quick emoji scale at each diary entry;
+* Admin panel
+* Statistics page
 * Unit tests
 
 ## Deployment url: https://webdiary-frontend.onrender.com
@@ -48,6 +50,7 @@ Also you can run tests with this command: `dotnet test`
 * Realize more statistics
 * Realize messaging between users
 * Fix glitches
+* You can look more in ROADMAP.md
 
 ## 🤝 Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.

@@ -66,4 +66,15 @@
 	<data name="LightThemeText" xml:space="preserve">
 		<value>Light theme</value>
 	</data>
+	
+	<!-- These entries are kept in English to avoid the need for translation in a personal portfolio context. -->
+	<data name="GitHub" xml:space="preserve">
+		<value>Github</value>
+	</data>
+	<data name="Portfolio" xml:space="preserve">
+		<value>Portfolio</value>
+	</data>
+	<data name="Contact" xml:space="preserve">
+		<value>Contact</value>
+	</data>
 </root>

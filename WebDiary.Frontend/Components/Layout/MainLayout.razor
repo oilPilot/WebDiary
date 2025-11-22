@@ -4,12 +4,13 @@
 @inject IJSRuntime JS
 @inject HttpClient httpClient
 @inject ISessionStorageService SessionStorage
+@inject IConfiguration Configuration
 
 <PageTitle>MyDiary</PageTitle>
 
 <div class="page">
     @if(AwakenedBackend == true) {
-    <div class="sidebar">
+    <div class="sidebar" style="z-index: 5;">
         <NavMenu />
     </div>
 
@@ -18,6 +19,11 @@
         <a href="/privacy-policy">@Localizator["PrivacyPolicy"]</a>
         <a href="/terms-of-service"class="ms-4">@Localizator["TermsOfService"]</a>
     </div>
+    <footer class="text-center bg-body-tertiary fixed-bottom" style="padding-top: 0.4rem; padding-bottom: 0.4rem; z-index: 1;">
+        <a href="@GitHubUrl"class="ms-4">@Localizator["GitHub"]</a>
+        <a href="@PortfolioUrl"class="ms-4">@Localizator["Portfolio"]</a>
+        <a href="@ContactUrl"class="ms-4">@Localizator["Contact"]</a>
+    </footer>
         @Body
     </main>
     }
@@ -47,6 +53,19 @@
 
 @code {
     private bool? AwakenedBackend = null;
+    private string GitHubUrl = "";
+    private string PortfolioUrl = "";
+    private string ContactUrl = "";
+
+    override protected async Task OnInitializedAsync()
+    {
+        GitHubUrl = Configuration["Links:GitHub"] ?? "";
+        PortfolioUrl = Configuration["Links:Portfolio"] ?? "";
+        ContactUrl = Configuration["Links:Contact"] ?? "";
+        await base.OnInitializedAsync();
+    }
+
+
     override protected async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)

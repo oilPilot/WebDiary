@@ -13,19 +13,17 @@
     Polishing:  1.Consider a "global master password" that can unlock all groups in session — to prevent repeated input annoyance.
 
 ## Known Issues:
-    Logout windows doesn't overlap tables
-    'Admin Rights' name of Group is long, causing design issues
-    Refresh tokens don't work
+    'Admin Rights' name of Group is long, causing issues, something is need to be done;
+    Fix Refresh tokens;
 
 ## Architecture improvements:
-    Realize DialogueTemplate instead of infinite lines for dialogues
-    Realize Services for backend
-    Add Serilog Logs for Admin actions
+    Realize DialogueTemplate instead of infinite lines for dialogues;
+    Realize Services for backend;
 
 ## UI/UX polishing tasks:
-    Add more dialogues for ManageUsersAdmin.razor
-    Symbols are currently includes HTML symbols, so they are a bit too high
-    Add dialogue after Reset Password button is pressed
-    Add translation to Statistics page and ManageUsersAdmin.razor
+    Add more dialogues for ManageUsersAdmin.razor;
+    Symbols in statistics are currently includes HTML symbols, so they are a bit too high;
+    Add dialogues and Logs after admin actions;
+    Realize translation for: Statistics page; ManageUsersAdmin.razor;
     
 

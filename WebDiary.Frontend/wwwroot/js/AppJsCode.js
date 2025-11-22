@@ -7,12 +7,12 @@ function toggleTheme(theme) {
     }
 function toggleLastTheme() {
         if (!localStorage.getItem('theme'))
-            localStorage.setItem('theme') = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            localStorage.setItem('theme', window.matchMedia('(prefers-color-scheme: dark)').matches);
         document.documentElement.setAttribute('data-bs-theme', localStorage.getItem('theme'));
     }
 function getTheme() {
         if (!localStorage.getItem('theme'))
-            localStorage.setItem('theme') = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            localStorage.setItem('theme', window.matchMedia('(prefers-color-scheme: dark)').matches);
         return localStorage.getItem('theme')
     }
 function getAndSetLastTheme() {

@@ -123,4 +123,43 @@
   	<data name="DeletingGroupHeader" xml:space="preserve">
 		<value>Gruppe löschen </value>
 	</data>
+  	<data name="StatisticsHeader" xml:space="preserve">
+		<value>Statistikseite</value>
+	</data>
+  	<data name="DateRangePick" xml:space="preserve">
+		<value>Wählen Sie den Datumsbereich aus, aus dem Sie Statistiken abrufen möchten:</value>
+	</data>
+  	<data name="LoadStatistics" xml:space="preserve">
+		<value>Laststatistik</value>
+	</data>
+  	<data name="StatisticsTableData1" xml:space="preserve">
+		<value>Statistiken zu Terminen:</value>
+	</data>
+  	<data name="StatisticsTableData2" xml:space="preserve">
+		<value>Datum</value>
+	</data>
+  	<data name="StatisticsTableData3" xml:space="preserve">
+		<value>Einträge zählen</value>
+	</data>
+  	<data name="StatisticsTableData4" xml:space="preserve">
+		<value>Symbole zählen</value>
+	</data>
+  	<data name="StatisticsTableData5" xml:space="preserve">
+		<value>Durchschnittliche Symbole pro Eintrag</value>
+	</data>
+  	<data name="StatisticsTableData6" xml:space="preserve">
+		<value>Gesamtstimmung des Tages</value>
+	</data>
+  	<data name="StatisticsTableData7" xml:space="preserve">
+		<value>Summen:</value>
+	</data>
+  	<data name="NoData" xml:space="preserve">
+		<value>Für den ausgewählten Zeitraum wurden keine Statistiken gefunden.</value>
+	</data>
+  	<data name="NotEnoughDataForChart" xml:space="preserve">
+		<value>Nicht genügend Datenpunkte, um ein aussagekräftiges Diagramm zu erstellen.</value>
+	</data>
+  	<data name="LoadChart" xml:space="preserve">
+		<value>Statistiken in Diagramm laden</value>
+	</data>
 </root>

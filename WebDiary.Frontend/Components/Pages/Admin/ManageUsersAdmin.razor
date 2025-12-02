@@ -17,25 +17,25 @@
 
 <TableTemplate Items="usersSearching" CssClassesToAdd="table-to-bottom-scroll-y" >
     <TableHeader>
-        <th>Id</th>
-        <th>User name</th>
-        <th>Activated</th>
-        <th>Role</th>
-        <th>Description</th>
-        <th>Actions with user</th>
+        <th>@Localizator["TableHeader1"]</th>
+        <th>@Localizator["TableHeader2"]</th>
+        <th>@Localizator["TableHeader3"]</th>
+        <th>@Localizator["TableHeader4"]</th>
+        <th>@Localizator["TableHeader5"]</th>
+        <th>@Localizator["TableHeader6"]</th>
     </TableHeader>
     <RowTemplate Context="user">
         <td>@user.Id</td>
         <td>@user.UserName</td>
-        <td>@(user.IsValidated ? @"Yes" : @"No")</td>
+        <td>@(user.IsValidated ? Localizator["TableIsActiveYes"] : Localizator["TableIsActiveNo"])</td>
         <td>@user.Role</td>
         <td>@user.Description</td>
         <th>
-            <button class="btn btn-secondary ms-1 mb-1" @onclick="() => ChangeActive(user)">@(user.IsValidated ? @"Dea" : @"A")ctivate account</button>
-            <button class="btn btn-danger ms-2 mb-1" @onclick="() => OpenDialogueWithUser(user, ResetPasswordDialogue)">Reset password</button>
+            <button class="btn btn-secondary ms-1 mb-1" @onclick="() => ChangeActive(user)">@(user.IsValidated ? Localizator["TableAction1"] : Localizator["TableAction2"])</button>
+            <button class="btn btn-danger ms-2 mb-1" @onclick="() => OpenDialogueWithUser(user, ResetPasswordDialogue)">@Localizator["TableAction3"]</button>
             @if(user.Role != "Admin") {
-                <button class="btn btn-success ms-2 mb-1" @onclick="() => OpenDialogueWithUser(user, giveAdminRightsDialogue)">Give admin rights</button>
-                <button class="btn btn-danger ms-2 mb-1" @onclick="() => OpenDialogueWithUser(user, DeleteUserDialogue)">Delete user</button>
+                <button class="btn btn-success ms-2 mb-1" @onclick="() => OpenDialogueWithUser(user, giveAdminRightsDialogue)">@Localizator["TableAction4"]</button>
+                <button class="btn btn-danger ms-2 mb-1" @onclick="() => OpenDialogueWithUser(user, DeleteUserDialogue)">@Localizator["TableAction5"]</button>
             }
         </th>
     </RowTemplate>

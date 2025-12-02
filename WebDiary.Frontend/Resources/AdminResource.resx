@@ -57,4 +57,43 @@
 	<data name="ResetPasswordDialogue3" xml:space="preserve">
 		<value>, this will set his password to „RESET_PASSWORD“, you will need to notify in some way him about that, are you sure?</value>
 	</data>
+	<data name="TableHeader1" xml:space="preserve">
+		<value>Id</value>
+	</data>
+	<data name="TableHeader2" xml:space="preserve">
+		<value>Username</value>
+	</data>
+	<data name="TableHeader3" xml:space="preserve">
+		<value>Activated</value>
+	</data>
+	<data name="TableHeader4" xml:space="preserve">
+		<value>Role</value>
+	</data>
+	<data name="TableHeader5" xml:space="preserve">
+		<value>Description</value>
+	</data>
+	<data name="TableHeader6" xml:space="preserve">
+		<value>Actions with user</value>
+	</data>
+	<data name="TableIsActiveYes" xml:space="preserve">
+		<value>Yes</value>
+	</data>
+	<data name="TableIsActiveNo" xml:space="preserve">
+		<value>No</value>
+	</data>
+	<data name="TableAction1" xml:space="preserve">
+		<value>Deactivate account</value>
+	</data>
+	<data name="TableAction2" xml:space="preserve">
+		<value> Activate account </value>
+	</data>
+	<data name="TableAction3" xml:space="preserve">
+		<value>Reset password</value>
+	</data>
+	<data name="TableAction4" xml:space="preserve">
+		<value>Give admin rights</value>
+	</data>
+	<data name="TableAction5" xml:space="preserve">
+		<value>Delete user</value>
+	</data>
 </root>

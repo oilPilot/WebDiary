@@ -3,27 +3,27 @@
 @using Plotly.Blazor.LayoutLib
 @using Plotly.Blazor.Traces
 @using System.Drawing
-
+@inject IStringLocalizer<Resources.MainResource> Localizator
 @inject HttpClient HttpClient
 
 <AuthorizeView>
     <Authorized>
-        <h3>Statistics Page</h3>
+        <h3>@Localizator["StatisticsHeader"]</h3>
         <div class="d-flex">
-            <p>Pick date range to get statistics from:</p>
+            <p>@Localizator["DateRangePick"]</p>
             <DateRangePicker class="ms-2 form-control-sm" @bind-StartDate="startDate" @bind-EndDate="endDate" />
-            <button class="btn btn-primary ms-2" @onclick="LoadStatsForDates">Load Stats</button>
+            <button class="btn btn-primary ms-2" @onclick="LoadStatsForDates">@Localizator["LoadStatistics"]</button>
         </div>
         @if(statsForDates != null)
         {
-            <p class="mt-3">Stats for dates:</p>
+            <p class="mt-3">@Localizator["StatisticsTableData1"]</p>
             <TableTemplate Items="statsForDates">
                 <TableHeader>
-                    <th>Date</th>
-                    <th>Entries count</th>
-                    <th>Symbols count</th>
-                    <th>Average symbols per entry</th>
-                    <th>Total mood of day</th>
+                    <th>@Localizator["StatisticsTableData2"]</th>
+                    <th>@Localizator["StatisticsTableData3"]</th>
+                    <th>@Localizator["StatisticsTableData4"]</th>
+                    <th>@Localizator["StatisticsTableData5"]</th>
+                    <th>@Localizator["StatisticsTableData6"]</th>
                 </TableHeader>
                 <RowTemplate Context="statsForDay">
                     <td>@statsForDay.Date</td>
@@ -33,7 +33,7 @@
                     <td>@statsForDay.MoodPointChange</td>
                 </RowTemplate>
                 <TableBottom>
-                    <td><strong>Totals:</strong></td>
+                    <td><strong>@Localizator["StatisticsTableData7"]</strong></td>
                     <td><strong>@totalStats?.EntriesCount</strong></td>
                     <td><strong>@totalStats?.SymbolsCount</strong></td>
                     <td><strong>@totalStats?.AvgSymbolsPerEntry</strong></td>
@@ -42,19 +42,19 @@
             </TableTemplate>
             @if(statsForDates.Count == 0)
             {
-                <p class="mt-3 text-danger">No statistics found for the selected date range.</p>
+                <p class="mt-3 text-danger">@Localizator["NoData"]</p>
             }
             @if(statsForDates.Count > 5)
             {
                 <div class="mt-5 d-flex" style="min-height: 400px;">
-                    <button class="btn btn-secondary ms-2" @onclick="LoadLinearChart">Load statistics onto chart</button>
+                    <button class="btn btn-secondary ms-2" @onclick="LoadLinearChart">@Localizator["LoadChart"]</button>
                     @if(data != null)
                     {
                         <PlotlyChart @bind-Config="config" @bind-Layout="layout" @bind-Data="data" @ref="chart"></PlotlyChart>
                     }
                 </div>
             } else {
-                <p class="mt-3 text-warning">Not enough data points to generate a meaningful chart.</p>
+                <p class="mt-3 text-warning">@Localizator["NotEnoughDataForChart"]</p>
             }
         }
     </Authorized>
@@ -124,14 +124,14 @@
         var moodPointChanges = statsForDates.Select(s => s.MoodPointChange).Cast<object>().ToList();
 
         Scatter scatterEntries = new Scatter() {
-            Name = "Entries count in day",
+            Name = Localizator["StatisticsTableData3"],
             Mode = Plotly.Blazor.Traces.ScatterLib.ModeFlag.Lines | Plotly.Blazor.Traces.ScatterLib.ModeFlag.Markers,
             X = dates,
             Y = entriesCounts,
             FillColor = Color.Green
         };
         Scatter scatterSymbols = new Scatter() {
-            Name = "Symbols count in day",
+            Name = Localizator["StatisticsTableData4"],
             Mode = Plotly.Blazor.Traces.ScatterLib.ModeFlag.Lines | Plotly.Blazor.Traces.ScatterLib.ModeFlag.Markers,
             X = dates,
             Y = symbolsCounts,
@@ -139,7 +139,7 @@
         };
 
         Scatter scatterAvgSymbols = new Scatter() {
-            Name = "Average symbols per Entry in day",
+            Name = Localizator["StatisticsTableData5"],
             Mode = Plotly.Blazor.Traces.ScatterLib.ModeFlag.Lines | Plotly.Blazor.Traces.ScatterLib.ModeFlag.Markers,
             X = dates,
             Y = avgSymbolsPerEntry,
@@ -147,7 +147,7 @@
         };
 
         Scatter scatterMood = new Scatter() {
-            Name = "Total mood point in day",
+            Name = Localizator["StatisticsTableData6"],
             Mode = Plotly.Blazor.Traces.ScatterLib.ModeFlag.Lines | Plotly.Blazor.Traces.ScatterLib.ModeFlag.Markers,
             X = dates,
             Y = moodPointChanges,

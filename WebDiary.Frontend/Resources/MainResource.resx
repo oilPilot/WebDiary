@@ -138,4 +138,43 @@
   	<data name="DeletingGroupHeader" xml:space="preserve">
 		<value>Deleting group </value>
 	</data>
+  	<data name="StatisticsHeader" xml:space="preserve">
+		<value>Statistics Page</value>
+	</data>
+  	<data name="DateRangePick" xml:space="preserve">
+		<value>Pick date range to get statistics from:</value>
+	</data>
+  	<data name="LoadStatistics" xml:space="preserve">
+		<value>Load Statistics</value>
+	</data>
+  	<data name="StatisticsTableData1" xml:space="preserve">
+		<value>Stats for dates:</value>
+	</data>
+  	<data name="StatisticsTableData2" xml:space="preserve">
+		<value>Date</value>
+	</data>
+  	<data name="StatisticsTableData3" xml:space="preserve">
+		<value>Entries count</value>
+	</data>
+  	<data name="StatisticsTableData4" xml:space="preserve">
+		<value>Symbols count</value>
+	</data>
+  	<data name="StatisticsTableData5" xml:space="preserve">
+		<value>Average symbols per entry</value>
+	</data>
+  	<data name="StatisticsTableData6" xml:space="preserve">
+		<value>Total mood of day</value>
+	</data>
+  	<data name="StatisticsTableData7" xml:space="preserve">
+		<value>Totals:</value>
+	</data>
+  	<data name="NoData" xml:space="preserve">
+		<value>No statistics found for the selected date range.</value>
+	</data>
+  	<data name="NotEnoughDataForChart" xml:space="preserve">
+		<value>Not enough data points to generate a meaningful chart.</value>
+	</data>
+  	<data name="LoadChart" xml:space="preserve">
+		<value>Load statistics onto chart</value>
+	</data>
 </root>

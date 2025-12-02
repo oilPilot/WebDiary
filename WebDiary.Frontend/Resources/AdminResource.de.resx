@@ -57,4 +57,43 @@
 	<data name="ResetPasswordDialogue3" xml:space="preserve">
 		<value> zurücksetzen. Dadurch wird sein Passwort auf „RESET_PASSWORD“ gesetzt. Sie müssen ihn darüber in irgendeiner Form benachrichtigen. Sind Sie sicher?</value>
 	</data>
+	<data name="TableHeader1" xml:space="preserve">
+		<value>Ausweis</value>
+	</data>
+	<data name="TableHeader2" xml:space="preserve">
+		<value>Benutzername</value>
+	</data>
+	<data name="TableHeader3" xml:space="preserve">
+		<value>Aktiviert</value>
+	</data>
+	<data name="TableHeader4" xml:space="preserve">
+		<value>Rolle</value>
+	</data>
+	<data name="TableHeader5" xml:space="preserve">
+		<value>Beschreibung</value>
+	</data>
+	<data name="TableHeader6" xml:space="preserve">
+		<value>Aktionen mit dem Benutzer</value>
+	</data>
+	<data name="TableIsActiveYes" xml:space="preserve">
+		<value>Ja</value>
+	</data>
+	<data name="TableIsActiveNo" xml:space="preserve">
+		<value>Nein</value>
+	</data>
+	<data name="TableAction1" xml:space="preserve">
+		<value>Konto deaktivieren</value>
+	</data>
+	<data name="TableAction2" xml:space="preserve">
+		<value> Konto aktivieren </value>
+	</data>
+	<data name="TableAction3" xml:space="preserve">
+		<value>Passwort zurücksetzen</value>
+	</data>
+	<data name="TableAction4" xml:space="preserve">
+		<value>Administratorrechte vergeben</value>
+	</data>
+	<data name="TableAction5" xml:space="preserve">
+		<value>Benutzer löschen</value>
+	</data>
 </root>

@@ -23,6 +23,5 @@
     Add Logs after admin actions;
 
 ## Places to translate:
-* Statistics page;
-* ManageUsersAdmin.razor;
+* Everything already
 

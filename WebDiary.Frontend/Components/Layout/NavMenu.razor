@@ -60,18 +60,29 @@
                 <p>@LocalizatorLayout["Loading"]</p>
             } else {
                 @foreach(var group in groups!) {
+                    /* Each diary group is represented as a navigation item with options to manage it,
+                    including setting a pin code, editing, or deleting the group,
+                    upon pressing them you shouldn't change the page (therefore the stopPropagation on the buttons).
+                    Clicking on the main area of the group item navigates to that diary group's page.
+                    We can't put buttons out of NavLink because of styling issues
+                    But we can stop the event propagation on button clicks to prevent navigation
+                    How to renew propagation though.
+                    */
                     <div class="nav-item px-3 d-flex">
                         <NavLink class="nav-link" href="@($"Diary/{group.Id}")" Match="NavLinkMatch.All">
                             <span class="bi bi-lock@(String.IsNullOrEmpty(group.PinCode) ? @"" : @"-fill")" />
-                            @if(group.Name!.Length > 10) {
-                                <p class="mt-3">@group.Name.Substring(0, 10)...</p>
-                            } else {
-                                <p class="mt-3">@group.Name</p>
-                            }
+                            <p class="mt-3 truncated-group-header">@group.Name</p>
                             <div class="d-flex position-buttons">
-                                <button type="button" class="btn btn-secondary biLocal bi-pin-code" @onclick="() => OpenPinGroup(group)" />
-                                <button type="button" class="btn btn-secondary biLocal bi-pencil-square-black-nav-menu" @onclick="() => OpenPinChangeUpdating(group)" />
-                                <button type="button" class="btn btn-danger btn-close" @onclick="() => OpenPinChangeDeleting(group)" />
+                                <button type="button" class="btn btn-secondary biLocal bi-pin-code"
+                                    @onclick="() => OpenPinGroup(group)" @onclick:preventDefault="true" @onclick:stopPropagation="true"/>
+                                <button type="button" class="btn btn-secondary biLocal bi-pencil-square-black-nav-menu"
+                                    @onclick="() => OpenPinChangeUpdating(group)" @onclick:preventDefault="true" @onclick:stopPropagation="true"/>
+                                <button type="button" class="btn btn-danger btn-close"
+                                    @onclick="() => OpenPinChangeDeleting(group)" @onclick:preventDefault="true" @onclick:stopPropagation="true"/>
+                                @* "propagation" generally means the spreading or dissemination of information or changes through a system
+                                    Here, @onclick:stopPropagation="true": Stops the event from bubbling up to parent elements
+                                    While @onclick:preventDefault="true": Stops the browser's default action (the href navigation for an <a> tag).
+                                *@
                             </div>
                         </NavLink>
                     </div>
@@ -102,8 +113,10 @@
                 @if(!isDeleting) {
                     <p>@LocalizatorMain["CreateGroupVar1"]</p>
                     <InputText class="full-width" @bind-Value="group!.Name"></InputText>
-                    <p>@LocalizatorMain["ChangePinGroup1"]</p>
-                    <InputText type="password"  class="full-width" @bind-Value="group!.PinCode"></InputText>
+                    @if(HeaderName == LocalizatorMain["AddThematicGroup"]) {
+                        <p class="mt-3">@LocalizatorMain["ChangePinGroup1"]</p>
+                        <InputText type="password" class="full-width" @bind-Value="group!.PinCode"></InputText>
+                    }
                 } else{
                     <p class="fs-5 fw-semibold text-danger">@LocalizatorMain["DeleteGroupPart1"]@group!.Name@LocalizatorMain["DeleteGroupPart2"]</p>
                 }

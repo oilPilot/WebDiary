@@ -13,8 +13,6 @@
     Polishing:  1.Consider a "global master password" that can unlock all groups in session — to prevent repeated input annoyance.
 
 ## Known Issues:
-    'Admin Rights' name of Group is long, causing issues, something is need to be done;
-    When pressing buttons on Navigation link in NavMenu don't Navigate;
     Fix Refresh tokens;
 
 ## Architecture improvements:
@@ -22,7 +20,9 @@
 
 ## UI/UX polishing tasks:
     Symbols in statistics are currently includes HTML symbols, so they are a bit too high;
-    Add dialogues and Logs after admin actions;
-    Realize translation for: Statistics page; ManageUsersAdmin.razor;
-    
+    Add Logs after admin actions;
+
+## Places to translate:
+* Statistics page;
+* ManageUsersAdmin.razor;
 

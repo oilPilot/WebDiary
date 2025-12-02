@@ -32,21 +32,55 @@
         <td>@user.Description</td>
         <th>
             <button class="btn btn-secondary ms-1 mb-1" @onclick="() => ChangeActive(user)">@(user.IsValidated ? @"Dea" : @"A")ctivate account</button>
-            <button class="btn btn-danger ms-2 mb-1" @onclick="() => ResetPassword(user)">Reset password</button>
+            <button class="btn btn-danger ms-2 mb-1" @onclick="() => OpenDialogueWithUser(user, ResetPasswordDialogue)">Reset password</button>
             @if(user.Role != "Admin") {
-                <button class="btn btn-success ms-2 mb-1" @onclick="() => giveAdminRights!.Open(user)">Give admin rights</button>
-                <button class="btn btn-danger ms-2 mb-1" @onclick="() => DeleteUser(user)">Delete user</button>
+                <button class="btn btn-success ms-2 mb-1" @onclick="() => OpenDialogueWithUser(user, giveAdminRightsDialogue)">Give admin rights</button>
+                <button class="btn btn-danger ms-2 mb-1" @onclick="() => OpenDialogueWithUser(user, DeleteUserDialogue)">Delete user</button>
             }
         </th>
     </RowTemplate>
 
 </TableTemplate>
-<GiveAdminRightsDialogue @ref="giveAdminRights" />
+
+<DialogueTemplate @ref="giveAdminRightsDialogue" HeaderText=@Localizator["GiveAdminRightsDialogue1"]>
+    <BodyTemplate>
+        <p>@Localizator["GiveAdminRightsDialogue2"]„@User.UserName“@Localizator["GiveAdminRightsDialogue3"]</p>
+    </BodyTemplate>
+    <FooterTemplate>
+        <button type="button" class="btn btn-secondary"
+            data-dismiss="modal" @onclick="() => giveAdminRightsDialogue!.Close()">@Localizator["CancelButtonText"]</button>
+        <button type="button" class="btn btn-primary" @onclick="GiveAdminRightsAsync">@Localizator["ContinueButton"]</button>
+    </FooterTemplate>
+</DialogueTemplate>
+
+<DialogueTemplate @ref="DeleteUserDialogue" HeaderText=@Localizator["DeleteUserDialogue1"]>
+    <BodyTemplate>
+        <p>@Localizator["DeleteUserDialogue2"]„@User.UserName“@Localizator["DeleteUserDialogue3"]</p>
+    </BodyTemplate>
+    <FooterTemplate>
+        <button type="button" class="btn btn-secondary"
+            data-dismiss="modal" @onclick="() => DeleteUserDialogue!.Close()">@Localizator["CancelButtonText"]</button>
+        <button type="button" class="btn btn-danger" @onclick="DeleteUserAsync">@Localizator["ContinueButton"]</button>
+    </FooterTemplate>
+</DialogueTemplate>
+
+<DialogueTemplate @ref="ResetPasswordDialogue" HeaderText=@Localizator["ResetPasswordDialogue1"]>
+    <BodyTemplate>
+        <p>@Localizator["ResetPasswordDialogue2"]„@User.UserName“@Localizator["ResetPasswordDialogue3"]</p>
+    </BodyTemplate>
+    <FooterTemplate>
+        <button type="button" class="btn btn-secondary"
+            data-dismiss="modal" @onclick="() => ResetPasswordDialogue!.Close()">@Localizator["CancelButtonText"]</button>
+        <button type="button" class="btn btn-danger" @onclick="ResetPasswordAsync">@Localizator["ContinueButton"]</button>
+    </FooterTemplate>
+</DialogueTemplate>
 
 @code {
     List<User>? users { get; set; }
     List<User>? usersSearching { get; set; }
-    private GiveAdminRightsDialogue? giveAdminRights { get; set; }
+    private DialogueTemplate? giveAdminRightsDialogue { get; set; }
+    private DialogueTemplate? DeleteUserDialogue { get; set; }
+    private DialogueTemplate? ResetPasswordDialogue { get; set; }
     private string userNameFilter = "";
     private string RoleFilter = "";
 
@@ -62,17 +96,33 @@
         newUser.IsValidated = !newUser.IsValidated;
         await userClient.UpdateUserAsync(newUser);
     }
-    private async Task ResetPassword(User user) {
-        var newUser = user;
-        newUser.Password = "RESET_PASSWORD";
-        await userClient.UpdateUserAsync(newUser);
-    }
-    private async Task DeleteUser(User user) {
-        await userClient.DeleteUserAsync(user.Id);
-    }
 
     private void UpdateSearch() {
         usersSearching = users.Where(user => user.UserName.Contains(userNameFilter))
                                 .Where(user => user.Role.Contains(RoleFilter)).ToList();
+    }
+
+    // Modals Methods and Data
+    private User User = new User() { UserName = ""};
+    private async Task GiveAdminRightsAsync() {
+        var newUser = User;
+        newUser.Role = "Admin";
+        await userClient.UpdateUserAsync(newUser);
+    }
+    private async Task DeleteUserAsync() {
+        await userClient.DeleteUserAsync(User.Id);
+    }
+    private async Task ResetPasswordAsync() {
+        var newUser = User;
+        newUser.Password = "RESET_PASSWORD";
+        await userClient.UpdateUserAsync(newUser);
+    }
+    
+    // Open helpers
+    private void OpenDialogueWithUser(User user, DialogueTemplate? dialogue = null) {
+        User = user;
+        if(dialogue != null) {
+            dialogue.Open();
+        }
     }
 }

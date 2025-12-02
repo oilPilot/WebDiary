@@ -39,4 +39,22 @@
 	<data name="CancelButtonText" xml:space="preserve">
 		<value>Cancel</value>
 	</data>
+	<data name="DeleteUserDialogue1" xml:space="preserve">
+		<value>Deleting user</value>
+	</data>
+	<data name="DeleteUserDialogue2" xml:space="preserve">
+		<value>You are going to delete user </value>
+	</data>
+	<data name="DeleteUserDialogue3" xml:space="preserve">
+		<value> with all his diaries, you will carry responsibility after that, are you sure?</value>
+	</data>
+	<data name="ResetPasswordDialogue1" xml:space="preserve">
+		<value>Resetting password</value>
+	</data>
+	<data name="ResetPasswordDialogue2" xml:space="preserve">
+		<value>You are going to reset password for user </value>
+	</data>
+	<data name="ResetPasswordDialogue3" xml:space="preserve">
+		<value>, this will set his password to „RESET_PASSWORD“, you will need to notify in some way him about that, are you sure?</value>
+	</data>
 </root>

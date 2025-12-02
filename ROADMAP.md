@@ -4,7 +4,7 @@
 
 ## Features to Polish yet:
     1. Mood tracking - Add a quick emoji/mood scale at the end of diary entries to track emotional trends.
-    Polishing:  1.At midnight all empty mood states will be send to AI for setting emoji
+    Polishing:  1.At midnight all empty mood states will be send to AI for setting emoji - shall be new experimental setting
     2. Rich text support - Allow formatting (bold, italic, bullet lists) in diary entries.
     Polishing:  1.Auto-save unfinished entry
     4. Statistics dashboard - Show charts (entries per week, mood trends, word counts).
@@ -14,14 +14,13 @@
 
 ## Known Issues:
     'Admin Rights' name of Group is long, causing issues, something is need to be done;
+    When pressing buttons on Navigation link in NavMenu don't Navigate;
     Fix Refresh tokens;
 
 ## Architecture improvements:
-    Realize DialogueTemplate instead of infinite lines for dialogues;
-    Realize Services for backend;
+    Currently unknown;
 
 ## UI/UX polishing tasks:
-    Add more dialogues for ManageUsersAdmin.razor;
     Symbols in statistics are currently includes HTML symbols, so they are a bit too high;
     Add dialogues and Logs after admin actions;
     Realize translation for: Statistics page; ManageUsersAdmin.razor;

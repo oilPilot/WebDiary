@@ -37,6 +37,8 @@ builder.Services.AddControllers();
 builder.Services.AddLocalization();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddScoped<IStatsService, StatsService>();
+builder.Services.AddScoped<IExportService, ExportService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 Log.Information("Added Authentication, Authorization, Controllers and Localization to services");
 /*

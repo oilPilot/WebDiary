@@ -6,20 +6,15 @@ using WebDiary.Helpers;
 
 [Route("export")]
 [ApiController]
-public class ExportController(DiariesContext dbContext) : ControllerBase
+public class ExportController(IExportService exportService) : ControllerBase
 {
     [HttpGet("all/{userId:int}")]
     [Authorize]
     public IActionResult ExportAllDiaryGroup(int? userId = null)
     {
-        List<Diary> diaries;
-
         if (userId != null)
         {
-            var groups = dbContext.diaryGroups.Where(group => group.UserId == userId);
-            diaries = dbContext.diaries.Where(diary => groups.Any(group => group.Id == diary.GroupId)).ToList();
-
-            var pdfBytes = new DiaryPdfExporter().Export(diaries);
+            var pdfBytes = exportService.GetExportForEveryDiary(userId);
             return File(pdfBytes, "application/pdf", "MyDiary.pdf");
         }
         else throw new Exception("ExportDiary: both group and user id was null");
@@ -29,12 +24,9 @@ public class ExportController(DiariesContext dbContext) : ControllerBase
     [HttpGet("certain/{groupId:int}")]
     public IActionResult ExportCertainDiaryGroup(int? groupId = null)
     {
-        List<Diary> entries;
-
         if (groupId != null)
         {
-            entries = dbContext.diaries.Where(diary => diary.GroupId == groupId).ToList();
-            var pdfBytes = new DiaryPdfExporter().Export(entries, dbContext.diaryGroups.Where(group => group.Id == groupId).First().Name);
+            var pdfBytes = exportService.GetExportForCertainGroup(groupId);
             return File(pdfBytes, "application/pdf", "MyDiary.pdf");
         }
         else throw new Exception("ExportDiary: both group and user id was null");

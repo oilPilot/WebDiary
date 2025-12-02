@@ -168,4 +168,10 @@
 	<data name="Continue" xml:space="preserve">
 		<value>Ja, weiter</value>
 	</data>
+	<data name="UpdateAccountDialogueHeader" xml:space="preserve">
+		<value>Konto ändern</value>
+	</data>
+	<data name="DeleteAccountDialogueHeader" xml:space="preserve">
+		<value>Konto löschen</value>
+	</data>
 </root>

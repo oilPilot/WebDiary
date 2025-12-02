@@ -1,11 +1,15 @@
 ﻿@page "/Users"
 @using System.Security.Claims
+@using BootstrapBlazor.Components
 @using Microsoft.AspNetCore.Authorization
+@using System.ComponentModel.DataAnnotations
 @using WebDiary.Frontend.Models.Auth
+@using WebDiary.Frontend.Clients
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserClient UserClient
 @inject NavigationManager NavigationManager
 @inject IStringLocalizer<Resources.UsersResource> Localizator
+@inject HttpClient HttpClient
 
 <PageTitle>MyDiary</PageTitle>
 
@@ -14,23 +18,107 @@
         @if(@isHadRendered) {
             <h3>@Localizator["ManageAccountTitle"]</h3>
             <p>@Localizator["ManageAccountName"]@context.User.Identity!.Name</p>
+            @*
+            <p>@Localizator["ManageAccountEmail"]@context.User.FindFirstValue(ClaimTypes.Email)</p>
+            *@
             <p>@Localizator["ManageAccountRole"]@context.User.FindFirstValue(ClaimTypes.Role)</p>
             <p>@Localizator["ManageAccountDesc"]@context.User.FindFirstValue(ClaimTypes.UserData)</p>
             @if(!@isValidated) {
                 <p>@Localizator["DeactivatedAccount"]</p>
             }
             <button type="button" class="btn btn-outline-secondary" @onclick="Login">@Localizator["IntoAnotherAcc"]</button>
-            <button type="button" class="btn btn-outline-secondary" @onclick="() => modalAccount!.OpenForUpdatingAsync(loggedUserId)"
+            <button type="button" class="btn btn-outline-secondary ms-2" @onclick="() => modalAccount!.Open()"
                 >@Localizator["ModifyAcc"]</button>
-            <button type="button" class="btn btn-outline-danger" @onclick="Logout">@Localizator["Logout"]</button>
-            <button type="button" class="btn btn-outline-danger" @onclick="() => modalAccount!.OpenForDelete(loggedUserId)">@Localizator["DeleteAcc"]</button>
-            <WebDiary.Frontend.Components.Pages.Users.DeleteAndUpdateAccountDialogue @ref="modalAccount" />
+            <button type="button" class="btn btn-outline-danger ms-2" @onclick="Logout">@Localizator["Logout"]</button>
+            <button type="button" class="btn btn-outline-danger ms-2" @onclick="() => modalAccountDelete!.Open()">@Localizator["DeleteAcc"]</button>
+            
             <AuthorizeView Roles="Admin" Context="AdminContext">
                 <Authorized>
-                    <button class="btn btn-danger" @onclick="() => modalRemove?.Open(user)">@Localizator["RemoveAdminRights"]</button>
-                    <RemoveAdminRightsDialogue @ref="modalRemove" />
+                    <button class="btn btn-danger ms-2" @onclick="() => modalRemove?.Open()">@Localizator["RemoveAdminRights"]</button>
+                    
+                    <DialogueTemplate @ref="modalRemove" HeaderText=@Localizator["RemoveAdminRightsHeader"]>
+                        <BodyTemplate>
+                            <p class="fs-5 fw-semibold text-danger">@Localizator["RemoveAdminRightsSure"]</p>
+                        </BodyTemplate>
+                        <FooterTemplate>
+                            <button class="btn btn-secondary" data-dismiss="modal" @onclick="() => modalRemove!.Close()">@Localizator["CancelButtonText"]</button>
+                            <button class="btn btn-primary" data-dismiss="modal" @onclick="RemoveAdminRightsAsync">@Localizator["Continue"]</button>
+                        </FooterTemplate>
+                    </DialogueTemplate>
                 </Authorized>
             </AuthorizeView>
+            
+            <EditForm Model="@newUser" Context="AccountChangeContext" OnValidSubmit="UpdateAccountAsync" FormName="DeleteAccountForm">
+                <DialogueTemplate @ref="modalAccount" HeaderText=@Localizator["UpdateAccountDialogueHeader"] CustomOpen="@OpenUpdatingAccount">
+                    <BodyTemplate>
+                        <div>
+                            <DataAnnotationsValidator />
+                            <ValidationSummary />
+                            <div class="mt-3">
+                                <label>
+                                    @Localizator["AskUsername"]
+                                    <InputText @bind-value="newUser!.UserName" />
+                                    <ValidationMessage For="() => newUser!.UserName" />
+                                </label>
+                            </div>
+                            <div class="mt-3">
+                                <label>
+                                    @Localizator["AskSelfdescription"]
+                                    <InputTextArea @bind-value="newUser.Description" class="no-resize" />
+                                    <ValidationMessage For="() => newUser.Description" />
+                                </label>
+                            </div>
+                            @*
+                            <div class="mt-3">
+                                <label>
+                                    @Localizator["AskNewEmail"]
+                                    <InputText @bind-value="newEmail" />
+                                    <ValidationMessage For="() => newEmail" />
+                                </label>
+                            </div>
+                            *@
+                            <div class="mt-3">
+                                <label>
+                                    @Localizator["AskOldPassword"]
+                                    <InputText type="password" @bind-value="newUser.Password" />
+                                    <ValidationMessage For="() => newUser.Password" />
+                                </label>
+                            </div>
+                            <div class="mt-3">
+                                <label>
+                                    @Localizator["AskNewPassword"]
+                                    <InputText type="password" @bind-value="newPassword" />
+                                    <ValidationMessage For="() => newPassword" />
+                                </label>
+                            </div>
+                            <div>
+                                <label>
+                                    <p class="fs-5 fw-semibold text-danger">@ErrorMessage</p>
+                                    @*@if(passwordForgot) {
+                                        <p>@Localizator["PswdIncorrectDoYouForgot"]
+                                            @Localizator["Restore1"]<a href="/Users/RestorePassword" class="link-info">@Localizator["AddressForSomething"]</a></p>
+                                    }*@
+                                </label>
+                            </div>
+                        </div>
+                    </BodyTemplate>
+                    <FooterTemplate>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="() => modalAccount!.Close()">
+                            @Localizator["CancelButtonText"]</button>
+                        <button type="submit" class="btn btn-primary" data-dismiss="modal">@Localizator["SaveButtonText"]</button>
+                    </FooterTemplate>
+                </DialogueTemplate>
+            </EditForm>
+
+            <DialogueTemplate @ref="modalAccountDelete" HeaderText=@Localizator["DeleteAccountDialogueHeader"]>
+                <BodyTemplate>
+                    <p class="fs-5 fw-semibold text-danger">@Localizator["DeleteAccSure"]</p>
+                </BodyTemplate>
+                <FooterTemplate>
+                    <button class="btn btn-secondary" data-dismiss="modal" @onclick="() => modalAccountDelete!.Close()">@Localizator["CancelButtonText"]</button>
+                    <button class="btn btn-danger" data-dismiss="modal" @onclick="DeleteAccountAsync">@Localizator["DeleteButtonText"]</button>
+                </FooterTemplate>
+            </DialogueTemplate>
         } else {
             <p>@Localizator["PrerenderedTextUponLoading"]</p>
         }
@@ -38,13 +126,13 @@
 </AuthorizeView>
 
 @code {
-    // <p>@Localizator["ManageAccountEmail"]@context.User.FindFirstValue(ClaimTypes.Email)</p>
     private int loggedUserId;
     private bool isValidated;
     private bool isHadRendered = false;
     private User user = new User() { UserName = ""};
-    private WebDiary.Frontend.Components.Pages.Users.DeleteAndUpdateAccountDialogue? modalAccount;
-    private RemoveAdminRightsDialogue? modalRemove;
+    private DialogueTemplate? modalAccount;
+    private DialogueTemplate? modalAccountDelete;
+    private DialogueTemplate? modalRemove;
     
     private async Task Logout() {
         await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).LogoutUserAsync();
@@ -71,4 +159,64 @@
         
         await base.OnAfterRenderAsync(firstRender);
     }
+
+    // Modal Methods and Data
+    private User newUser = new User() { UserName = ""};
+    [MinLength(8)]
+    [MaxLength(64)]
+    [Required(AllowEmptyStrings = true)]
+    private string? newPassword;
+    private string? ErrorMessage;
+    //private bool passwordForgot = false;
+
+    private void OpenUpdatingAccount() {
+        newUser = user;
+        newUser.Password = "";
+    }
+    
+    private async Task ReLogin() {
+        var response = await HttpClient.PostAsJsonAsync("/auth/jwttoken/login", new { Username = newUser!.UserName, Password = newUser.Password });
+        if(response.IsSuccessStatusCode) {
+            System.Text.Json.JsonElement result = await response.Content.ReadFromJsonAsync<dynamic>();
+            var token = result.GetProperty("token").GetString();
+            var refreshToken = result.GetProperty("refreshToken").GetString();
+            if(token != null && refreshToken != null)
+                await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).LoginUserAsync(token!, refreshToken!);
+        } else {
+            var msg = await response.Content.ReadAsStringAsync();
+            ErrorMessage = msg;
+        }
+    }
+    private async Task UpdateAccountAsync() {
+        ErrorMessage = "";
+        var response = (await HttpClient.GetAsync($"/auth/password/isequal/{newUser!.Password}/{user!.Id}?culture={CultureInfo.CurrentCulture}"));
+        if( response.IsSuccessStatusCode ) {
+            if(!String.IsNullOrEmpty(newPassword))
+                newUser.Password = newPassword;
+            //if(!String.IsNullOrEmpty(newEmail))
+            //    newUser.Email = newEmail;
+            await UserClient.UpdateUserAsync(newUser);
+            await ReLogin();
+            StateHasChanged();
+            modalAccount.Close();
+        } else {
+            var msg = await response.Content.ReadAsStringAsync();
+            ErrorMessage += msg;
+            //passwordForgot = true;
+        }
+    }
+
+    private async Task DeleteAccountAsync() {
+        await UserClient.DeleteUserAsync(loggedUserId);
+        await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).LogoutUserAsync();
+        NavigationManager.NavigateTo("/", true);
+        return;
+    }
+
+    private async Task RemoveAdminRightsAsync() {
+        var newUser = user;
+        newUser.Role = "Default";
+        await UserClient.UpdateUserAsync(newUser);
+    }
+
 }

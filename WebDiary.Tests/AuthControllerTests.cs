@@ -28,7 +28,7 @@ public class AuthControllerTests
     private readonly Mock<DiariesContext> _mockContext;
     private readonly Mock<IStringLocalizer<ErrorResource>> _mockLocalizer;
     private readonly Mock<IConfiguration> _mockConfig;
-    private readonly Mock<ISmtpClient> _mockSmpt;
+    private readonly AuthService authService;
     private readonly DbContextOptions<DiariesContext> _options;
 
     public AuthControllerTests() {
@@ -37,11 +37,9 @@ public class AuthControllerTests
         _mockContext = new Mock<DiariesContext>(_options);
         _mockLocalizer = new Mock<IStringLocalizer<ErrorResource>>();
         _mockConfig = new Mock<IConfiguration>();
-        _mockSmpt = new Mock<ISmtpClient>();
     }
     private AuthController GetControllerWithContext(DiariesContext diariesContext) {
-        return new AuthController(diariesContext, _mockConfig.Object, _mockLocalizer.Object,
-            _mockSmpt.Object);
+        return new AuthController(diariesContext, _mockConfig.Object, _mockLocalizer.Object, authService);
     }
 
     [Fact]
@@ -172,7 +170,7 @@ public class AuthControllerTests
         _mockConfig.Setup(config => config["EmailFromSend"]).Returns("sender@example.com");
         _mockConfig.Setup(config => config["AppPaswordForEmailAuth"]).Returns("dummy-password");
 
-        var emailForm = new sendEmailForm() {
+        var emailForm = new sendEmailModel() {
             userId = 1,
             CallbackUrl = "http://example.com/validate",
             IsValidation = true
@@ -200,7 +198,7 @@ public class AuthControllerTests
         
         _mockLocalizer.Setup(l => l["RefreshTokenError"]).Returns(new LocalizedString("RefreshTokenError", "Refresh failed"));
 
-        var tokenRequest = new AuthController.TokenRequestModel {
+        var tokenRequest = new TokenRequestModel {
             AccessToken = "some-token",
             RefreshToken = "some-refresh-token"
         };
@@ -239,7 +237,7 @@ public class AuthControllerTests
 
         var controller = GetControllerWithContext(dbContext);
 
-        var form = new validateEmailForm() {
+        var form = new validateEmailModel() {
             UserId = 1,
             Token = token
         };
@@ -288,7 +286,7 @@ public class AuthControllerTests
         var controller = GetControllerWithContext(dbContext);
 
         var tokenBase64 = Convert.ToBase64String(wrongToken).Replace('+', '-').Replace('/', '_');
-        var form = new validateEmailForm { UserId = 1, Token = tokenBase64 };
+        var form = new validateEmailModel { UserId = 1, Token = tokenBase64 };
 
         var mockLocalized = new LocalizedString("TokenNotEqual", "Tokens don't match");
         _mockLocalizer.Setup(l => l["TokenNotEqual"]).Returns(mockLocalized);
@@ -331,7 +329,7 @@ public class AuthControllerTests
         var controller = GetControllerWithContext(context);
 
         var tokenBase64 = Convert.ToBase64String(tokenBytes).Replace('+', '-').Replace('/', '_');
-        var form = new validateEmailForm { UserId = 1, Token = tokenBase64 };
+        var form = new validateEmailModel { UserId = 1, Token = tokenBase64 };
 
         var mockLocalized = new LocalizedString("TokenTimeExpired", "Token expired");
         _mockLocalizer.Setup(l => l["TokenTimeExpired"]).Returns(mockLocalized);
@@ -356,7 +354,7 @@ public class AuthControllerTests
 
         var controller = GetControllerWithContext(context);
 
-        var form = new validateEmailForm
+        var form = new validateEmailModel
         {
             UserId = 99,
             Token = "irrelevant"

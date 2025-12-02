@@ -1,20 +1,31 @@
 ﻿@page "/Diary/{id:int}"
 @using System.Security.Claims
 @using System.Text.Json
-
 @inject DiaryClient DiaryClient
 @inject DiaryGroupClient DiaryGroupClient
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserClient UserClient
 @inject IJSRuntime JS
+@inject HttpClient HttpClient
 @inject IStringLocalizer<Resources.MainResource> Localizator
 
 <PageTitle>MyDiary</PageTitle>
 
 <AuthorizeView Context="diaryContext">
     <Authorized>
-        <WebDiary.Frontend.Components.Pages.CheckPinGroupDialogue @ref="modalPin" OnSuccess="CorrectPin" />
+        <DialogueTemplate @ref="modalPin" HeaderText=@Localizator["CheckPinHeader"]>
+            <BodyTemplate>
+                    <p>@Localizator["CheckPinGroup1"]</p>
+                    <InputText type="password"  class="full-width" @bind-Value="PinCode"></InputText>
+            </BodyTemplate>
+            <FooterTemplate>
+                    <p class="fs-5 fw-semibold text-danger">@ErrorMessage</p>
+                    <button type="button" class="btn btn-primary"
+                        @onclick="TryCheckPinAsync">@Localizator["EnterButtonText"]</button>
+            </FooterTemplate>
+        </DialogueTemplate>
+
         @if(diaries is null) {
             <p>@Localizator["LoadingDiaries"]</p>
         } else {
@@ -118,7 +129,7 @@
     [Parameter]
     public int? id { get; set; }
     public BlazoredTextEditor richEditor { get; set;}
-    private WebDiary.Frontend.Components.Pages.CheckPinGroupDialogue? modalPin;
+    private DialogueTemplate? modalPin;
 
     private List<Diary>? diaries;
     private Diary? diary;
@@ -147,7 +158,7 @@
             };
             diaries = await DiaryClient.GetDiariesOfGroupAsync(group.Id);
             if (!string.IsNullOrEmpty(group.PinCode)) {
-                modalPin!.Open(group);
+                modalPin!.Open();
                 PageTitle = "PIN";
             } else {
                 PageTitle = group.Name;
@@ -160,6 +171,7 @@
         }
         await base.OnParametersSetAsync();
     }
+
     protected async override Task OnAfterRenderAsync(bool firstRender) {
         if(firstRender) {
 
@@ -177,12 +189,15 @@
         }
         await base.OnAfterRenderAsync(firstRender);
     }
+
     private void RedirectTo404() {
         NavigationManager.NavigateTo("NotFoundResource");
     }
+
     private void CorrectPin() {
         PageTitle = group.Name;
     }
+
     async Task AddDiaryAsync() {
         var js = await JS.InvokeAsync<JsonElement>("getClientTime");
         var isoUtc = js.GetProperty("isoUtc").GetString();
@@ -198,5 +213,22 @@
         StateHasChanged();
         NavigationManager.Refresh(true);
     }
+    // Modals Methods
+    private string? ErrorMessage;
+    private string? PinCode;
+
+    private async Task TryCheckPinAsync() {
+        ArgumentNullException.ThrowIfNull(group);
+
+        var response = (await HttpClient.GetAsync($"/auth/pincode/isequal/{PinCode}/{group!.Id}?culture={CultureInfo.CurrentCulture}"));
+        if(!response.IsSuccessStatusCode) {
+            ErrorMessage = Localizator["IncorrectPinText"];
+            return;
+        }
+
+        CorrectPin();
+        modalPin.Close();
+    }
+
 }
 

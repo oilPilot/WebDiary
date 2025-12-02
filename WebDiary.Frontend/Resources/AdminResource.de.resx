@@ -39,4 +39,22 @@
 	<data name="CancelButtonText" xml:space="preserve">
 		<value>Absagen</value>
 	</data>
+	<data name="DeleteUserDialogue1" xml:space="preserve">
+		<value>Benutzer löschen</value>
+	</data>
+	<data name="DeleteUserDialogue2" xml:space="preserve">
+		<value>Sie werden den Benutzer </value>
+	</data>
+	<data name="DeleteUserDialogue3" xml:space="preserve">
+		<value> mitsamt all seinen Tagebüchern löschen, danach tragen Sie die Verantwortung, sind Sie sich sicher?</value>
+	</data>
+	<data name="ResetPasswordDialogue1" xml:space="preserve">
+		<value>Passwort zurücksetzen</value>
+	</data>
+	<data name="ResetPasswordDialogue2" xml:space="preserve">
+		<value>Sie werden das Passwort für den Benutzer </value>
+	</data>
+	<data name="ResetPasswordDialogue3" xml:space="preserve">
+		<value> zurücksetzen. Dadurch wird sein Passwort auf „RESET_PASSWORD“ gesetzt. Sie müssen ihn darüber in irgendeiner Form benachrichtigen. Sind Sie sicher?</value>
+	</data>
 </root>

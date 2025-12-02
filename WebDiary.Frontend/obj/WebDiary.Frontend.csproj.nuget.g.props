@@ -14,7 +14,9 @@
     <SourceRoot Include="C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages\" />
   </ItemGroup>
   <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <Import Project="$(NuGetPackageRoot)plotly.blazor\6.0.2\buildTransitive\Plotly.Blazor.props" Condition="Exists('$(NuGetPackageRoot)plotly.blazor\6.0.2\buildTransitive\Plotly.Blazor.props')" />
     <Import Project="$(NuGetPackageRoot)bootstrapblazor\9.4.2\buildTransitive\BootstrapBlazor.props" Condition="Exists('$(NuGetPackageRoot)bootstrapblazor\9.4.2\buildTransitive\BootstrapBlazor.props')" />
     <Import Project="$(NuGetPackageRoot)blazored.texteditor\1.1.3\buildTransitive\Blazored.TextEditor.props" Condition="Exists('$(NuGetPackageRoot)blazored.texteditor\1.1.3\buildTransitive\Blazored.TextEditor.props')" />
+    <Import Project="$(NuGetPackageRoot)blazordaterangepicker\6.2.0\buildTransitive\BlazorDateRangePicker.props" Condition="Exists('$(NuGetPackageRoot)blazordaterangepicker\6.2.0\buildTransitive\BlazorDateRangePicker.props')" />
   </ImportGroup>
 </Project>

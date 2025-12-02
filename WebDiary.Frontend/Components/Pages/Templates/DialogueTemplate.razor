@@ -19,26 +19,38 @@
 
 @if (ShowBackdrop)
 {
-    <div class="modal-backdrop fade show"></div>
+    <div class="modal-backdrop fade show" />
 }
 
 @code {
     [Parameter]
-    public string HeaderText { get; set; }
+    public required string HeaderText { get; set; }
     [Parameter]
-    public RenderFragment BodyTemplate { get; set; }
+    public required RenderFragment BodyTemplate { get; set; }
     [Parameter]
-    public RenderFragment FooterTemplate { get; set; }
-
+    public required RenderFragment FooterTemplate { get; set; }
+    /// <summary>
+    /// Adds custom code before opening (you can add whenever needed)
+    /// </summary>
+    [Parameter]
+    public EventCallback CustomOpen { get; set; } = new EventCallback();
+    /// <summary>
+    /// Adds custom code before closing (you can add whenever needed)
+    /// </summary>
+    [Parameter]
+    public EventCallback CustomClose { get; set; } = new EventCallback();
+    // Modal visibility control Basics
     public string ModalDisplay = "none;";
     public bool ShowBackdrop = false;
 
     public void Open() {
+        CustomOpen.InvokeAsync();
         ModalDisplay = "block;";
         ShowBackdrop = true;
         StateHasChanged();
     }
-    private void Close() {
+    public void Close() {
+        CustomClose.InvokeAsync();
         ModalDisplay = "none;";
         ShowBackdrop = false;
         StateHasChanged();

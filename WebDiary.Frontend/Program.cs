@@ -6,8 +6,13 @@ using Microsoft.AspNetCore.Components.Authorization;
 using WebDiary.Frontend.Components;
 using Microsoft.AspNetCore.Localization;
 using Blazored.SessionStorage;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+using var log = new LoggerConfiguration().WriteTo.Console().CreateLogger();
+Log.Logger = log;
+Log.Information("Global logger has been configured");
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -28,7 +33,7 @@ builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStat
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddHttpContextAccessor();
 
-
+Log.Information("Added services to container");
 
 var app = builder.Build();
 
@@ -60,5 +65,15 @@ app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
-app.Run();
+Log.Information("App is ready to run");
+
+try
+{
+    if (app.Environment.IsDevelopment())
+        Log.Information("In Development environment");
+    app.Run();
+} catch (Exception Ex)
+{
+    Log.Fatal("Catched exception upon opening app: {Exception}", Ex);
+}
 

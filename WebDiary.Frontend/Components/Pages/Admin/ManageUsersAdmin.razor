@@ -1,3 +1,4 @@
+@using Serilog
 @inject UserClient userClient
 @inject IStringLocalizer<Resources.AdminResource> Localizator
 
@@ -83,23 +84,35 @@
     private DialogueTemplate? ResetPasswordDialogue { get; set; }
     private string userNameFilter = "";
     private string RoleFilter = "";
+    private string userId = "";
+    private string userName = "";
+    [CascadingParameter] protected Task<AuthenticationState>? AuthStat { get; set; }
 
     protected async override Task OnInitializedAsync()
     {
         base.OnInitialized();
         users = await userClient.GetUsersAsync();
         UpdateSearch();
+        var user = (await AuthStat!).User;
+        var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var userName = user.FindFirst(ClaimTypes.Name)?.Value;
     }
 
     private async Task ChangeActive(User user) {
         var newUser = user;
         newUser.IsValidated = !newUser.IsValidated;
         await userClient.UpdateUserAsync(newUser);
+        Log.Information("Admin with Username '{UserName}' & id '{UserId}' had " +
+                        "changed activation state of user with Username '{UpdateUserName}' & id '{UpdateUserId}'",
+                        userName, userId, newUser.UserName, newUser.Id);
     }
 
     private void UpdateSearch() {
-        usersSearching = users.Where(user => user.UserName.Contains(userNameFilter))
-                                .Where(user => user.Role.Contains(RoleFilter)).ToList();
+        if(userNameFilter == "" && RoleFilter == "")
+            usersSearching = users!;
+        else
+            usersSearching = users!.Where(user => user.UserName.Contains(userNameFilter))
+                                .Where(user => user.Role!.Contains(RoleFilter)).ToList();
     }
 
     // Modals Methods and Data
@@ -108,14 +121,23 @@
         var newUser = User;
         newUser.Role = "Admin";
         await userClient.UpdateUserAsync(newUser);
+        Log.Information("Admin with Username '{UserName}' & id '{UserId}' had " +
+                        "given admin rights to user with Username '{UpdateUserName}' & id '{UpdateUserId}'",
+                        userName, userId, newUser.UserName, newUser.Id);
     }
     private async Task DeleteUserAsync() {
         await userClient.DeleteUserAsync(User.Id);
+        Log.Information("Admin with Username '{UserName}' & id '{UserId}' had " +
+                        "deleted user with Username '{UpdateUserName}' & id '{UpdateUserId}'",
+                        userName, userId, User.UserName, User.Id);
     }
     private async Task ResetPasswordAsync() {
         var newUser = User;
         newUser.Password = "RESET_PASSWORD";
         await userClient.UpdateUserAsync(newUser);
+        Log.Information("Admin with Username '{UserName}' & id '{UserId}' had " +
+                        "resetted password of user with Username '{UpdateUserName}' & id '{UpdateUserId}'",
+                        userName, userId, newUser.UserName, newUser.Id);
     }
     
     // Open helpers

@@ -43,7 +43,7 @@ public class StatsService : IStatsService
 
     private StatsDayDTO CalculateDailyStats(List<Diary> diary)
     {
-        int totalSymbols = diary.Sum(d => d.Text.Length);
+        int totalSymbols = diary.Sum(d => d.BaseText.Length);
         int moodPoint = diary.Sum(d => MoodHelper.GetMoodValue(d.mood));
         return new StatsDayDTO
         {

@@ -34,12 +34,14 @@ public class DiaryPdfExporter
             }
             gfx.DrawString($"Date: {new DateTime(diary.Date, diary.Time):HH:mm dd-MM-yyyy} {diary.mood}", normalFont, XBrushes.Black, 40, y);
             y += 15;
+            /* We currently have BaseText
             // Convert simple HTML to text + styled drawing
             var htmlContent = diary.Text;
             var cleanHtml = htmlContent.Replace("<br>", "\n").Replace("<br/>", "\n");
             var docHtml = new HtmlDocument();
             docHtml.LoadHtml(cleanHtml);
-            var plainText = Regex.Replace(docHtml.DocumentNode.InnerText, @"\s+", " ").Trim();
+            */
+            var plainText = Regex.Replace(diary.BaseText, @"\s+", " ").Trim();
 
             // You could improve by walking nodes for <b>/<i> tags — simple version first:
             var textLines = XTextFormatterExtensions.SplitLines(plainText, 90); // helper (see below)

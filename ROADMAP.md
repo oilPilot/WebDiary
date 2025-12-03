@@ -11,6 +11,8 @@
     Polishing:  1.Allow for Users to set points for certain mood
     6. Privacy - Add ability to lock specific groups/entries with a PIN.
     Polishing:  1.Consider a "global master password" that can unlock all groups in session — to prevent repeated input annoyance.
+    7. Diary Export PDF
+    Polishing:  1. Include Rich Text formatting.
 
 ## Known Issues:
     Fix Refresh tokens;
@@ -19,8 +21,7 @@
     Currently unknown;
 
 ## UI/UX polishing tasks:
-    Symbols in statistics are currently includes HTML symbols, so they are a bit too high;
-    Add Logs after admin actions;
+    Currently none;
 
 ## Places to translate:
 * Everything already

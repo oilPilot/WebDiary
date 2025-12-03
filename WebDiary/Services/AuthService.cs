@@ -70,10 +70,10 @@ public class AuthService : IAuthService
     }
 
     // Helpers
-    
 
     private string GenerateJwtToken(User user) {
         List<Claim> claims = new List<Claim> {
+            new Claim(ClaimTypes.NameIdentifier, $"{user.Id}"),
             new Claim(ClaimTypes.Name, user.UserName),
             new Claim("userId", user.Id.ToString()),
             new Claim(ClaimTypes.Role, user.Role),

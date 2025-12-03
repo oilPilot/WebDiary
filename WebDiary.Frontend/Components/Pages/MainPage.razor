@@ -90,7 +90,7 @@
                             </BlazoredTextEditor>
                             <div>
                                 <button class="btn btn-secondary ms-2" type="submit">@Localizator["MainPageButtonText"]</button>
-                                <select @bind="diary.mood">
+                                <select @bind="diary!.mood">
                                     <option value="—">you can select mood</option>
                                     <option value="🙂">🙂</option>
                                     <option value="😁">😁</option>
@@ -128,7 +128,7 @@
 @code {
     [Parameter]
     public int? id { get; set; }
-    public BlazoredTextEditor richEditor { get; set;}
+    public BlazoredTextEditor? richEditor { get; set;}
     private DialogueTemplate? modalPin;
 
     private List<Diary>? diaries;
@@ -195,7 +195,7 @@
     }
 
     private void CorrectPin() {
-        PageTitle = group.Name;
+        PageTitle = group!.Name;
     }
 
     async Task AddDiaryAsync() {
@@ -203,9 +203,11 @@
         var isoUtc = js.GetProperty("isoUtc").GetString();
         
         var offset = js.GetProperty("offsetMinutes").GetInt32();
+        if(isoUtc == null)
+            isoUtc = "";
         var utc = DateTime.Parse(isoUtc, null, System.Globalization.DateTimeStyles.AdjustToUniversal);
         
-        diary.Text = await richEditor.GetHTML();
+        diary!.Text = await richEditor!.GetHTML();
         diary.CreatedUtc = utc;
         diary.UtcOffsetMinutes = offset;
         
@@ -213,6 +215,7 @@
         StateHasChanged();
         NavigationManager.Refresh(true);
     }
+
     // Modals Methods
     private string? ErrorMessage;
     private string? PinCode;
@@ -227,7 +230,7 @@
         }
 
         CorrectPin();
-        modalPin.Close();
+        modalPin!.Close();
     }
 
 }

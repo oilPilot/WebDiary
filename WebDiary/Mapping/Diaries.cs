@@ -1,4 +1,6 @@
 using System;
+using System.Text.RegularExpressions;
+using HtmlAgilityPack;
 using WebDiary.DTO;
 using WebDiary.Entities;
 
@@ -8,8 +10,11 @@ public static class Diaries
 {
     public static Diary ToEntity(this CreateDiaryDTO diaryDTO) {
         DateTime localTime = diaryDTO.CreatedUtc.AddMinutes(diaryDTO.UtcOffsetMinutes);
+        var baseText = new HtmlDocument();
+        baseText.LoadHtml(diaryDTO.Text);
         return new Diary {
             Text = diaryDTO.Text,
+            BaseText = baseText.DocumentNode.InnerHtml,
             Date = DateOnly.FromDateTime(localTime),
             Time = TimeOnly.FromDateTime(localTime),
             CreatedUtc = diaryDTO.CreatedUtc,

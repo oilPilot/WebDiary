@@ -1,14 +1,16 @@
 ﻿@page "/Diary/{id:int}"
 @using System.Security.Claims
 @using System.Text.Json
+@using Blazored.LocalStorage
 @inject DiaryClient DiaryClient
 @inject DiaryGroupClient DiaryGroupClient
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserClient UserClient
-@inject IJSRuntime JS
 @inject HttpClient HttpClient
 @inject IStringLocalizer<Resources.MainResource> Localizator
+@inject ILocalStorageService localStorage
+@inject IJSRuntime JS
 
 <PageTitle>MyDiary</PageTitle>
 
@@ -56,7 +58,7 @@
                             </ol>
                         }
                     </div>
-                    <EditForm Model="diary" OnValidSubmit="AddDiaryAsync" FormName="SendDiary" class="footer">
+                    <EditForm Model="diary" OnValidSubmit="AddDiaryAsync" FormName="SendDiary" class="footer" @onchange="SaveTextInForm" @oninput="SaveTextInForm">
                         <div class="mb-2 me-2 ms-2" style="height: 100px;">
                             <BlazoredTextEditor @ref="@richEditor" Placeholder="Please, enter what you think currently">
                                 <ToolbarContent>
@@ -128,7 +130,7 @@
 @code {
     [Parameter]
     public int? id { get; set; }
-    public BlazoredTextEditor? richEditor { get; set;}
+    public BlazoredTextEditor richEditor { get; set;} = new();
     private DialogueTemplate? modalPin;
 
     private List<Diary>? diaries;
@@ -186,8 +188,26 @@
             }
 
             StateHasChanged();
+            /*  It needs delay, or else richEditor will break because of null JSInterop (by some reason...)
+                If i want to fix this shitty thingy, i will need to make Quill usage of myself entirely.
+                Will probably do much later.
+            */
+            await Task.Delay(600);
+            await LoadText();
         }
+
         await base.OnAfterRenderAsync(firstRender);
+    }
+
+
+    private async Task LoadText() {
+        var autoSavedText = await localStorage.GetItemAsStringAsync("NewDiaryAutoSavedText");
+        if(autoSavedText != null)
+            await richEditor.LoadHTMLContent(autoSavedText);
+    }
+
+    private async Task SaveTextInForm() {
+        await localStorage.SetItemAsStringAsync("NewDiaryAutoSavedText", await richEditor!.GetHTML());
     }
 
     private void RedirectTo404() {
@@ -212,6 +232,7 @@
         diary.UtcOffsetMinutes = offset;
         
         await DiaryClient.AddDiaryAsync(diary!);
+        await localStorage.SetItemAsStringAsync("NewDiaryAutoSavedText", string.Empty);
         StateHasChanged();
         NavigationManager.Refresh(true);
     }

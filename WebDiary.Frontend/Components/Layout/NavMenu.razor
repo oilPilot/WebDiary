@@ -60,14 +60,6 @@
                 <p>@LocalizatorLayout["Loading"]</p>
             } else {
                 @foreach(var group in groups!) {
-                    /* Each diary group is represented as a navigation item with options to manage it,
-                    including setting a pin code, editing, or deleting the group,
-                    upon pressing them you shouldn't change the page (therefore the stopPropagation on the buttons).
-                    Clicking on the main area of the group item navigates to that diary group's page.
-                    We can't put buttons out of NavLink because of styling issues
-                    But we can stop the event propagation on button clicks to prevent navigation
-                    How to renew propagation though.
-                    */
                     <div class="nav-item px-3 d-flex">
                         <NavLink class="nav-link" href="@($"Diary/{group.Id}")" Match="NavLinkMatch.All">
                             <span class="bi bi-lock@(String.IsNullOrEmpty(group.PinCode) ? @"" : @"-fill")" />

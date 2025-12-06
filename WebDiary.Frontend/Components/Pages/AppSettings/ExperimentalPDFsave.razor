@@ -19,19 +19,15 @@
     List<DiaryGroup>? groups;
     int loggedUserId;
     int selectedGroupId;
+    [CascadingParameter] protected Task<AuthenticationState>? AuthStat { get; set; }
     
-    protected async override Task OnAfterRenderAsync(bool firstRender) {
-        if(firstRender) {
-            var loggedUser = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
-
-            if(loggedUser.Identity != null && loggedUser.Identity.IsAuthenticated) {
-                loggedUserId = Convert.ToInt32(loggedUser.FindFirstValue("userId"));
-                groups = await DiaryGroupClient.GetGroupsOfUserAsync(loggedUserId);
-            }
-
-            StateHasChanged();
+    protected async override Task OnInitializedAsync() {
+        await base.OnInitializedAsync();
+        var user = (await AuthStat!).User;
+        if(user.Identity != null && user.Identity.IsAuthenticated) {
+            loggedUserId = Convert.ToInt32(user.FindFirstValue("userId"));
+            groups = await DiaryGroupClient.GetGroupsOfUserAsync(loggedUserId);
         }
-        await base.OnAfterRenderAsync(firstRender);
     }
 
     private async Task SaveAsPdf() {

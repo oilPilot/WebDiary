@@ -10,6 +10,8 @@ using WebDiary.Frontend.Models;
 using WebDiary.Frontend.Components.Pages;
 using WebDiary.Frontend.Resources;
 using Bunit.TestDoubles;
+using Blazored.LocalStorage;
+using Blazored.SessionStorage;
 
 namespace WebDiary.Tests.Frontend;
 
@@ -29,6 +31,8 @@ public class MainPageTests : TestContext
         Services.AddSingleton<DiaryClient>(new DiaryClient(new HttpClient(), new TestAuthProvider(false)));
         Services.AddSingleton<DiaryGroupClient>(new DiaryGroupClient(new HttpClient()));
         Services.AddSingleton<UserClient>(new UserClient(new HttpClient()));
+        Services.AddBlazoredLocalStorage();
+        Services.AddBlazoredSessionStorage();
         Services.AddAuthentication();
         Services.AddAuthorization();
         Services.AddCascadingAuthenticationState();

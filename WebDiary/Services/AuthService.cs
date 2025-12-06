@@ -94,7 +94,7 @@ public class AuthService : IAuthService
         var number = new byte[32];
         using(var random = RandomNumberGenerator.Create()) {
             random.GetBytes(number);
-
+            
             return Convert.ToBase64String(number);
         }
     }

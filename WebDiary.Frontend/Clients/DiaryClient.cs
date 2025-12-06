@@ -1,5 +1,6 @@
 using System;
 using Microsoft.AspNetCore.Components.Authorization;
+using Serilog;
 using WebDiary.Frontend.Models;
 using WebDiary.Frontend.Models.Auth;
 
@@ -28,6 +29,7 @@ public class DiaryClient(HttpClient httpClient, AuthenticationStateProvider auth
         var response = await ((CustomAuthenticationStateProvider)authenticationStateProvider).AuthorizedRequestAsync(() =>
             httpClient.PostAsJsonAsync<Diary>("diaries", diary));
         if(!response.IsSuccessStatusCode) {
+            Log.Error("Adding diary was unsuccessful: " + response.Content);
             throw new Exception();
         }
     }

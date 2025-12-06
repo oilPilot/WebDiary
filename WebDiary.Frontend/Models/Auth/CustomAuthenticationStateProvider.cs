@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Serilog;
 
 namespace WebDiary.Frontend.Models.Auth;
 
@@ -32,7 +33,10 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
             if(_localStorage is null)
                 return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
             
-            var token = await _localStorage.GetItemAsync<string>("token");
+            string? token = null;
+            try {
+                token = await _localStorage.GetItemAsync<string>("token");
+            } catch (InvalidOperationException) {}
             _httpClient.DefaultRequestHeaders.Authorization = null;
 
             if(token != null) {
@@ -40,10 +44,10 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
                 var jwtToken = handler.ReadJwtToken(token);
                 identity = new ClaimsIdentity(jwtToken.Claims, "jwt");
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                /**/
+                
                 if(jwtToken.ValidTo < DateTime.UtcNow) {
                     await CheckTokenExpiration();
-                } // - it is a bad idea       // Why though? I will fix it. 10.11.25
+                }
             }
         } catch(Exception ex) {
             Console.WriteLine($"Token exception message: {ex}");
@@ -74,7 +78,7 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
         var refreshToken = await _localStorage.GetItemAsync<string>("refreshToken");
         if(string.IsNullOrEmpty(token) || string.IsNullOrEmpty(refreshToken))
             return false;
-        
+
         var response = await _httpClient.PostAsJsonAsync($"/auth/refresh?culture={CultureInfo.CurrentCulture}",
             new { RefreshToken = refreshToken, AccessToken = token } );
         if(!response.IsSuccessStatusCode) {

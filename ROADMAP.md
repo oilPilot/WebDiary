@@ -13,10 +13,10 @@
     Polishing:  1.Consider a "global master password" that can unlock all groups in session — to prevent repeated input annoyance.
 
 ## Known Issues:
-    Fix Refresh tokens;
+    There's none;
 
 ## Architecture improvements:
-    Currently unknown;
+    Possibly should make cascading from NavMenu, specially for User variables;
 
 ## UI/UX polishing tasks:
     Currently none;

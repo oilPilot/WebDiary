@@ -172,10 +172,25 @@
     private DialogueTemplate? modalPin;
     private DialogueTemplate? cookieAgreementModal;
     private DialogueTemplate? modalLogout;
+    [CascadingParameter] protected Task<AuthenticationState>? AuthStat { get; set; }
 
     protected async override Task OnInitializedAsync() {
         topName = "Smart diary";
         await base.OnInitializedAsync();
+        var user = (await AuthStat!).User;
+        if(user.Identity != null && user.Identity.IsAuthenticated) {
+            loggedUserId = Convert.ToInt32(user.FindFirstValue("userId"));
+            try {
+                await UserClient.GetUserByIdAsync(loggedUserId);
+            } catch (Exception Ex) {
+                Log.Error("Exception of user nonexistance?: " + Ex);
+                await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).LogoutUserAsync();
+            }
+            groups = await DiaryGroupClient.GetGroupsOfUserAsync(loggedUserId);
+            topName = user.Identity.Name;
+            User userMain = await UserClient.GetUserByIdAsync(loggedUserId);
+            isValidated = userMain.IsValidated;
+        }
     }
 
     protected async override Task OnAfterRenderAsync(bool firstRender) {
@@ -183,22 +198,6 @@
 
             if(await localStorage.GetItemAsync<bool>("CookieAgreement") != true) {
                 cookieAgreementModal?.Open();
-            }
-
-            var loggedUser = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
-
-            if(loggedUser.Identity != null && loggedUser.Identity.IsAuthenticated) {
-                loggedUserId = Convert.ToInt32(loggedUser.FindFirstValue("userId"));
-                try {
-                    await UserClient.GetUserByIdAsync(loggedUserId);
-                } catch (Exception Ex) {
-                    Console.WriteLine("Exception of user nonexistance?: " + Ex);
-                    await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).LogoutUserAsync();
-                }
-                groups = await DiaryGroupClient.GetGroupsOfUserAsync(loggedUserId);
-                topName = loggedUser.Identity.Name;
-                User user = await UserClient.GetUserByIdAsync(loggedUserId);
-                isValidated = user.IsValidated;
             }
 
             StateHasChanged();

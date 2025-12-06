@@ -138,6 +138,7 @@
     private DiaryGroup? group;
     public string? PageTitle;
     private bool isValidated;
+    [CascadingParameter] protected Task<AuthenticationState>? AuthStat { get; set; }
 
     protected override async Task OnInitializedAsync() {
         if(id is null)
@@ -147,6 +148,15 @@
             GroupId = id!.Value
         };
         await base.OnInitializedAsync();
+
+        var User = (await AuthStat!).User;
+        if(User.Identity != null && User.Identity.IsAuthenticated) {
+            int loggedUserId = Convert.ToInt32(User.FindFirstValue("userId"));
+            User user = await UserClient.GetUserByIdAsync(loggedUserId);
+            isValidated = user.IsValidated;
+        } else {
+            NavigationManager.NavigateTo("/Users/Login");
+        }
     }
 
     protected override async Task OnParametersSetAsync() {
@@ -176,24 +186,13 @@
 
     protected async override Task OnAfterRenderAsync(bool firstRender) {
         if(firstRender) {
-
-            var loggedUser = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
-
-            if(loggedUser.Identity != null && loggedUser.Identity.IsAuthenticated) {
-                int loggedUserId = Convert.ToInt32(loggedUser.FindFirstValue("userId"));
-                User user = await UserClient.GetUserByIdAsync(loggedUserId);
-                isValidated = user.IsValidated;
-            } else {
-                NavigationManager.NavigateTo("/Users/Login");
-            }
-
             StateHasChanged();
             /*  It needs delay, or else richEditor will break because of null JSInterop (by some reason...)
                 If i want to fix this shitty thingy, i will need to make Quill usage of myself entirely.
                 Will probably do much later.
             */
-            await Task.Delay(600);
-            await LoadText();
+            //await Task.Delay(600);
+            //await LoadText();
         }
 
         await base.OnAfterRenderAsync(firstRender);

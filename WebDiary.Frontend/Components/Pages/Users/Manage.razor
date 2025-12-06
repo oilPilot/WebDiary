@@ -133,32 +133,26 @@
     private DialogueTemplate? modalAccount;
     private DialogueTemplate? modalAccountDelete;
     private DialogueTemplate? modalRemove;
+    [CascadingParameter] protected Task<AuthenticationState>? AuthStat { get; set; }
+    
+    protected async override Task OnInitializedAsync() {
+        await base.OnInitializedAsync();
+        var User = (await AuthStat!).User;
+        if(User.Identity != null && User.Identity.IsAuthenticated) {
+            loggedUserId = Convert.ToInt32(User.FindFirstValue("userId"));
+            user = await UserClient.GetUserByIdAsync(loggedUserId);
+            isValidated = user.IsValidated;
+            isHadRendered = true;
+        } else {
+            NavigationManager.NavigateTo("/Users/Login");
+        }
+    }
     
     private async Task Logout() {
         await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).LogoutUserAsync();
         Login();
     }
     private void Login() => NavigationManager.NavigateTo("/Users/Login");
-
-    protected async override Task OnAfterRenderAsync(bool firstRender) {
-        if(firstRender) {
-
-            var loggedUser = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
-
-            if(loggedUser.Identity != null && loggedUser.Identity.IsAuthenticated) {
-                loggedUserId = Convert.ToInt32(loggedUser.FindFirstValue("userId"));
-                user = await UserClient.GetUserByIdAsync(loggedUserId);
-                isValidated = user.IsValidated;
-                isHadRendered = true;
-            } else {
-                NavigationManager.NavigateTo("/Users/Login");
-            }
-
-            StateHasChanged();
-        }
-        
-        await base.OnAfterRenderAsync(firstRender);
-    }
 
     // Modal Methods and Data
     private User newUser = new User() { UserName = ""};

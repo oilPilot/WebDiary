@@ -34,7 +34,7 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
         var hasher = new PasswordHasher<User>();
         var verify = hasher.VerifyHashedPassword(user, user.Password, model.Password!);
         if(verify == PasswordVerificationResult.Success) {
-            Log.Information("User {Name} tries to login with correct password at {currentTime}", user.UserName, DateTime.Now);
+            Serilog.Log.Information("User {Name} tries to login with correct password at {currentTime}", user.UserName, DateTime.Now);
             return await CreatingTokens(user);
         }
         return Unauthorized(localizer["InvalidNameOrPswd"].Value);
@@ -46,17 +46,17 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
 
         var user = await dbContext.users.FirstOrDefaultAsync(user => user.UserName == principal.Identity!.Name);
         if(user == null) {
-                Log.Error("Upon refresh user wasn't found, name {principalName}", principal.Identity!.Name);
+            Serilog.Log.Error<string>("Upon refresh user wasn't found, name {principalName}", principal.Identity!.Name);
             return BadRequest(localizer["RefreshTokenError"].Value);
         }
         if(user.RefreshToken != tokenModel.RefreshToken || user.RefreshTokenDateEnd <= DateTime.Now) {
-            Log.Error("Refresh for user {Name} has been unsuccessful, refreshTokenExpDate: {RefreshTokenExpTime}," +
+            Serilog.Log.Error("Refresh for user {Name} has been unsuccessful, refreshTokenExpDate: {RefreshTokenExpTime}," +
                             "user token {RefreshTokenUser}, sended token {RefreshTokenSended}",
                             user.UserName, user.RefreshTokenDateEnd, user.RefreshToken, tokenModel.RefreshToken);
             return BadRequest(localizer["RefreshTokenError"].Value);
         }
-        
-        Log.Information("Refreshing token for user name {Name}", user.UserName);
+
+        Serilog.Log.Information("Refreshing token for user name {Name}", user.UserName);
         return await CreatingTokens(user, false);
     }
 
@@ -81,13 +81,13 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
             var principal = tokenHandler.ValidateToken(token, TokenValidationParameters, out var securityToken);
             var JwtSecurityToken = (JwtSecurityToken)securityToken;
             if(securityToken == null || !JwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase)) {
-                Log.Error("Upon GetPrincipalFromExpiredToken token was inwalid {Token} Algorithm: {Alg}",
+                Serilog.Log.Error<SecurityToken, string>("Upon GetPrincipalFromExpiredToken token was inwalid {Token} Algorithm: {Alg}",
                                 securityToken, JwtSecurityToken.Header.Alg);
                 throw new Exception("Invalid token.");
             }
             return principal;
         } catch(Exception Ex) {
-            Log.Error("Catched exception at GetPrincipalFromExpiredToken: {Exception}", Ex);
+            Serilog.Log.Error("Catched exception at GetPrincipalFromExpiredToken: {Exception}", Ex);
         }
 
         return new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>() { new Claim(ClaimTypes.Name, "") }));
@@ -105,12 +105,12 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
                 await authService.ResetPassword(user, resetPasswordForm.newPassword);
                 return Ok("Resetted successfully");
             } else {
-                Log.Error("ResetPassword was unsuccessful, token {token}, base64Token {base64Token}",
+                Serilog.Log.Error<byte[], byte[]>("ResetPassword was unsuccessful, token {token}, base64Token {base64Token}",
                                 user.ActionToken, Base64Token);
                 return BadRequest(localizer["TokenNotEqual"].Value);
             }
         } else {
-            Log.Information("ResetPassword was unsuccessful, actionDateEnd {DateEnd}", user.ActionDateEnd);
+            Serilog.Log.Information("ResetPassword was unsuccessful, actionDateEnd {DateEnd}", user.ActionDateEnd);
             return BadRequest(localizer["TokenTimeExpired"].Value);
         }
     }
@@ -133,17 +133,17 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
     
     // THERE ARE GOES METHODS THAT REQUIRE EMAILS
     [HttpGet("email/isunique/{email}")]
-    public async Task<IActionResult> IsUniqueEmailAsync(string email) {
+    public IActionResult IsUniqueEmailAsync(string email) {
         return Ok("NO EMAILS");
     }
     [HttpPost("sendEmail")]
-    public async Task<IActionResult> SendEmailAsync(sendEmailModel email)
+    public IActionResult SendEmailAsync(sendEmailModel email)
     {
         return Ok("Email sended successfully"); // EMAIL DELETED
     }
     
     [HttpPost("ValidateEmail")]
-    public async Task<IActionResult> ValidateEmailAsync(validateEmailModel ValidateEmailForm) {
+    public IActionResult ValidateEmailAsync(validateEmailModel ValidateEmailForm) {
         return Ok("Validated successfully"); // NO VALIDATION NEEDED ANYMORE
     }
 

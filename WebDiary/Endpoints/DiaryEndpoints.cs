@@ -25,7 +25,7 @@ public static class DiaryEndpoints
         group.MapGet("/{id}", [Authorize] async (int id, DiariesContext dbContext) => {
             var diary = await dbContext.diaries.FindAsync(id);
             if(diary is null) {
-                Log.Error("Search of diary by id '{ID}' was unsuccessful", id);
+                Serilog.Log.Error("Search of diary by id '{ID}' was unsuccessful", id);
                 return Results.NotFound();
             }
 
@@ -38,11 +38,11 @@ public static class DiaryEndpoints
                 Diary diary = createDiary.ToEntity();
                 await dbContext.diaries.AddAsync(diary);
                 await dbContext.SaveChangesAsync();
-                Log.Information("Added diary with name: '{Name}' to group with id: '{Id}'", diary.Text, diary.GroupId);
+                Serilog.Log.Information("Added diary with name: '{Name}' to group with id: '{Id}'", diary.Text, diary.GroupId);
 
                 return Results.CreatedAtRoute(getDiaryRoute, new {id = diary.Id}, diary.ToDTO());
             } catch (Exception Ex) {
-                Log.Fatal("Adding Diary was failed. Creating diary data: " +
+                Serilog.Log.Fatal("Adding Diary was failed. Creating diary data: " +
                 "{@creatingDiary} Exception text: {Exception}", createDiary, Ex);
                 return Results.Problem("Exception message: " + Ex);
             }
@@ -57,9 +57,11 @@ public static class DiaryEndpoints
 
         /* mapping DELETE methods
         Deleting diaries shouldn't be possible
-        group.MapDelete("/{id}", (int id) => {
-            return Results.("You can't delete diaries");
-        }); */
+        Up until AdminPanel was created */
+        group.MapDelete("/{id}", [Authorize] async (int id, DiariesContext dbContext) => {
+            await dbContext.diaries.Where(diary => diary.Id == id).ExecuteDeleteAsync();
+            return Results.NoContent();
+        });
 
         return group;
     }

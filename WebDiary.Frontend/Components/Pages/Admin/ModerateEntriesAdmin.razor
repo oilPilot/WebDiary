@@ -1,0 +1,125 @@
+@using Serilog
+@inject DiaryGroupClient groupClient
+@inject DiaryClient diaryClient
+@inject IStringLocalizer<Resources.AdminResource> Localizator
+@inject NavigationManager NavigationManager
+
+<div class="mt-4 mb-4 d-flex">
+    <div class="mt-2">
+        @Localizator["FilterSet4"]
+        <InputNumber class="form-full-width ms-2" @bind-value="IdFilter" aria-placeholder="@Localizator[@"FilterSet4"]" style="width: auto;" />
+    </div>
+    <div class="mt-2 ms-2">
+        @Localizator["FilterSet6"]
+        <InputDate class="form-full-width ms-2" @bind-value="DateFilter" aria-placeholder="@Localizator[@"FilterSet6"]" style="width: auto;" />
+    </div>
+    <div class="mt-2 ms-2">
+        <button type="submit" class="btn btn-secondary" @onclick="() => UpdateSearch()">@Localizator["FilterSet3"]</button>
+    </div>
+</div>
+
+<TableTemplate Items="diariesSearching" CssClassesToAdd="table-to-bottom-scroll-y" >
+    <TableHeader>
+        <th>@Localizator["TableDiaryHeader1"]</th>
+        <th>@Localizator["TableDiaryHeader2"]</th>
+        <th>@Localizator["TableDiaryHeader3"]</th>
+        @*<th>@Localizator["TableDiaryHeader4"]</th> - ONLY BACKEND KNOWS*@
+        <th>@Localizator["TableDiaryHeader5"]</th>
+        <th>@Localizator["TableDiaryHeader6"]</th>
+        @*<th>@Localizator["TableDiaryHeader7"]</th> - ONLY BACKEND KNOWS*@
+        <th>@Localizator["TableDiaryHeader8"]</th>
+    </TableHeader>
+    <RowTemplate Context="diary">
+        <td>@diary.Id</td>
+        <td><button class="btn" @onclick="() => OpenDialogueWithDiary(diary, GetDiaryContentDialogue)">@Localizator["TableDiaryAction1"]</button></td>
+        <td>@(new DateTime(diary.Date, diary.Time))</td>
+        @*<td>@diary.CreatedUtc</td> - ONLY BACKEND KNOWS*@
+        <td>@diary.mood</td>
+        <td>@diary.GroupId</td>
+        @*<td>@groups![diary.GroupId].UserId</td> - ONLY BACKEND KNOWS*@
+        <th>
+            <button class="btn btn-danger ms-1 mb-1"
+                @onclick="() => OpenDialogueWithDiary(diary, DeleteDiaryDialogue)">@Localizator["TableDiaryAction2"]</button>
+        </th>
+    </RowTemplate>
+
+</TableTemplate>
+
+<DialogueTemplate @ref="GetDiaryContentDialogue" HeaderText=@($"{Localizator["GetDiaryContentDialogueHeader"]} '{Diary.Id}'")>
+    <BodyTemplate>
+        <p>@((MarkupString)Diary.Text)</p>
+    </BodyTemplate>
+    <FooterTemplate>
+        <button type="button" class="btn btn-primary"
+            @onclick="() => GetDiaryContentDialogue!.Close()">@Localizator["CloseButton"]</button>
+    </FooterTemplate>
+</DialogueTemplate>
+
+<DialogueTemplate @ref="DeleteDiaryDialogue" HeaderText=@($"{Localizator["DeleteDiaryDialogue1"]} '{Diary.Id}' {Localizator["DeleteDiaryDialogue4"]}")>
+    <BodyTemplate>
+        <p>@Localizator["DeleteDiaryDialogue2"]„@Diary.Id“@Localizator["DeleteDiaryDialogue3"]</p>
+    </BodyTemplate>
+    <FooterTemplate>
+        <button type="button" class="btn btn-secondary"
+            data-dismiss="modal" @onclick="() => DeleteDiaryDialogue!.Close()">@Localizator["CancelButtonText"]</button>
+        <button type="button" class="btn btn-danger" @onclick="DeleteEntryAsync">@Localizator["ContinueButton"]</button>
+    </FooterTemplate>
+</DialogueTemplate>
+
+@code {
+    List<Diary>? diaries { get; set; } = new();
+    List<DiaryGroup>? groups { get; set; }
+    List<Diary>? diariesSearching { get; set; }
+    private DialogueTemplate? GetDiaryContentDialogue { get; set; }
+    private DialogueTemplate? DeleteDiaryDialogue { get; set; }
+    // Filter data
+    private int? IdFilter = null;
+    private DateOnly? DateFilter = null;
+    // For logging actions done by Admin
+    private string? adminId;
+    private string? adminUserName;
+    [CascadingParameter] protected Task<AuthenticationState>? AuthStat { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        base.OnInitialized();
+        groups = await groupClient.GetGroupsAsync();
+        diaries = await diaryClient.GetDiariesAsync();
+        UpdateSearch();
+        ClaimsPrincipal? user = (await AuthStat!).User;
+        adminId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        adminUserName = user.FindFirst(ClaimTypes.Name)?.Value;
+    }
+
+    private void UpdateSearch() {
+        if(IdFilter == null && DateFilter == null)
+            diariesSearching = diaries!;
+        else if(IdFilter == null)
+            diariesSearching = diaries!.Where(diary => diary.Date == DateFilter).ToList();
+        else if(DateFilter == null)
+            diariesSearching = diaries!.Where(diary => diary.Id == IdFilter).ToList();
+        else
+            diariesSearching = diaries!.Where(diary => diary.Id == IdFilter)
+                                .Where(diary => diary.Date == DateFilter).ToList();
+    }
+
+    // Modals Methods and Data
+    private Diary Diary = new Diary() { Text = "", GroupId = 0};
+
+    private async Task DeleteEntryAsync() {
+        Log.Information("Admin with Username '{UserName}' & id '{UserId}' is " +
+                        "deleting diary with id '{UpdateDiaryId}'",
+                        adminUserName, adminId, Diary.Id);
+        await diaryClient.DeleteDiaryAsync(Diary.Id);
+        DeleteDiaryDialogue!.Close();
+        NavigationManager.Refresh(true);
+    }
+
+    // Open helpers
+    private void OpenDialogueWithDiary(Diary diary, DialogueTemplate? dialogue = null) {
+        Diary = diary;
+        if(dialogue != null) {
+            dialogue.Open();
+        }
+    }
+}

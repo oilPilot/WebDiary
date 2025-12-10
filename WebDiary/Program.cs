@@ -8,18 +8,21 @@ using WebDiary.Data;
 using WebDiary.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
+var connstring = builder.Configuration.GetConnectionString("DiariesConnection");
 
-using var log = new LoggerConfiguration().WriteTo.Console().CreateLogger();
+using var log = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.PostgreSQL(connstring, "logs")
+    .CreateLogger();
 Log.Logger = log;
 Log.Information("Global logger has been configured");
 
-var connstring = builder.Configuration.GetConnectionString("DiariesConnection");
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 builder.Services.AddDbContextPool<DiariesContext>(options =>
 {
     options.UseNpgsql(connstring);
 });
-Log.Information("Configured DbContext with connection string {ConnectionString}", connstring);
+Log.Information("Configured DbContext with connection string" /*{ConnectionString}", connstring 'ONLY FOR DEVELOPERS'*/);
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options => 
@@ -90,9 +93,11 @@ Log.Information("Added Localization to app");
 
 app.MapGet("/health", () => "Healthy!");
 
-app.AddDiariesEndpoints();
-app.AddGroupsEndpoints();
-app.AddUsersEndpoint();
+//app.AddDiariesEndpoints();
+//app.AddGroupsEndpoints();
+//app.AddUsersEndpoint();
+//app.AddLogsEndpoint();
+app.AddEveryEndpoint();
 app.MapControllers();
 Log.Information("Added Endpoints and Controllers to app");
 

@@ -9,8 +9,12 @@ using Blazored.SessionStorage;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+var connstring = builder.Configuration.GetConnectionString("DiariesConnection");
 
-using var log = new LoggerConfiguration().WriteTo.Console().CreateLogger();
+using var log = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.PostgreSQL(connstring, "logs")
+    .CreateLogger();
 Log.Logger = log;
 Log.Information("Global logger has been configured");
 
@@ -18,9 +22,7 @@ Log.Information("Global logger has been configured");
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration["ApiConnection"] ?? throw new Exception ("Api wasn't in ApiConnection."))});
-builder.Services.AddScoped<DiaryGroupClient>();
-builder.Services.AddScoped<DiaryClient>();
-builder.Services.AddScoped<UserClient>();
+AddClients();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddBlazoredSessionStorage();
 
@@ -77,3 +79,10 @@ try
     Log.Fatal("Catched exception upon opening app: {Exception}", Ex);
 }
 
+void AddClients()
+{
+    builder.Services.AddScoped<DiaryGroupClient>();
+    builder.Services.AddScoped<DiaryClient>();
+    builder.Services.AddScoped<UserClient>();
+    builder.Services.AddScoped<LogRecordClient>();
+}

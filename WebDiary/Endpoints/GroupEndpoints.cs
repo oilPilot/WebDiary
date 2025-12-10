@@ -23,7 +23,7 @@ public static class GroupEndpoints
         group.MapGet("/{id}", async (int id, DiariesContext dbContext) => {
             var group = await dbContext.diaryGroups.FindAsync(id);
             if(group is null) {
-                Log.Error("Search of group by id '{ID}' was unsuccessful", id);
+                Serilog.Log.Error("Search of group by id '{ID}' was unsuccessful", id);
                 return Results.NotFound();
             }
 
@@ -38,11 +38,11 @@ public static class GroupEndpoints
                 await dbContext.diaryGroups.AddAsync(group);
                 await dbContext.SaveChangesAsync();
 
-                Log.Information("Created new group with name: {Name} and id: {Id}", group.Name, group.Id);
+                Serilog.Log.Information("Created new group with name: {Name} and id: {Id}", group.Name, group.Id);
 
                 return Results.CreatedAtRoute(getGroupRoute, new {id = group.Id}, group.toDTO());
             } catch (Exception Ex) {
-                Log.Fatal("Adding Group was failed. New Group data: " +
+                Serilog.Log.Fatal("Adding Group was failed. New Group data: " +
                 "{@newGroup} Exception text: {Exception}", newGroup, Ex);
                 return Results.Problem("Exception message: " + Ex);
             }
@@ -53,7 +53,7 @@ public static class GroupEndpoints
             try {
                 var currentGroup = await dbContext.diaryGroups.FindAsync(id);
                 if(currentGroup is null) {
-                    Log.Error("Search of group by id '{ID}' upon updating was unsuccessful", id);
+                    Serilog.Log.Error("Search of group by id '{ID}' upon updating was unsuccessful", id);
                     return Results.NotFound();
                 }
 
@@ -63,7 +63,7 @@ public static class GroupEndpoints
                 
                 return Results.NoContent();
             } catch (Exception Ex) {
-                Log.Fatal("Updating Group was failed. New Group data: " +
+                Serilog.Log.Fatal("Updating Group was failed. New Group data: " +
                 "{@newGroup} Exception text: {Exception}", newGroup, Ex);
                 return Results.Problem("Exception message: " + Ex);
             }
@@ -74,7 +74,7 @@ public static class GroupEndpoints
             await dbContext.diaryGroups.Where(group => group.Id == id).ExecuteDeleteAsync();
             await dbContext.diaries.Where(diary => diary.GroupId == id).ExecuteDeleteAsync();
 
-            Log.Information("Deleted group with id '{ID}' and it's diaries", id);
+            Serilog.Log.Information("Deleted group with id '{ID}' and it's diaries", id);
 
             return Results.NoContent();
         });

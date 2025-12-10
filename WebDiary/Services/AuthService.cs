@@ -65,7 +65,7 @@ public class AuthService : IAuthService
             user.RefreshTokenDateEnd = DateTime.UtcNow.AddDays(7);
         dbContext.users.Entry(oldUser).CurrentValues.SetValues(user);
         await dbContext.SaveChangesAsync();
-        Log.Information("Created tokens for user {Name} with refresh token expiration {ExpTime}", user.UserName, user.RefreshTokenDateEnd);
+        Serilog.Log.Information("Created tokens for user {Name} with refresh token expiration {ExpTime}", user.UserName, user.RefreshTokenDateEnd);
         return new string[] {token, refreshToken};
     }
 
@@ -84,10 +84,10 @@ public class AuthService : IAuthService
             issuer: config["Jwt:Issuer"],
             audience: config["Jwt:Audience"],
             claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(30),
+            expires: DateTime.UtcNow.AddMinutes(15),
             signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]!)), SecurityAlgorithms.HmacSha256)
         );
-        Log.Information("Generated jwt token for user {Name}", user.UserName);
+        Serilog.Log.Information("Generated jwt token for user {Name}", user.UserName);
         return new JwtSecurityTokenHandler().WriteToken(securityToken);
     }
     private string GenerateRefreshToken() {

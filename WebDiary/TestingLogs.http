@@ -1,0 +1,12 @@
+GET http://localhost:5281
+
+
+###
+GET http://localhost:5281/logs/50
+
+###
+DELETE http://localhost:5281/logs
+
+###
+###
+

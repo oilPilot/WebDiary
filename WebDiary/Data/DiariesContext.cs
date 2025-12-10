@@ -9,4 +9,6 @@ public class DiariesContext(DbContextOptions<DiariesContext> options) : DbContex
     public virtual DbSet<Diary> diaries => Set<Diary>();
     public virtual DbSet<DiaryGroup> diaryGroups => Set<DiaryGroup>();
     public virtual DbSet<User> users => Set<User>();
+    public virtual DbSet<LogRecord> logs => Set<LogRecord>();
 }
+

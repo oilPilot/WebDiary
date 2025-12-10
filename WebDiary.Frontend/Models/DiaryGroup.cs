@@ -8,4 +8,5 @@ public class DiaryGroup
     public string? Name { get; set; }
     public int? UserId { get; set; }
     public string? PinCode { get; set; }
+    // Maybe i would want to add later creationDate
 }

@@ -1,0 +1,161 @@
+@using Serilog
+@inject DiaryGroupClient groupClient
+@inject DiaryClient diaryClient
+@inject IStringLocalizer<Resources.AdminResource> Localizator
+@inject NavigationManager NavigationManager
+
+<div class="mt-4 mb-4 d-flex">
+    <div class="mt-2">
+        @Localizator["FilterSet4"]
+        <InputNumber class="form-full-width ms-2" @bind-value="IdFilter" aria-placeholder="@Localizator[@"FilterSet4"]" style="width: auto;" />
+    </div>
+    <div class="mt-2 ms-2">
+        @Localizator["FilterSet5"]
+        <InputText type="text" class="form-full-width ms-2" @bind-value="NameFilter" aria-placeholder="@Localizator[@"FilterSet5"]" style="width: auto;" />
+    </div>
+    <div class="mt-2 ms-2">
+        <button type="submit" class="btn btn-secondary" @onclick="() => UpdateSearch()">@Localizator["FilterSet3"]</button>
+    </div>
+</div>
+
+<TableTemplate Items="groupsSearching" CssClassesToAdd="table-to-bottom-scroll-y" >
+    <TableHeader>
+        <th>@Localizator["TableGroupHeader1"]</th>
+        <th>@Localizator["TableGroupHeader2"]</th>
+        @*<th>@Localizator["TableGroupHeader3"]</th> - ONLY BACKEND KNOWS*@
+        <th>@Localizator["TableGroupHeader5"]</th>
+        <th>@Localizator["TableGroupHeader4"]</th>
+    </TableHeader>
+    <RowTemplate Context="group">
+        <td>@group.Id</td>
+        <td>@group.Name</td>
+        @*<td>@group.UserId</td> - ONLY BACKEND KNOWS*@
+        <td>@diaries!.Where(diary => diary.GroupId == group.Id).ToList().Count</td>
+        <th>
+            <button class="btn btn-danger ms-1 mb-1"
+                @onclick="() => OpenDialogueWithGroup(group, DeleteGroupDialogue)">@Localizator["TableGroupAction1"]</button>
+            <button class="btn btn-secondary ms-1 mb-1"
+                @onclick="() => OpenDialogueWithGroup(group, ChangeOwnerDialogue)">@Localizator["TableGroupAction2"]</button>
+            <button class="btn btn-secondary ms-1 mb-1"
+                @onclick="() => OpenDialogueWithGroup(group, ChangeNameDialogue)">@Localizator["TableGroupAction3"]</button>
+        </th>
+    </RowTemplate>
+
+</TableTemplate>
+
+<DialogueTemplate @ref="DeleteGroupDialogue" HeaderText=@Localizator["DeleteGroupDialogue1"]>
+    <BodyTemplate>
+        <p>@Localizator["DeleteGroupDialogue2"]„@Group.Name“@Localizator["DeleteGroupDialogue3"]</p>
+    </BodyTemplate>
+    <FooterTemplate>
+        <button type="button" class="btn btn-secondary"
+            data-dismiss="modal" @onclick="() => DeleteGroupDialogue!.Close()">@Localizator["CancelButtonText"]</button>
+        <button type="button" class="btn btn-danger" @onclick="DeleteGroupAsync">@Localizator["ContinueButton"]</button>
+    </FooterTemplate>
+</DialogueTemplate>
+
+<DialogueTemplate @ref="ChangeOwnerDialogue" HeaderText=@Localizator["ChangeOwnerDialogue1"]>
+    <BodyTemplate>
+        <div class="d-flex">
+            <p>@Localizator["ChangeOwnerDialogue3"]</p>
+            <InputNumber class="form-full-width ms-2" @bind-value="newId" aria-placeholder="@Localizator[@"ChangeOwnerDialogue2"]" style="width: auto;" />
+        </div>
+    </BodyTemplate>
+    <FooterTemplate>
+        <button type="button" class="btn btn-secondary"
+            data-dismiss="modal" @onclick="() => ChangeOwnerDialogue!.Close()">@Localizator["CancelButtonText"]</button>
+        <button type="button" class="btn btn-primary" @onclick="ChangeGroupOwnerAsync">@Localizator["ContinueButton"]</button>
+    </FooterTemplate>
+</DialogueTemplate>
+
+<DialogueTemplate @ref="ChangeNameDialogue" HeaderText=@Localizator["ChangeNameDialogue1"]>
+    <BodyTemplate>
+        <div class="d-flex">
+            <p>@Localizator["ChangeNameDialogue3"]</p>
+            <InputText type="text" class="form-full-width ms-2" @bind-value="newName" aria-placeholder="@Localizator[@"ChangeNameDialogue2"]" style="width: auto;" />
+        </div>
+    </BodyTemplate>
+    <FooterTemplate>
+        <button type="button" class="btn btn-secondary"
+            data-dismiss="modal" @onclick="() => ChangeNameDialogue!.Close()">@Localizator["CancelButtonText"]</button>
+        <button type="button" class="btn btn-primary" @onclick="ChangeGroupNameAsync">@Localizator["ContinueButton"]</button>
+    </FooterTemplate>
+</DialogueTemplate>
+
+@code {
+    List<Diary>? diaries { get; set; } = new();
+    List<DiaryGroup>? groups { get; set; }
+    List<DiaryGroup>? groupsSearching { get; set; }
+    private DialogueTemplate? DeleteGroupDialogue { get; set; }
+    private DialogueTemplate? ChangeOwnerDialogue { get; set; }
+    private DialogueTemplate? ChangeNameDialogue { get; set; }
+    // Filter data
+    private int? IdFilter = null;
+    private string NameFilter = "";
+    // For logging actions done by Admin
+    private string? adminId;
+    private string? adminUserName;
+    [CascadingParameter] protected Task<AuthenticationState>? AuthStat { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        base.OnInitialized();
+        groups = await groupClient.GetGroupsAsync();
+        diaries = await diaryClient.GetDiariesAsync();
+        UpdateSearch();
+        ClaimsPrincipal? user = (await AuthStat!).User;
+        adminId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        adminUserName = user.FindFirst(ClaimTypes.Name)?.Value;
+    }
+
+    private void UpdateSearch() {
+        if(IdFilter == null && NameFilter == "")
+            groupsSearching = groups!;
+        else if(IdFilter == null)
+            groupsSearching = groups!.Where(group => group.Name!.Contains(NameFilter)).ToList();
+        else
+            groupsSearching = groups!.Where(group => group.Id == IdFilter)
+                                .Where(group => group.Name!.Contains(NameFilter)).ToList();
+    }
+
+    // Modals Methods and Data
+    private DiaryGroup Group = new DiaryGroup();
+    private int? newId;
+    private string? newName;
+
+    private async Task DeleteGroupAsync() {
+        Log.Information("Admin with Username '{UserName}' & id '{UserId}' is " +
+                        "deleting group with Name '{UpdateGroupName}' & id '{UpdateGroupId}'",
+                        adminUserName, adminId, Group.Name, Group.Id);
+        await groupClient.DeleteGroupAsync(Group.Id);
+        DeleteGroupDialogue!.Close();
+        NavigationManager.Refresh(true);
+    }
+    private async Task ChangeGroupOwnerAsync() {
+        Log.Information("Admin with Username '{UserName}' & id '{UserId}' is " +
+                        "changing ownership of group with Name '{UpdateGroupName}' & id '{UpdateGroupId}'" +
+                        " to User with id '{OwnerId}' from user with id '{FirstOwnerId}'",
+                        adminUserName, adminId, Group.Name, Group.Id, newId, Group.Id);
+        var newGroup = Group;
+        if(newId != null)
+            newGroup.UserId = newId;
+        await groupClient.UpdateGroupAsync(newGroup);
+    }
+    private async Task ChangeGroupNameAsync() {
+        Log.Information("Admin with Username '{UserName}' & id '{UserId}' is " +
+                        "changing naming of group from '{UpdateGroupName}' to '{NewGroupName}' while group id is '{UpdateGroupId}'",
+                        adminUserName, adminId, Group.Name, newName, Group.Id);
+        var newGroup = Group;
+        if(newName != null)
+            newGroup.Name = newName;
+        await groupClient.UpdateGroupAsync(newGroup);
+    }
+
+    // Open helpers
+    private void OpenDialogueWithGroup(DiaryGroup group, DialogueTemplate? dialogue = null) {
+        Group = group;
+        if(dialogue != null) {
+            dialogue.Open();
+        }
+    }
+}

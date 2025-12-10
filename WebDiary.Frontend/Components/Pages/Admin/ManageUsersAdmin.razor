@@ -1,6 +1,7 @@
 @using Serilog
 @inject UserClient userClient
 @inject IStringLocalizer<Resources.AdminResource> Localizator
+@inject NavigationManager NavigationManager
 
 <div class="mt-4 mb-4 d-flex">
     <div class="mt-2">
@@ -18,12 +19,12 @@
 
 <TableTemplate Items="usersSearching" CssClassesToAdd="table-to-bottom-scroll-y" >
     <TableHeader>
-        <th>@Localizator["TableHeader1"]</th>
-        <th>@Localizator["TableHeader2"]</th>
-        <th>@Localizator["TableHeader3"]</th>
-        <th>@Localizator["TableHeader4"]</th>
-        <th>@Localizator["TableHeader5"]</th>
-        <th>@Localizator["TableHeader6"]</th>
+        <th>@Localizator["TableUserHeader1"]</th>
+        <th>@Localizator["TableUserHeader2"]</th>
+        <th>@Localizator["TableUserHeader3"]</th>
+        <th>@Localizator["TableUserHeader4"]</th>
+        <th>@Localizator["TableUserHeader5"]</th>
+        <th>@Localizator["TableUserHeader6"]</th>
     </TableHeader>
     <RowTemplate Context="user">
         <td>@user.Id</td>
@@ -82,10 +83,12 @@
     private DialogueTemplate? giveAdminRightsDialogue { get; set; }
     private DialogueTemplate? DeleteUserDialogue { get; set; }
     private DialogueTemplate? ResetPasswordDialogue { get; set; }
+    // Filter data
     private string userNameFilter = "";
     private string RoleFilter = "";
-    private string userId = "";
-    private string userName = "";
+    // For logging actions done by Admin
+    private string? adminId;
+    private string? adminUserName;
     [CascadingParameter] protected Task<AuthenticationState>? AuthStat { get; set; }
 
     protected async override Task OnInitializedAsync()
@@ -94,8 +97,8 @@
         users = await userClient.GetUsersAsync();
         UpdateSearch();
         var user = (await AuthStat!).User;
-        var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var userName = user.FindFirst(ClaimTypes.Name)?.Value;
+        adminId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        adminUserName = user.FindFirst(ClaimTypes.Name)?.Value;
     }
 
     private async Task ChangeActive(User user) {
@@ -104,7 +107,7 @@
         await userClient.UpdateUserAsync(newUser);
         Log.Information("Admin with Username '{UserName}' & id '{UserId}' had " +
                         "changed activation state of user with Username '{UpdateUserName}' & id '{UpdateUserId}'",
-                        userName, userId, newUser.UserName, newUser.Id);
+                        adminUserName, adminId, newUser.UserName, newUser.Id);
     }
 
     private void UpdateSearch() {
@@ -123,13 +126,16 @@
         await userClient.UpdateUserAsync(newUser);
         Log.Information("Admin with Username '{UserName}' & id '{UserId}' had " +
                         "given admin rights to user with Username '{UpdateUserName}' & id '{UpdateUserId}'",
-                        userName, userId, newUser.UserName, newUser.Id);
+                        adminUserName, adminId, newUser.UserName, newUser.Id);
+        giveAdminRightsDialogue!.Close();
     }
     private async Task DeleteUserAsync() {
         await userClient.DeleteUserAsync(User.Id);
         Log.Information("Admin with Username '{UserName}' & id '{UserId}' had " +
                         "deleted user with Username '{UpdateUserName}' & id '{UpdateUserId}'",
-                        userName, userId, User.UserName, User.Id);
+                        adminUserName, adminId, User.UserName, User.Id);
+        DeleteUserDialogue!.Close();
+        NavigationManager.Refresh(true);
     }
     private async Task ResetPasswordAsync() {
         var newUser = User;
@@ -137,7 +143,8 @@
         await userClient.UpdateUserAsync(newUser);
         Log.Information("Admin with Username '{UserName}' & id '{UserId}' had " +
                         "resetted password of user with Username '{UpdateUserName}' & id '{UpdateUserId}'",
-                        userName, userId, newUser.UserName, newUser.Id);
+                        adminUserName, adminId, newUser.UserName, newUser.Id);
+        ResetPasswordDialogue!.Close();
     }
     
     // Open helpers

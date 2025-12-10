@@ -57,22 +57,22 @@
 	<data name="ResetPasswordDialogue3" xml:space="preserve">
 		<value> zurücksetzen. Dadurch wird sein Passwort auf „RESET_PASSWORD“ gesetzt. Sie müssen ihn darüber in irgendeiner Form benachrichtigen. Sind Sie sicher?</value>
 	</data>
-	<data name="TableHeader1" xml:space="preserve">
+	<data name="TableUserHeader1" xml:space="preserve">
 		<value>Ausweis</value>
 	</data>
-	<data name="TableHeader2" xml:space="preserve">
+	<data name="TableUserHeader2" xml:space="preserve">
 		<value>Benutzername</value>
 	</data>
-	<data name="TableHeader3" xml:space="preserve">
+	<data name="TableUserHeader3" xml:space="preserve">
 		<value>Aktiviert</value>
 	</data>
-	<data name="TableHeader4" xml:space="preserve">
+	<data name="TableUserHeader4" xml:space="preserve">
 		<value>Rolle</value>
 	</data>
-	<data name="TableHeader5" xml:space="preserve">
+	<data name="TableUserHeader5" xml:space="preserve">
 		<value>Beschreibung</value>
 	</data>
-	<data name="TableHeader6" xml:space="preserve">
+	<data name="TableUserHeader6" xml:space="preserve">
 		<value>Aktionen mit dem Benutzer</value>
 	</data>
 	<data name="TableIsActiveYes" xml:space="preserve">
@@ -95,5 +95,137 @@
 	</data>
 	<data name="TableAction5" xml:space="preserve">
 		<value>Benutzer löschen</value>
+	</data>
+	<data name="TableGroupHeader1" xml:space="preserve">
+		<value>Ausweis</value>
+	</data>
+	<data name="TableGroupHeader2" xml:space="preserve">
+		<value>Name</value>
+	</data>
+	<data name="TableGroupHeader3" xml:space="preserve">
+		<value>Besitzer-ID</value>
+	</data>
+	<data name="TableGroupHeader4" xml:space="preserve">
+		<value>Aktionen mit der Gruppe</value>
+	</data>
+	<data name="TableGroupHeader5" xml:space="preserve">
+		<value>Einträge zählen</value>
+	</data>
+	<data name="TableGroupAction1" xml:space="preserve">
+		<value>Gruppe löschen</value>
+	</data>
+	<data name="TableGroupAction2" xml:space="preserve">
+		<value>Eigentümerwechsel</value>
+	</data>
+	<data name="TableGroupAction3" xml:space="preserve">
+		<value>Namensänderung</value>
+	</data>
+	<data name="FilterSet4" xml:space="preserve">
+		<value>ID-Filter:</value>
+	</data>
+	<data name="FilterSet5" xml:space="preserve">
+		<value>Gruppenname Filter:</value>
+	</data>
+	<data name="DeleteGroupDialogue1" xml:space="preserve">
+		<value>Gruppe löschen</value>
+	</data>
+	<data name="DeleteGroupDialogue2" xml:space="preserve">
+		<value>Sie möchten die Gruppe mit dem Namen </value>
+	</data>
+	<data name="DeleteGroupDialogue3" xml:space="preserve">
+		<value> löschen? Sind Sie sicher?</value>
+	</data>
+	<data name="ChangeOwnerDialogue1" xml:space="preserve">
+		<value>Eigentümerwechsel</value>
+	</data>
+	<data name="ChangeOwnerDialogue2" xml:space="preserve">
+		<value>Neue Besitzer-ID festlegen</value>
+	</data>
+	<data name="ChangeOwnerDialogue3" xml:space="preserve">
+		<value>Sie werden den Eigentümer wechseln. Legen Sie zuerst die neue Eigentümer-ID fest:</value>
+	</data>
+	<data name="ChangeNameDialogue1" xml:space="preserve">
+		<value>Namensänderung</value>
+	</data>
+	<data name="ChangeNameDialogue2" xml:space="preserve">
+		<value>Neuen Gruppennamen festlegen</value>
+	</data>
+	<data name="ChangeNameDialogue3" xml:space="preserve">
+		<value>Sie werden den Gruppennamen ändern. Legen Sie ihn zuerst fest:</value>
+	</data>
+	<data name="TableDiaryHeader1" xml:space="preserve">
+		<value>Ausweis</value>
+	</data>
+	<data name="TableDiaryHeader2" xml:space="preserve">
+		<value>Inhalt</value>
+	</data>
+	<data name="TableDiaryHeader3" xml:space="preserve">
+		<value>Datum und Uhrzeit (Ortszeit)</value>
+	</data>
+	<data name="TableDiaryHeader4" xml:space="preserve">
+		<value>Datum und Uhrzeit in UTC</value>
+	</data>
+	<data name="TableDiaryHeader5" xml:space="preserve">
+		<value>Ausgewählte Stimmung</value>
+	</data>
+	<data name="TableDiaryHeader6" xml:space="preserve">
+		<value>Die Gruppe gehörte zu</value>
+	</data>
+	<data name="TableDiaryHeader7" xml:space="preserve">
+		<value>Benutzer, dem der Besitz gehört</value>
+	</data>
+	<data name="TableDiaryHeader8" xml:space="preserve">
+		<value>Löschen</value>
+	</data>
+	<data name="TableDiaryAction1" xml:space="preserve">
+		<value>Sehen</value>
+	</data>
+	<data name="TableDiaryAction2" xml:space="preserve">
+		<value>Diesen Eintrag löschen</value>
+	</data>
+	<data name="CloseButton" xml:space="preserve">
+		<value>Schließen</value>
+	</data>
+	<data name="GetDiaryContentDialogueHeader" xml:space="preserve">
+		<value>Inhalt des Eintrags mit der ID</value>
+	</data>
+	<data name="FilterSet6" xml:space="preserve">
+		<value>Datumsfilter:</value>
+	</data>
+	<data name="DeleteDiaryDialogue1" xml:space="preserve">
+		<value>Eintrag mit der ID</value>
+	</data>
+	<data name="DeleteDiaryDialogue2" xml:space="preserve">
+		<value>Sie möchten den Eintrag mit der ID </value>
+	</data>
+	<data name="DeleteDiaryDialogue3" xml:space="preserve">
+		<value> löschen, sind Sie sich da sicher?</value>
+	</data>
+	<data name="DeleteDiaryDialogue4" xml:space="preserve">
+		<value> wird gelöscht</value>
+	</data>
+	<data name="TableLogsHeader1" xml:space="preserve">
+		<value>Ebene</value>
+	</data>
+	<data name="TableLogsHeader2" xml:space="preserve">
+		<value>Zeitstempel</value>
+	</data>
+	<data name="TableLogsHeader3" xml:space="preserve">
+		<value>Nachricht</value>
+	</data>
+	<data name="TableLogsHeader4" xml:space="preserve">
+		<value>Ausnahmen (falls vorhanden)</value>
+	</data>
+	<data name="FilterSet7" xml:space="preserve">
+		<value>Filter von Ebene:</value>
+	</data>
+	<data name="FilterSet8" xml:space="preserve">
+		<value>Maximale Anzahl der abzurufenden Protokolle (0 ist alles):</value>
+	</data>
+	<data name="FilterSet9" xml:space="preserve">
+		<value>Nach Text filtern, der in der Nachricht enthalten ist:</value>
+	</data>
+	<data name="LogsClear" xml:space="preserve">
+		<value>Protokolle löschen</value>
 	</data>
 </root>

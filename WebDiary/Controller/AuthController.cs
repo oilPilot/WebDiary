@@ -34,7 +34,7 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
         var hasher = new PasswordHasher<User>();
         var verify = hasher.VerifyHashedPassword(user, user.Password, model.Password!);
         if(verify == PasswordVerificationResult.Success) {
-            Serilog.Log.Information("User {Name} tries to login with correct password at {currentTime}", user.UserName, DateTime.Now);
+            Log.Information("User {Name} tries to login with correct password at {currentTime}", user.UserName, DateTime.Now);
             return await CreatingTokens(user);
         }
         return Unauthorized(localizer["InvalidNameOrPswd"].Value);
@@ -46,17 +46,17 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
 
         var user = await dbContext.users.FirstOrDefaultAsync(user => user.UserName == principal.Identity!.Name);
         if(user == null) {
-            Serilog.Log.Error<string>("Upon refresh user wasn't found, name {principalName}", principal.Identity!.Name);
+            Log.Error<string>("Upon refresh user wasn't found, name {principalName}", principal.Identity!.Name);
             return BadRequest(localizer["RefreshTokenError"].Value);
         }
         if(user.RefreshToken != tokenModel.RefreshToken || user.RefreshTokenDateEnd <= DateTime.Now) {
-            Serilog.Log.Error("Refresh for user {Name} has been unsuccessful, refreshTokenExpDate: {RefreshTokenExpTime}," +
+            Log.Error("Refresh for user {Name} has been unsuccessful, refreshTokenExpDate: {RefreshTokenExpTime}," +
                             "user token {RefreshTokenUser}, sended token {RefreshTokenSended}",
                             user.UserName, user.RefreshTokenDateEnd, user.RefreshToken, tokenModel.RefreshToken);
             return BadRequest(localizer["RefreshTokenError"].Value);
         }
 
-        Serilog.Log.Information("Refreshing token for user name {Name}", user.UserName);
+        Log.Information("Refreshing token for user name {Name}", user.UserName);
         return await CreatingTokens(user, false);
     }
 
@@ -81,13 +81,13 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
             var principal = tokenHandler.ValidateToken(token, TokenValidationParameters, out var securityToken);
             var JwtSecurityToken = (JwtSecurityToken)securityToken;
             if(securityToken == null || !JwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase)) {
-                Serilog.Log.Error<SecurityToken, string>("Upon GetPrincipalFromExpiredToken token was inwalid {Token} Algorithm: {Alg}",
+                Log.Error<SecurityToken, string>("Upon GetPrincipalFromExpiredToken token was inwalid {Token} Algorithm: {Alg}",
                                 securityToken, JwtSecurityToken.Header.Alg);
                 throw new Exception("Invalid token.");
             }
             return principal;
         } catch(Exception Ex) {
-            Serilog.Log.Error("Catched exception at GetPrincipalFromExpiredToken: {Exception}", Ex);
+            Log.Error("Catched exception at GetPrincipalFromExpiredToken: {Exception}", Ex);
         }
 
         return new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>() { new Claim(ClaimTypes.Name, "") }));
@@ -105,12 +105,12 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
                 await authService.ResetPassword(user, resetPasswordForm.newPassword);
                 return Ok("Resetted successfully");
             } else {
-                Serilog.Log.Error<byte[], byte[]>("ResetPassword was unsuccessful, token {token}, base64Token {base64Token}",
+                Log.Error<byte[], byte[]>("ResetPassword was unsuccessful, token {token}, base64Token {base64Token}",
                                 user.ActionToken, Base64Token);
                 return BadRequest(localizer["TokenNotEqual"].Value);
             }
         } else {
-            Serilog.Log.Information("ResetPassword was unsuccessful, actionDateEnd {DateEnd}", user.ActionDateEnd);
+            Log.Information("ResetPassword was unsuccessful, actionDateEnd {DateEnd}", user.ActionDateEnd);
             return BadRequest(localizer["TokenTimeExpired"].Value);
         }
     }

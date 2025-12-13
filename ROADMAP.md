@@ -11,10 +11,10 @@
     6. Privacy - Add ability to lock specific groups/entries with a PIN.
     Polishing:  Consider a "global master password" that can unlock all groups in session — to prevent repeated input annoyance;
     8. Admin panel
-    Polishing:  Add remaining extra features; Should add max logs count as filter;
+    Polishing:  Add User Impersonation; Add max logs count as filter; Add most active users stat;
+                Add Chart for some of statistics;
 
 ## Known Issues:
-    Check, whether ALL admin tools are working (yes, including Users changing which i already tested)
     There's none;
 
 ## Architecture improvements:

@@ -85,4 +85,5 @@ void AddClients()
     builder.Services.AddScoped<DiaryClient>();
     builder.Services.AddScoped<UserClient>();
     builder.Services.AddScoped<LogRecordClient>();
+    builder.Services.AddScoped<StatsClient>();
 }

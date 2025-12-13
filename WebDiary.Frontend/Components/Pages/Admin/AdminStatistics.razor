@@ -1,0 +1,143 @@
+@using Plotly.Blazor
+@using Plotly.Blazor.Traces
+@using Serilog
+@using System.Drawing
+@inject UserClient userClient
+@inject StatsClient statsClient
+@inject IStringLocalizer<Resources.AdminResource> Localizator
+
+<div class="mt-4 mb-4 d-flex">
+    <div class="mt-2">
+        @Localizator["AdminStats1"]
+        <InputDate class="form-full-width ms-1" @bind-value="usersDate"
+            aria-placeholder="@Localizator[@"AdminStats1"]" style="width: auto;" />
+    </div>
+    <div class="mt-2 ms-2">
+        @Localizator["AdminStats2"]
+        <InputDate class="form-full-width ms-1" @bind-value="entriesDate"
+            aria-placeholder="@Localizator[@"AdminStats2"]" style="width: auto;" />
+    </div>
+    <div class="mt-2 ms-2">
+        @Localizator["AdminStats3"]
+        <InputDate class="form-full-width ms-1" @bind-value="activeDate"
+            aria-placeholder="@Localizator[@"AdminStats3"]" style="width: auto;" />
+    </div>
+    <div class="mt-2 ms-4">
+        <button type="submit" class="btn btn-primary" @onclick="() => UpdateSearch()">@Localizator["AdminStats4"]</button>
+    </div>
+</div>
+
+<div class="mt-2 d-flex">
+    <p>@Localizator["BasicDataText1"]</p>
+    <ul>
+        <li><p><strong>@Localizator["BasicDataText2"] @newUsers</strong></p></li>
+        <li><p>@Localizator["BasicDataText3"] @newEntries</p></li>
+        <li><p>@Localizator["BasicDataText4"] @users?.Count()</p></li>
+        <li><p>@Localizator["BasicDataText5"] @activeUsers</p></li>
+    </ul>
+</div>
+
+@if(usersInactive == null || data == null) {
+    <div class="mt-2 d-flex">
+        @Localizator["LoadingDataAdmin1"]
+        @if(usersInactive == null) {
+            <button class="btn btn-danger ms-2" @onclick="LoadInactiveUsers">@Localizator["LoadingDataAdmin2"]</button>
+        } @if(data == null) {
+            @*<button class="btn btn-success">Load most active users table</button>*@
+            @*<button class="btn btn-primary ms-2" @onclick="LoadChart">@Localizator["LoadingDataAdmin3"]</button>*@
+        }
+    </div>
+}
+
+@if(usersInactive != null) {
+    @if(usersInactive.Count() > 0) {
+        <p class="mt-2">@Localizator["InactiveUsersMessage"]</p>
+        <TableTemplate Items="usersInactive" CssClassesToAdd="table-to-bottom-scroll-y mt-4" >
+            <TableHeader>
+                <th>@Localizator["TableUserHeader1"]</th>
+                <th>@Localizator["TableUserHeader2"]</th>
+                <th>@Localizator["TableUserHeader4"]</th>
+            </TableHeader>
+            <RowTemplate Context="user">
+                <td>@user.Id</td>
+                <td>@user.UserName</td>
+                <td>@user.Role</td>
+            </RowTemplate>
+        </TableTemplate>
+    } else {
+        <p class="mt-2">@Localizator["InactiveUsersMessageAreNone"]</p>
+    }
+}
+
+@if(data != null) {
+    <PlotlyChart @bind-Config="config" @bind-Layout="layout" @bind-Data="data" @ref="chart"></PlotlyChart>
+}
+
+@code {
+    List<User>? users { get; set; } = new List<User>();
+    List<User>? usersInactive { get; set; }
+    // Filter data
+    private DateOnly? usersDate = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-7);
+    private DateOnly? entriesDate = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-7);
+    private DateOnly? activeDate = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-1);
+    private int newUsers = 0;
+    private int newEntries = 0;
+    private int activeUsers = 0;
+    // Chart data
+    PlotlyChart? chart;
+    Config? config;
+    Layout? layout;
+    IList<ITrace>? data;
+
+    protected async override Task OnInitializedAsync()
+    {
+        base.OnInitialized();
+        users = await userClient.GetUsersAsync();
+        await UpdateSearch();
+    }
+
+    private async Task UpdateSearch() {
+        newUsers = await statsClient.GetNewUsersFromDate(usersDate);
+        newEntries = await statsClient.GetNewEntriesFromDate(entriesDate);
+        activeUsers = await statsClient.GetActiveUsersFromDate(activeDate);
+    }
+
+    private async Task LoadInactiveUsers() => usersInactive = await statsClient.GetInactiveUsers();
+    private async Task LoadChart() {
+        // Initialize chart properties
+        config = new Config();
+        config.Responsive = true;
+        config.DisplayLogo = false;
+
+        // Define layout properties as needed
+        layout = new Layout();
+        //layout.Title = new Title { Text = "Linear Chart Example", Color = Color.DarkBlue };
+
+        // Define data
+        var neededStats = await statsClient.GetLast30DaysStats();
+        List<object> dates = neededStats.Select(t => t.dateOfData.ToString("yyyy-MM-dd")).Cast<object>().ToList();
+        List<object> entriesCounts = neededStats.Select(s => s.entriesCount).Cast<object>().ToList();
+        List<object> symbolsCounts = neededStats.Select(s => s.symbolsCount).Cast<object>().ToList();
+
+        Scatter scatterEntries = new Scatter() {
+            Name = Localizator["StatisticsTableAdminData1"],
+            Mode = Plotly.Blazor.Traces.ScatterLib.ModeFlag.Lines | Plotly.Blazor.Traces.ScatterLib.ModeFlag.Markers,
+            X = dates,
+            Y = entriesCounts,
+            FillColor = Color.Green
+        };
+        Scatter scatterSymbols = new Scatter() {
+            Name = Localizator["StatisticsTableAdminData2"],
+            Mode = Plotly.Blazor.Traces.ScatterLib.ModeFlag.Lines | Plotly.Blazor.Traces.ScatterLib.ModeFlag.Markers,
+            X = dates,
+            Y = symbolsCounts,
+            FillColor = Color.Black
+        };
+
+        data = new List<ITrace>
+        {
+            scatterEntries,
+            scatterSymbols
+        };
+    }
+}

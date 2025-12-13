@@ -29,6 +29,7 @@ public record class UpdateUserDTO
     public string? Password { get; set; }
     public string? Description { get; set; }
     //public string? Email { get; set; }
+    public DateTime? LastLoginAtUTC { get; set; }
     public bool? IsValidated { get; set; }
     public byte[]? ActionToken { get; set; }
     public DateTime? ActionDateEnd { get; set; }

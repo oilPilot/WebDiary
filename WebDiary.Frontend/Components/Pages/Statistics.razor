@@ -5,6 +5,7 @@
 @using System.Drawing
 @inject IStringLocalizer<Resources.MainResource> Localizator
 @inject HttpClient HttpClient
+@inject StatsClient statsClient
 
 <AuthorizeView>
     <Authorized>
@@ -85,8 +86,7 @@
     private async Task LoadStatsForDates()
     {
         try {
-            var requestUri = $"stats/fordates?userId={loggedUserId}&startDate={startDate?.ToString("yyyy-MM-dd")}&endDate={endDate?.ToString("yyyy-MM-dd")}";
-            var response = await HttpClient.GetAsync(requestUri);
+            var response = await statsClient.GetStatisticsAsync(loggedUserId, startDate, endDate);
             if(response.IsSuccessStatusCode)
             {
                 statsForDates = await response.Content.ReadFromJsonAsync<List<StatsDay>>();

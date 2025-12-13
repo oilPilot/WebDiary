@@ -13,9 +13,11 @@ public static class Users
         return new User {
             UserName = user.UserName,
             Password = hasher.HashPassword(dummyUser, user.Password),
-            Role = "Default", // No Roles Currently (only Admin, but it's for ME! :D ).
+            Role = "Default",
             // Email = user.Email is null ? "" : user.Email,
             Description = user.Description,
+            CreatedAtUTC = DateTime.UtcNow,
+            LastLoginAtUTC = DateTime.UtcNow,
             ActionToken = user.ActionToken,
             ActionDateEnd = user.ActionDateEnd,
             IsValidated = true // false should be, but emails are disabled
@@ -30,6 +32,8 @@ public static class Users
             Password = user.Password != null ? hasher.HashPassword(currentUser, user.Password) : hasher.HashPassword(currentUser, currentUser.Password),
             Description = user.Description != null ? user.Description : currentUser.Description,
             // Email = user.Email != null ? user.Email : currentUser.Email,
+            CreatedAtUTC = currentUser.CreatedAtUTC,
+            LastLoginAtUTC = user.LastLoginAtUTC != null ? user.LastLoginAtUTC.Value : currentUser.LastLoginAtUTC,
             ActionToken = user.ActionToken,
             ActionDateEnd = user.ActionDateEnd,
             Role = currentUser.Role,

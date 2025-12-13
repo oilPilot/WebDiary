@@ -30,6 +30,49 @@ public class StatsService : IStatsService
         return stats;
     }
 
+    public async Task<int> GetNewUsersCountAsync(DateTime fromPeriod)
+    {
+        var users = await dbContext.users.Where(user => user.CreatedAtUTC >= fromPeriod).CountAsync();
+        return users;
+    }
+
+    public async Task<int> GetNewEntriesCountAsync(DateTime fromPeriod)
+    {
+        var entries = await dbContext.diaries.Where(entry => entry.CreatedUtc >= fromPeriod).CountAsync();
+        return entries;
+    }
+
+    public async Task<int> CountActiveUsersInPeriod(DateTime fromPeriod)
+    {
+        var users = await dbContext.users.Where(user => user.LastLoginAtUTC >= fromPeriod).CountAsync();
+        return users;
+    }
+
+    public async Task<List<User>> GetNewInactiveUsersAsync(int daysInactive = 30)
+    {
+        var maxTime = DateTime.UtcNow.AddDays(-daysInactive);
+        var users = await dbContext.users.Where(user => user.LastLoginAtUTC <= maxTime).ToListAsync();
+        return users;
+    }
+
+    public async Task<List<(DateOnly dateOfData, int entriesCount, int symbolsCount)>> NewEntriesIn30DaysForChart()
+    {
+        var returnList = new List<(DateOnly dateOfData, int entriesCount, int symbolsCount)>();
+        var startDate = new DateTime(DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-30)), TimeOnly.MinValue);
+        var diaries = await dbContext.diaries.Where(entry => entry.CreatedUtc >= startDate).ToListAsync();
+
+        for(DateTime date = startDate; date <= DateTime.UtcNow; date = date.AddDays(1)) {
+            var todayDiaries = diaries.Where(entry => DateOnly.FromDateTime(entry.CreatedUtc)
+                == DateOnly.FromDateTime(date)).ToList();
+            (DateOnly, int, int) newValue = new (DateOnly.FromDateTime(date), todayDiaries.Count(), todayDiaries.Sum(entry => entry.BaseText.Length));
+            returnList.Add(newValue);
+        }
+
+        return returnList;
+    }
+
+    // Helpers
+
     private List<StatsDayDTO> CalculateStats(List<Diary> diaries)
     {
         List<StatsDayDTO> statsList = new List<StatsDayDTO>();

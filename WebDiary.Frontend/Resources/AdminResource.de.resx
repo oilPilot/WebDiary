@@ -228,4 +228,52 @@
 	<data name="LogsClear" xml:space="preserve">
 		<value>Protokolle löschen</value>
 	</data>
+	<data name="AdminStats1" xml:space="preserve">
+		<value>Neue Nutzer seit:</value>
+	</data>
+	<data name="AdminStats2" xml:space="preserve">
+		<value>Neue Einträge seit:</value>
+	</data>
+	<data name="AdminStats3" xml:space="preserve">
+		<value>Suche nach der Anzahl der Benutzer, die sich seit:</value>
+	</data>
+	<data name="AdminStats4" xml:space="preserve">
+		<value>Datum nach neuer Voreinstellung suchen</value>
+	</data>
+	<data name="BasicDataText1" xml:space="preserve">
+		<value>Basisdaten:</value>
+	</data>
+	<data name="BasicDataText2" xml:space="preserve">
+		<value>Neue Benutzer ab dem eingegebenen Datum:</value>
+	</data>
+	<data name="BasicDataText3" xml:space="preserve">
+		<value>Neue Einträge ab dem Eingabedatum:</value>
+	</data>
+	<data name="BasicDataText4" xml:space="preserve">
+		<value>Aktuelle Gesamtzahl der Nutzer:</value>
+	</data>
+	<data name="BasicDataText5" xml:space="preserve">
+		<value>Benutzer, die sich ab dem eingegebenen Datum angemeldet haben:</value>
+	</data>
+	<data name="LoadingDataAdmin1" xml:space="preserve">
+		<value>Andere Daten laden:</value>
+	</data>
+	<data name="LoadingDataAdmin2" xml:space="preserve">
+		<value>Tabelle für inaktive Benutzer laden</value>
+	</data>
+	<data name="LoadingDataAdmin3" xml:space="preserve">
+		<value>Ladediagramm der Einträge und ihrer Symbole/Beträge der letzten 30 Tage</value>
+	</data>
+	<data name="InactiveUsersMessage" xml:space="preserve">
+		<value>Zeigte Benutzer an, die sich seit 30 Tagen nicht mehr angemeldet haben (Daten für die Suche in der Benutzerverwaltung):</value>
+	</data>
+	<data name="InactiveUsersMessageAreNone" xml:space="preserve">
+		<value>Es gibt seit 30 Tagen keine inaktiven Benutzer.</value>
+	</data>
+	<data name="StatisticsTableAdminData1" xml:space="preserve">
+		<value>Einträge werden pro Tag gezählt</value>
+	</data>
+	<data name="StatisticsTableAdminData2" xml:space="preserve">
+		<value>Symbole in Einträgen werden pro Tag gezählt</value>
+	</data>
 </root>

@@ -13,8 +13,8 @@
             @onclick="() => openedFunction = 3">@Localizator["AdminAction3"]</button>
         <button class="ms-2 btn btn-@(openedFunction == 4 ? @"primary" : @"secondary")"
             @onclick="() => openedFunction = 4">@Localizator["AdminAction4"]</button>
-        @*<button class="ms-2 btn btn-@(openedFunction == 5 ? @"primary" : @"secondary")"
-            @onclick="() => openedFunction = 5">@Localizator["AdminAction5"]</button>*@
+        <button class="ms-2 btn btn-@(openedFunction == 5 ? @"primary" : @"secondary")"
+            @onclick="() => openedFunction = 5">@Localizator["AdminAction5"]</button>
         @*<button class="btn btn-@(openedFunction == 6 ? @"primary" : @"secondary")"
             @onclick="() => openedFunction = 6">User Impersonation (Admin can “log in as user” for debugging.)</button>*@
     </div>
@@ -26,15 +26,8 @@
         <ModerateEntriesAdmin />
     } else if (openedFunction == 4) {
         <LogsView />
-    } else if (openedFunction == 5) { // IT IS IN ACTIVE DEVELOPMENT!
-        <p>Opened Admin Statistics</p>
-        <p>I should add:</p>
-        <uo>
-            <li>Total users</li>
-            <li>Total diary entries</li>
-            <li>Activity per day</li>
-            <li>New users per week</li>
-        </uo>
+    } else if (openedFunction == 5) {
+        <AdminStatistics />
     } else if (openedFunction == 6) {
         <p>Opened User Impersonation</p>
         <p>Admin can “log in as user” for debugging.</p>

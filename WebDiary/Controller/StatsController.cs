@@ -26,5 +26,25 @@ public class StatsController(IStatsService statsService) : ControllerBase
 
         return Ok(stats);
     }
+    
+    [HttpGet("adminNewUsers")]
+    public async Task<IActionResult> GetNewUsers(DateOnly fromPeriod) =>
+        Ok(await statsService.GetNewUsersCountAsync(ToDateTime(fromPeriod)));
+
+    [HttpGet("adminNewEntries")]
+    public async Task<IActionResult> GetNewEntries(DateOnly fromPeriod) =>
+        Ok(await statsService.GetNewEntriesCountAsync(ToDateTime(fromPeriod)));
+
+    [HttpGet("adminActiveUsers")]
+    public async Task<IActionResult> GetActiveUsers(DateOnly fromPeriod) =>
+        Ok(await statsService.CountActiveUsersInPeriod(ToDateTime(fromPeriod)));
+
+    [HttpGet("adminInactiveUsers")]
+    public async Task<IActionResult> GetInactiveUsers() => Ok(await statsService.GetNewInactiveUsersAsync());
+    
+    [HttpGet("admin30DayStatistics")]
+    public async Task<IActionResult> Get30DaysStats() => Ok(await statsService.NewEntriesIn30DaysForChart());
+
+    private DateTime ToDateTime(DateOnly fromPeriod) => fromPeriod.ToDateTime(TimeOnly.MinValue);
 
 }

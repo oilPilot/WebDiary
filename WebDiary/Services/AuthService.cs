@@ -60,12 +60,13 @@ public class AuthService : IAuthService
         var token = GenerateJwtToken(user);
         var refreshToken = GenerateRefreshToken();
         var oldUser = user;
+        user.LastLoginAtUTC = DateTime.UtcNow;
         user.RefreshToken = refreshToken;
         if(populateExpire)
             user.RefreshTokenDateEnd = DateTime.UtcNow.AddDays(7);
         dbContext.users.Entry(oldUser).CurrentValues.SetValues(user);
         await dbContext.SaveChangesAsync();
-        Serilog.Log.Information("Created tokens for user {Name} with refresh token expiration {ExpTime}", user.UserName, user.RefreshTokenDateEnd);
+        Log.Information("Created tokens for user {Name} with refresh token expiration {ExpTime}", user.UserName, user.RefreshTokenDateEnd);
         return new string[] {token, refreshToken};
     }
 

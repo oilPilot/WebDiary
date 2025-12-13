@@ -228,4 +228,52 @@
 	<data name="LogsClear" xml:space="preserve">
 		<value>Clear Logs</value>
 	</data>
+	<data name="AdminStats1" xml:space="preserve">
+		<value>New users since:</value>
+	</data>
+	<data name="AdminStats2" xml:space="preserve">
+		<value>New entries since:</value>
+	</data>
+	<data name="AdminStats3" xml:space="preserve">
+		<value>Search amount of users that logged since:</value>
+	</data>
+	<data name="AdminStats4" xml:space="preserve">
+		<value>Search date by new preset</value>
+	</data>
+	<data name="BasicDataText1" xml:space="preserve">
+		<value>Basic data:</value>
+	</data>
+	<data name="BasicDataText2" xml:space="preserve">
+		<value>New users from entered date:</value>
+	</data>
+	<data name="BasicDataText3" xml:space="preserve">
+		<value>New entries from entered date:</value>
+	</data>
+	<data name="BasicDataText4" xml:space="preserve">
+		<value>Current total users amount:</value>
+	</data>
+	<data name="BasicDataText5" xml:space="preserve">
+		<value>Users that logged from entered date:</value>
+	</data>
+	<data name="LoadingDataAdmin1" xml:space="preserve">
+		<value>Load other data:</value>
+	</data>
+	<data name="LoadingDataAdmin2" xml:space="preserve">
+		<value>Load inactive users table</value>
+	</data>
+	<data name="LoadingDataAdmin3" xml:space="preserve">
+		<value>Load chart of entries and their symbols amount during last 30 days</value>
+	</data>
+	<data name="InactiveUsersMessage" xml:space="preserve">
+		<value>Showed users that haven't logged in 30 days (data for searching in managing users):</value>
+	</data>
+	<data name="InactiveUsersMessageAreNone" xml:space="preserve">
+		<value>There are no inactive users for 30 days.</value>
+	</data>
+	<data name="StatisticsTableAdminData1" xml:space="preserve">
+		<value>Entries count in day</value>
+	</data>
+	<data name="StatisticsTableAdminData2" xml:space="preserve">
+		<value>Symbols in entries count in day</value>
+	</data>
 </root>

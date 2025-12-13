@@ -117,7 +117,7 @@ public class AuthControllerTests
         var controller = GetControllerWithContext(dbContext);
 
         // Act
-        var result = await controller.IsUniqueEmailAsync("NotexistEmail@gmail.not");
+        var result = controller.IsUniqueEmailAsync("NotexistEmail@gmail.not");
 
         // Assert
         // Assert.IsType<BadRequestObjectResult>(result); - THERE ARE NONE EMAILS!
@@ -141,7 +141,7 @@ public class AuthControllerTests
         var controller = GetControllerWithContext(dbContext);
 
         // Act
-        var result = await controller.IsUniqueEmailAsync("New@gmail.com");
+        var result = controller.IsUniqueEmailAsync("New@gmail.com");
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
@@ -175,7 +175,7 @@ public class AuthControllerTests
         };
 
         // Act
-        var result = await controller.SendEmailAsync(emailForm);
+        var result = controller.SendEmailAsync(emailForm);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
@@ -241,7 +241,7 @@ public class AuthControllerTests
         };
 
         // Act
-        var result = await controller.ValidateEmailAsync(form);
+        var result = controller.ValidateEmailAsync(form);
 
         // Assert
         /* NO EMAIL NO NEEDED VALIDATION
@@ -290,7 +290,7 @@ public class AuthControllerTests
         _mockLocalizer.Setup(l => l["TokenNotEqual"]).Returns(mockLocalized);
 
         // Act
-        var result = await controller.ValidateEmailAsync(form);
+        var result = controller.ValidateEmailAsync(form);
 
         // Assert
         /* NO EMAIL NO VALIDATION PROBLEMS
@@ -333,7 +333,7 @@ public class AuthControllerTests
         _mockLocalizer.Setup(l => l["TokenTimeExpired"]).Returns(mockLocalized);
 
         // Act
-        var result = await controller.ValidateEmailAsync(form);
+        var result = controller.ValidateEmailAsync(form);
 
         // Assert
         /* NO EMAIL NO VALIDATION PROBLEMS
@@ -362,7 +362,7 @@ public class AuthControllerTests
         _mockLocalizer.Setup(l => l["InvalidNameOrPswd"]).Returns(mockLocalized);
 
         // Act
-        var result = await controller.ValidateEmailAsync(form);
+        var result = controller.ValidateEmailAsync(form);
 
         // Assert
         /* NO EMAIL NO VALIDATION PROBLEMS

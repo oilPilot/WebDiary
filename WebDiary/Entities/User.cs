@@ -11,6 +11,8 @@ public class User
     public required string Description { get; set; }
     // public required string Email { get; set; }
     public required bool IsValidated { get; set; }
+    public DateTime CreatedAtUTC { get; set; }
+    public DateTime LastLoginAtUTC { get; set; }
     public byte[]? ActionToken { get; set; }
     public DateTime? ActionDateEnd { get; set; }
     public string? RefreshToken { get; set; }

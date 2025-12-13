@@ -1,4 +1,5 @@
 using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using WebDiary.Data;
@@ -15,7 +16,7 @@ public static class LogsEndpoints
         var group = app.MapGroup("logs");
 
         // mapping GET methods
-        group.MapGet("/{count}", async (int count, DiariesContext dbContext) => {
+        group.MapGet("/{count}", [Authorize(Roles = "Admin")] async (int count, DiariesContext dbContext) => {
             Log.Information("Getting all logs");
             return await dbContext.logs.OrderByDescending(log => log.timestamp)
                 .Select(logs => logs.toDTO()).Take(count).AsNoTracking().ToListAsync();
@@ -25,7 +26,7 @@ public static class LogsEndpoints
         // Update is not needed for logging
 
         // mapping DELETE methods
-        group.MapDelete("/", async (DiariesContext dbContext) => {
+        group.MapDelete("/", [Authorize(Roles = "Admin")] async (DiariesContext dbContext) => {
             await dbContext.logs.ExecuteDeleteAsync();
             Log.Information("Cleared logs");
             return Results.NoContent();

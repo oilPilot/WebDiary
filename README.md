@@ -1,6 +1,15 @@
 # 🖥 Personal Diary Web App
 This is web application built with ASP.NET Core and Blazor that allows users to log daily experiences, categorize them and manage entries with timestamps.
-### Features:
+
+### Live demo:
+* https://webdiary-frontend.onrender.com
+
+### Screenshots:
+![AdminPanelOfAppScreenshot](screenshots/AdminPanel.png)
+![MainDiariesScreenshot](screenshots/DiariesPage.png)
+![StatisticsPageScreenshot](screenshots/StatisticsPage.png)
+
+## Features:
 * User authentication and registration
 * Categorized diary entries to named categories that you are creating
 * Automatic timestamping
@@ -14,7 +23,6 @@ This is web application built with ASP.NET Core and Blazor that allows users to 
 * Statistics page
 * Unit tests
 
-## Deployment url: https://webdiary-frontend.onrender.com
 
 ## 🧗 Installation on local machine
 ### Prerequisites:
@@ -26,31 +34,36 @@ This is web application built with ASP.NET Core and Blazor that allows users to 
 ```
 git clone https://github.com/oilPilot/WebDiary.git
 cd WebDiary
+dotnet run --project WebDiary
+dotnet run --project WebDiary.Frontend
 ```
 2. Before running the backend, configure the following secrets (using `dotnet user-secrets` or environment variables):
 	- `Jwt:Key` – Secret key for Jwt signing.
 	- `ConnectionStrings:DiariesConnection` – Database connection string.
-3. Database migrations will run automatically
-4. Run the backend at ../Webdiary:
-`dotnet run`
-5. And then run frontend with same command at ../Webdiary.Frontend
-Also you can run tests with this command: `dotnet test`
+3. Note: Database migrations will run automatically
 
 ## 🛠️ Tech Stack
 * ASP.NET Core
 * Entity Framework Core
-* Blazor
 * Serilog
-* Bootstrap
-* xUnit and Moq for unit test
+* Blazor Server
+* Bootstrap UI
+* Docker files
+* xUnit and Moq for unit tests
 * Git for version control
 
 ## 📈 Planned Improvements
-* Improve Admin panel
-* Realize more statistics
 * Realize messaging between users
 * Fix glitches
 * You can look more in ROADMAP.md
+
+## Where can be used
+* Where this can be used:
+* User portals with time-tracking
+* Personal productivity apps
+* CRM task logs
+* Admin dashboards
+* Company internal diaries/logs
 
 ## 🤝 Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.

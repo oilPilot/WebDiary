@@ -114,8 +114,14 @@
         config.DisplayLogo = false;
 
         // Define layout properties as needed
-        layout = new Layout();
-        //layout.Title = new Title { Text = "Linear Chart Example", Color = Color.DarkBlue };
+        layout = new Layout() {
+            PlotBgColor = "rgba(0,0,0,0)",
+            PaperBgColor = "rgba(0,0,0,0)",
+            ModeBar = new Plotly.Blazor.LayoutLib.ModeBar
+            {
+                BgColor = "rgba(0,0,0,0)"
+            }
+        };
         // Define data
         List<object> dates = statsForDates.Select(s => s.Date.ToString("yyyy-MM-dd")).Cast<object>().ToList();
         List<object> entriesCounts = statsForDates.Select(s => s.EntriesCount).Cast<object>().ToList();

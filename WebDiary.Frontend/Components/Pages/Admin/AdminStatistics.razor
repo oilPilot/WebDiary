@@ -44,7 +44,7 @@
             <button class="btn btn-danger ms-2" @onclick="LoadInactiveUsers">@Localizator["LoadingDataAdmin2"]</button>
         } @if(data == null) {
             @*<button class="btn btn-success">Load most active users table</button>*@
-            @*<button class="btn btn-primary ms-2" @onclick="LoadChart">@Localizator["LoadingDataAdmin3"]</button>*@
+            <button class="btn btn-primary ms-2" @onclick="LoadChart">@Localizator["LoadingDataAdmin3"]</button>
         }
     </div>
 }
@@ -110,14 +110,19 @@
         config.DisplayLogo = false;
 
         // Define layout properties as needed
-        layout = new Layout();
-        //layout.Title = new Title { Text = "Linear Chart Example", Color = Color.DarkBlue };
-
+        layout = new Layout() {
+            PlotBgColor = "rgba(0,0,0,0)",
+            PaperBgColor = "rgba(0,0,0,0)",
+            ModeBar = new Plotly.Blazor.LayoutLib.ModeBar
+            {
+                BgColor = "rgba(0,0,0,0)"
+            }
+        };
         // Define data
-        var neededStats = await statsClient.GetLast30DaysStats();
-        List<object> dates = neededStats.Select(t => t.dateOfData.ToString("yyyy-MM-dd")).Cast<object>().ToList();
-        List<object> entriesCounts = neededStats.Select(s => s.entriesCount).Cast<object>().ToList();
-        List<object> symbolsCounts = neededStats.Select(s => s.symbolsCount).Cast<object>().ToList();
+        List<AdminStatsModel>? neededStats = await statsClient.GetLast30DaysStats();
+        List<object> dates = neededStats.Select(t => t.DateOfData.ToString("yyyy-MM-dd")).Cast<object>().ToList();
+        List<object> entriesCounts = neededStats.Select(s => s.EntriesCount).Cast<object>().ToList();
+        List<object> symbolsCounts = neededStats.Select(s => s.SymbolsCount).Cast<object>().ToList();
 
         Scatter scatterEntries = new Scatter() {
             Name = Localizator["StatisticsTableAdminData1"],

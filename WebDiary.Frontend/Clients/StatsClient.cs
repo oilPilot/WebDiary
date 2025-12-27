@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Components.Authorization;
 using WebDiary.Frontend.Models;
 using WebDiary.Frontend.Models.Auth;
@@ -35,10 +36,10 @@ public class StatsClient(HttpClient httpClient, AuthenticationStateProvider auth
         return await response.Content.ReadFromJsonAsync<List<User>>() ?? new List<User>();
     }
 
-    public async Task<List<(DateOnly dateOfData, int entriesCount, int symbolsCount)>> GetLast30DaysStats() {
+    public async Task<List<AdminStatsModel>> GetLast30DaysStats() {
         var response = await ((CustomAuthenticationStateProvider)authenticationStateProvider).AuthorizedRequestAsync(() =>
             httpClient.GetAsync($"stats/admin30DayStatistics"));
-        return await response.Content.ReadFromJsonAsync<List<(DateOnly dateOfData, int entriesCount, int symbolsCount)>>()
-            ?? new List<(DateOnly dateOfData, int entriesCount, int symbolsCount)>();
+        return await response.Content.ReadFromJsonAsync<List<AdminStatsModel>>()
+            ?? new List<AdminStatsModel>();
     }
 }

@@ -4,6 +4,7 @@ using WebDiary.DTO;
 using WebDiary.Entities;
 using WebDiary.Helpers;
 using WebDiary.Mapping;
+using WebDiary.Model;
 
 public class StatsService : IStatsService
 {
@@ -55,16 +56,20 @@ public class StatsService : IStatsService
         return users;
     }
 
-    public async Task<List<(DateOnly dateOfData, int entriesCount, int symbolsCount)>> NewEntriesIn30DaysForChart()
+    public async Task<List<AdminStatsModel>> NewEntriesIn30DaysForChart()
     {
-        var returnList = new List<(DateOnly dateOfData, int entriesCount, int symbolsCount)>();
+        var returnList = new List<AdminStatsModel>();
         var startDate = new DateTime(DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-30)), TimeOnly.MinValue);
         var diaries = await dbContext.diaries.Where(entry => entry.CreatedUtc >= startDate).ToListAsync();
 
         for(DateTime date = startDate; date <= DateTime.UtcNow; date = date.AddDays(1)) {
             var todayDiaries = diaries.Where(entry => DateOnly.FromDateTime(entry.CreatedUtc)
                 == DateOnly.FromDateTime(date)).ToList();
-            (DateOnly, int, int) newValue = new (DateOnly.FromDateTime(date), todayDiaries.Count(), todayDiaries.Sum(entry => entry.BaseText.Length));
+            var newValue = new AdminStatsModel {
+                DateOfData = DateOnly.FromDateTime(date),
+                EntriesCount = todayDiaries.Count,
+                SymbolsCount = todayDiaries.Sum(d => d.BaseText.Length)
+            };
             returnList.Add(newValue);
         }
 

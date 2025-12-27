@@ -1,5 +1,6 @@
 using WebDiary.DTO;
 using WebDiary.Entities;
+using WebDiary.Model;
 
 public interface IStatsService
 {
@@ -8,6 +9,6 @@ public interface IStatsService
     Task<int> GetNewEntriesCountAsync(DateTime fromPeriod);
     Task<int> CountActiveUsersInPeriod(DateTime fromPeriod); // Typically Day or Week
     Task<List<User>> GetNewInactiveUsersAsync(int daysInactive = 30);
-    Task<List<(DateOnly dateOfData, int entriesCount, int symbolsCount)>> NewEntriesIn30DaysForChart();
+    Task<List<AdminStatsModel>> NewEntriesIn30DaysForChart();
     // Task<IReadOnlyList<UserActivityDto>> GetMostActiveUsers(int limit) - Maybe one day... One day i will implement it
 }

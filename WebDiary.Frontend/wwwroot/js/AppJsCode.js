@@ -32,6 +32,41 @@ function getClientTime() {
     };
 }
 
+// Code for Quill Editor
+
+function initializeQuillEditor() {
+    var quill = new Quill('#editor', {
+        theme: 'snow',
+        placeholder: 'Start writing your diary...',
+        modules: {
+            toolbar: [
+                [{ header: [1, 2, 5, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                ['color', 'background'],
+                ['ordered'],
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                [{ 'indent': '-1' }, { 'indent': '+1' }],
+                ['clean']
+            ]
+        }
+    });
+    // Auto-save on text change
+    quill.on('text-change', function() {
+        localStorage.setItem('NewDiaryAutoSavedText', quill.root.innerHTML);
+    });
+
+    // Auto-load saved text
+    var value = localStorage.getItem('NewDiaryAutoSavedText');
+    if (value) {
+        quill.root.innerHTML = value;
+    }
+}
+
+function getQuillContent() {
+    var quill = Quill.find(document.getElementById('editor'));
+    return quill.root.innerHTML;
+}
+
 // Code for Export
 
 async function downloadDiaryPdf(url) {

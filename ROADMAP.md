@@ -4,8 +4,6 @@
 ## Features to Polish yet:
     1. Mood tracking - Add a quick emoji/mood scale at the end of diary entries to track emotional trends.
     Polishing:  At midnight all empty mood states will be send to AI for setting emoji - shall be new experimental setting;
-    2. Rich text support - Allow formatting (bold, italic, bullet lists) in diary entries.
-    Polishing:  Instead of relying onto BlazoredTextEditor to use quill, use it directly;
     4. Statistics dashboard - Show charts (entries per week, mood trends, word counts).
     Polishing:  Allow for Users to set points for certain mood; add caching;
     6. Privacy - Add ability to lock specific groups/entries with a PIN.

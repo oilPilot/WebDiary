@@ -3,6 +3,7 @@
 @using BootstrapBlazor.Components
 @using Microsoft.AspNetCore.Authorization
 @using System.ComponentModel.DataAnnotations
+@using WebDiary.Frontend.Model
 @using WebDiary.Frontend.Models.Auth
 @using WebDiary.Frontend.Clients
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -34,6 +35,7 @@
             
             <AuthorizeView Roles="Admin" Context="AdminContext">
                 <Authorized>
+    <button class="btn btn-danger ms-2" @onclick="() => SendTest()">Send Test Email</button>
                     <button class="btn btn-danger ms-2" @onclick="() => modalRemove?.Open()">@Localizator["RemoveAdminRights"]</button>
                     
                     <DialogueTemplate @ref="modalRemove" HeaderText=@Localizator["RemoveAdminRightsHeader"]>
@@ -152,6 +154,16 @@
         await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).LogoutUserAsync();
         Login();
     }
+
+    private async Task SendTest() {
+        var emailModel = new sendEmailModel() {
+            To = "matveyeresko1@gmail.com",
+            Subject = "Test Email",
+            Body = "This is a test email."
+        };
+        await HttpClient.PostAsJsonAsync("/auth/sendEmail", emailModel);
+    }
+
     private void Login() => NavigationManager.NavigateTo("/Users/Login");
 
     // Modal Methods and Data

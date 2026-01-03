@@ -58,9 +58,9 @@
                             </ol>
                         }
                     </div>
-                    <EditForm Model="diary" OnValidSubmit="AddDiaryAsync" FormName="SendDiary" class="footer" @onchange="SaveTextInForm" @oninput="SaveTextInForm">
+                    <EditForm Model="diary" OnValidSubmit="AddDiaryAsync" FormName="SendDiary" class="footer">
                         <div class="mb-2 me-2 ms-2" style="height: 100px;">
-                            <BlazoredTextEditor @ref="@richEditor" Placeholder="Please, enter what you think currently">
+                            @*<BlazoredTextEditor @ref="@richEditor" Placeholder="Start writing your diary...">
                                 <ToolbarContent>
                                     <select class="ql-header">
                                         <option selected=""></option>
@@ -89,7 +89,8 @@
                                 <EditorContent>
                                     
                                 </EditorContent>
-                            </BlazoredTextEditor>
+                            </BlazoredTextEditor>*@
+                            <div id="editor" @ref="richEditor"></div>
                             <div>
                                 <button class="btn btn-secondary ms-2" type="submit">@Localizator["MainPageButtonText"]</button>
                                 <select @bind="diary!.mood">
@@ -130,7 +131,9 @@
 @code {
     [Parameter]
     public int? id { get; set; }
-    public BlazoredTextEditor richEditor { get; set;} = new();
+    //public BlazoredTextEditor richEditor { get; set;} = new();
+    private ElementReference richEditor { get; set; }
+    private bool shouldInitializeEditor = false;
     private DialogueTemplate? modalPin;
 
     private List<Diary>? diaries;
@@ -174,6 +177,8 @@
                 PageTitle = "PIN";
             } else {
                 PageTitle = group.Name;
+                if(isValidated)
+                    shouldInitializeEditor = true;
             }
         } catch (Exception Exception) {
             if(Exception.Message == "Response status code does not indicate success: 404 (Not Found).") {
@@ -184,29 +189,20 @@
         await base.OnParametersSetAsync();
     }
 
-    protected async override Task OnAfterRenderAsync(bool firstRender) {
-        if(firstRender) {
+    protected async override Task OnAfterRenderAsync(bool firstRender) {        
+        if (shouldInitializeEditor)
+        {
+            try {
+                await JS.InvokeVoidAsync("initializeQuillEditor");
+                shouldInitializeEditor = false;
+            }
+            catch (Exception ex) {
+                Console.WriteLine("Quill init failed: " + ex.Message);
+            }
             StateHasChanged();
-            /*  It needs delay, or else richEditor will break because of null JSInterop (by some reason...)
-                If i want to fix this shitty thingy, i will need to make Quill usage of myself entirely.
-                Will probably do much later.
-            */
-            //await Task.Delay(600);
-            //await LoadText();
         }
 
         await base.OnAfterRenderAsync(firstRender);
-    }
-
-
-    private async Task LoadText() {
-        var autoSavedText = await localStorage.GetItemAsStringAsync("NewDiaryAutoSavedText");
-        if(autoSavedText != null)
-            await richEditor.LoadHTMLContent(autoSavedText);
-    }
-
-    private async Task SaveTextInForm() {
-        await localStorage.SetItemAsStringAsync("NewDiaryAutoSavedText", await richEditor!.GetHTML());
     }
 
     private void RedirectTo404() {
@@ -215,6 +211,8 @@
 
     private void CorrectPin() {
         PageTitle = group!.Name;
+        if(isValidated)
+            shouldInitializeEditor = true;
     }
 
     async Task AddDiaryAsync() {
@@ -226,7 +224,7 @@
             isoUtc = "";
         var utc = DateTime.Parse(isoUtc, null, System.Globalization.DateTimeStyles.AdjustToUniversal);
         
-        diary!.Text = await richEditor!.GetHTML();
+        diary!.Text = await JS.InvokeAsync<string>("getQuillContent");
         diary.CreatedUtc = utc;
         diary.UtcOffsetMinutes = offset;
         

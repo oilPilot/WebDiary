@@ -22,7 +22,7 @@ namespace WebDiary.Controller;
 [ApiController]
 public class AuthController (DiariesContext dbContext, IConfiguration config,
                             IStringLocalizer<ErrorResource> localizer,
-                            IAuthService authService) : ControllerBase
+                            IAuthService authService, IEmailSenderService emailSenderService) : ControllerBase
 {
 
     [HttpPost("jwttoken/login")]
@@ -139,6 +139,7 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
     [HttpPost("sendEmail")]
     public IActionResult SendEmailAsync(sendEmailModel email)
     {
+        emailSenderService.SendEmail(email.To, email.Subject, email.Body);
         return Ok("Email sended successfully"); // EMAIL DELETED
     }
     

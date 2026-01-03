@@ -1,5 +1,5 @@
 
-namespace WebDiary.Model;
+namespace WebDiary.Frontend.Model;
 
 public class sendEmailModel {
     //public int? userId { get; set; }

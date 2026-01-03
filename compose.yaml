@@ -1,0 +1,58 @@
+
+services:
+  backend:
+    container_name: webdiary-backend
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DiariesConnection: ${DIARIES_CONNECTION_STRING}
+      Jwt__Key: ${JWT_TOKEN_KEY}
+    ports:
+      - "5281:5281"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - webdiary-net
+
+  frontend:
+    container_name: webdiary-frontend
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ApiConnection: "http://backend:5281"
+    ports:
+      - "5101:5101"
+    depends_on:
+      - backend
+    networks:
+      - webdiary-net
+  # If using Supabase/other cloud db, this service is unneeded
+  db:
+    container_name: webdiary-db
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: webdiary
+      POSTGRES_USER: webdiary
+      POSTGRES_PASSWORD: webdiary_password
+    volumes:
+      - webdiary-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U webdiary"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - webdiary-net
+
+networks:
+  webdiary-net:
+    driver: bridge
+
+volumes:
+  webdiary-db-data:

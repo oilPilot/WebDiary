@@ -2,7 +2,7 @@
 This is web application built with ASP.NET Core and Blazor that allows users to log daily experiences, categorize them and manage entries with timestamps.
 
 ### Live demo:
-* https://webdiary-frontend.onrender.com
+* You can see live demo hosted here: https://webdiary-frontend.onrender.com
 
 ### Screenshots:
 ![AdminPanelOfAppScreenshot](screenshots/AdminPanel.png)
@@ -42,13 +42,26 @@ dotnet run --project WebDiary.Frontend
 	- `ConnectionStrings:DiariesConnection` – Database connection string.
 3. Note: Database migrations will run automatically
 
+## Architecture Overview
+WebDiary is structured as a separated frontend and backend application.
+1. The backend is an ASP.NET Core Web API. It is organized into:
+* Controllers handle HTTP requests.
+* Services contain business logic such.
+* Data layer using EF Core and entities.
+* DTOs defining the data contracts exposed.
+2. The frontend is a Blazor application that communicates with the backend via HttpClient. It contains:
+* Razor components responsible for UI and user interaction.
+* API client classes that encapsulate HTTP communication and CRUD operations.
+* Frontend models that match DTOs.
+The request flow is: UI component => API client => backend controller => service => database => response flows back using DTO.
+
 ## 🛠️ Tech Stack
 * ASP.NET Core
 * Entity Framework Core
 * Serilog
 * Blazor Server
 * Bootstrap UI
-* Docker files
+* Docker files (used for deployment)
 * xUnit and Moq for unit tests
 * Git for version control
 

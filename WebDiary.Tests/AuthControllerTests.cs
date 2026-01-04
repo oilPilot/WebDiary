@@ -37,7 +37,9 @@ public class AuthControllerTests
         _mockConfig = new Mock<IConfiguration>();
     }
     private AuthController GetControllerWithContext(DiariesContext diariesContext) {
-        return new AuthController(diariesContext, _mockConfig.Object, _mockLocalizer.Object, new AuthService(diariesContext, _mockConfig.Object));
+        var authService = new AuthService(diariesContext, _mockConfig.Object);
+        var emailSenderService = new EmailSenderService(_mockConfig.Object);
+        return new AuthController(diariesContext, _mockConfig.Object, _mockLocalizer.Object, authService, emailSenderService);
     }
 
     [Fact]
@@ -169,17 +171,19 @@ public class AuthControllerTests
         _mockConfig.Setup(config => config["AppPaswordForEmailAuth"]).Returns("dummy-password");
 
         var emailForm = new sendEmailModel() {
-            userId = 1,
-            CallbackUrl = "http://example.com/validate",
-            IsValidation = true
+            To = null,
+            Subject = null,
+            Body = null
         };
 
         // Act
-        var result = controller.SendEmailAsync(emailForm);
+        var result = await controller.SendEmailAsync(emailForm);
 
         // Assert
-        var okResult = Assert.IsType<OkObjectResult>(result);
-        Assert.Equal("Email sended successfully", okResult.Value);
+        var badRequest = Assert.IsType<BadRequestObjectResult>(result);
+        Assert.Equal("Invalid email data", badRequest.Value);
+        //var okResult = Assert.IsType<OkObjectResult>(result);
+        //Assert.Equal("Email sended successfully", okResult.Value);
     }
 
     [Fact]

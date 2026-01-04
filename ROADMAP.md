@@ -15,7 +15,7 @@
     Currently none;
 
 ## Architecture improvements:
-    Possibly should make cascading from NavMenu, specially for User variables;
+    Currently none;
 
 ## UI/UX polishing tasks:
     Currently none;

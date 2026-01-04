@@ -137,10 +137,14 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
         return Ok("NO EMAILS");
     }
     [HttpPost("sendEmail")]
-    public IActionResult SendEmailAsync(sendEmailModel email)
+    public async Task<IActionResult> SendEmailAsync(sendEmailModel email)
     {
-        emailSenderService.SendEmail(email.To, email.Subject, email.Body);
-        return Ok("Email sended successfully"); // EMAIL DELETED
+        if (email.To == null || email.Subject == null || email.Body == null)
+            return BadRequest("Invalid email data");
+        var response = await emailSenderService.SendEmail(email.To, email.Subject, email.Body);
+        if (!response.IsSuccessful)
+            return StatusCode(500, "Failed to send email: " + response.ErrorMessage);
+        return Ok("Email sended successfully");
     }
     
     [HttpPost("ValidateEmail")]

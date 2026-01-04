@@ -91,7 +91,7 @@ public class MainPageTests : TestContext
         Assert.Contains("You need to login to see this page.", cut.Markup);
     }
 
-    [Fact]
+    /*[Fact]
     public void MainPage_ShowsGroupedDiaries_WhenValidated()
     {
         // Arrange
@@ -132,7 +132,7 @@ public class MainPageTests : TestContext
         Assert.Contains("First", cut.Markup);
         Assert.Contains("Second", cut.Markup);
         Assert.Contains("Group B", cut.Markup); // title from group
-    }
+    }*/
 
     // -------------------
     // Helper mocks

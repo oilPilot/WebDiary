@@ -35,7 +35,7 @@
             
             <AuthorizeView Roles="Admin" Context="AdminContext">
                 <Authorized>
-    <button class="btn btn-danger ms-2" @onclick="() => SendTest()">Send Test Email</button>
+                    <button class="btn btn-danger ms-2" @onclick="() => SendTest()">Send Test Email</button>
                     <button class="btn btn-danger ms-2" @onclick="() => modalRemove?.Open()">@Localizator["RemoveAdminRights"]</button>
                     
                     <DialogueTemplate @ref="modalRemove" HeaderText=@Localizator["RemoveAdminRightsHeader"]>
@@ -157,9 +157,9 @@
 
     private async Task SendTest() {
         var emailModel = new sendEmailModel() {
-            To = "matveyeresko1@gmail.com",
-            Subject = "Test Email",
-            Body = "This is a test email."
+            To = "oilPilot <matveyeresko0@gmail.com>",
+            Subject = "Hello oilPilot",
+            Body = "Test Email from MyDiary Web Application"
         };
         await HttpClient.PostAsJsonAsync("/auth/sendEmail", emailModel);
     }

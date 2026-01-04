@@ -55,6 +55,11 @@ WebDiary is structured as a separated frontend and backend application.
 * Frontend models that match DTOs.
 The request flow is: UI component => API client => backend controller => service => database => response flows back using DTO.
 
+## Email Integration
+The application integrates with Mailgun for email notifications.
+Due to sandbox limitations, email sending is enabled only for development and testing environments.
+The integration is implemented using environment-based configuration.
+
 ## 🛠️ Tech Stack
 * ASP.NET Core
 * Entity Framework Core

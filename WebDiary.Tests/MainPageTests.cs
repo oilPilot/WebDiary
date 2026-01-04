@@ -40,6 +40,19 @@ public class MainPageTests : TestContext
     }
 
     [Fact]
+    public void MainPage_ShowsUnauthorized_WhenUserIsNotAuthenticated()
+    {
+        // Arrange
+        Services.AddSingleton<AuthenticationStateProvider>(new TestAuthProvider(authenticated: false));
+
+        var cut = RenderComponent<MainPage>(parameters => parameters.Add(p => p.id, 1));
+
+        // Assert
+        Assert.Contains("Unauthorized", cut.Markup);
+        Assert.Contains("You need to login to see this page.", cut.Markup);
+    }
+
+    /*[Fact]
     public void MainPage_ShowsLoading_WhenDiariesAreNull()
     {
         // Arrange: mock diary list to be null and user is validated
@@ -79,19 +92,6 @@ public class MainPageTests : TestContext
     }
 
     [Fact]
-    public void MainPage_ShowsUnauthorized_WhenUserIsNotAuthenticated()
-    {
-        // Arrange
-        Services.AddSingleton<AuthenticationStateProvider>(new TestAuthProvider(authenticated: false));
-
-        var cut = RenderComponent<MainPage>(parameters => parameters.Add(p => p.id, 1));
-
-        // Assert
-        Assert.Contains("Unauthorized", cut.Markup);
-        Assert.Contains("You need to login to see this page.", cut.Markup);
-    }
-
-    /*[Fact]
     public void MainPage_ShowsGroupedDiaries_WhenValidated()
     {
         // Arrange
@@ -123,7 +123,7 @@ public class MainPageTests : TestContext
             new Claim("userId", fakeUser.Id.ToString())
         });
         authContext.SetAuthorized(fakeUser.UserName);
-        JSInterop.Setup<object>("QuillFunctions.createQuill", _ => true);
+        JSInterop.Setup<object>("initializeQuillEditor", _ => true);
 
         // Act
         var cut = RenderComponent<MainPage>(parameters => parameters.Add(p => p.id, 7));

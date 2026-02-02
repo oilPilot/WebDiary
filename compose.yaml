@@ -1,4 +1,4 @@
-
+# DON'T FORGET ABOUT "docker compose up --build" AFTER UPDATES
 services:
   backend:
     container_name: webdiary-backend
@@ -9,6 +9,7 @@ services:
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__DiariesConnection: ${DIARIES_CONNECTION_STRING}
       Jwt__Key: ${JWT_TOKEN_KEY}
+      MailgunApiKey: ${MAILGUN_API_KEY}
     ports:
       - "5281:5281"
     depends_on:
@@ -24,7 +25,8 @@ services:
       dockerfile: Dockerfile.frontend
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      ApiConnection: "http://backend:5281"
+      ConnectionStrings__DiariesConnection: ${DIARIES_CONNECTION_STRING}
+      ApiConnection: ${API_CONNECTION}
     ports:
       - "5101:5101"
     depends_on:

@@ -35,6 +35,13 @@ function getClientTime() {
 // Code for Quill Editor
 
 function initializeQuillEditor() {
+    // Better to check whether Quill is already initialized
+    var editorElement = document.getElementById('editor');
+    if (editorElement.firstChild && editorElement.firstChild.classList.contains('ql-editor')) {
+        console.log('Quill editor is already initialized.');
+        return; // Exit if already initialized
+    }
+
     var quill = new Quill('#editor', {
         theme: 'snow',
         placeholder: 'Start writing your diary...',

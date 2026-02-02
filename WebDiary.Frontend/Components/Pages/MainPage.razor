@@ -189,9 +189,10 @@
         await base.OnParametersSetAsync();
     }
 
-    protected async override Task OnAfterRenderAsync(bool firstRender) {        
+    protected async override Task OnAfterRenderAsync(bool firstRender) {
         if (shouldInitializeEditor)
         {
+                await JS.InvokeVoidAsync("initializeQuillEditor");
             try {
                 await JS.InvokeVoidAsync("initializeQuillEditor");
                 shouldInitializeEditor = false;

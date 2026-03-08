@@ -8,32 +8,70 @@
 
 <PageTitle>MyDiary</PageTitle>
 
-<h3>@Localizator["Login"]</h3>
+<div class="container-fluid py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white text-center py-4">
+                    <i class="bi bi-box-arrow-in-right fs-1 mb-2"></i>
+                    <h3 class="card-title mb-0">@Localizator["Login"]</h3>
+                </div>
+                <div class="card-body p-4">
+                    <EditForm Model="user" OnValidSubmit="TryLogin" FormName="LoginForm">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="alert alert-danger" />
 
-<EditForm Model="user" OnValidSubmit="TryLogin" FormName="LoginForm">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-    <div class="mt-3">
-        <div class="mt-3">
-            @Localizator["AskUsername"]
-            <InputText type="text" class="form-full-width" @bind-value="user!.UserName" DisplayName="Tst" />
-            <ValidationMessage For="() => user.UserName" />
-        </div>
-        <div class="mt-3">
-            @Localizator["AskPassword"]
-            <InputText type="password" class="form-full-width" @bind-value="user.Password" />
-            <ValidationMessage For="() => user.Password" />
-        </div>
-        <div class="mt-3">
-            <button type="submit" class="btn btn-primary @ButtonDisabled">@Localizator["Login"]</button>
-        </div>
-        <div class="mt-3 text-nowrap">
-            <p class="fs-5 fw-semibold text-danger">@ErrorMessage</p>
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="bi bi-person-fill text-primary me-1"></i>
+                                @Localizator["AskUsername"]
+                            </label>
+                            <InputText type="text" class="form-control form-control-lg" @bind-value="user!.UserName" placeholder="@Localizator["AskUsername"]" />
+                            <ValidationMessage For="() => user.UserName" class="text-danger small mt-1" />
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">
+                                <i class="bi bi-key-fill text-warning me-1"></i>
+                                @Localizator["AskPassword"]
+                            </label>
+                            <InputText type="password" class="form-control form-control-lg" @bind-value="user.Password" placeholder="@Localizator["AskPassword"]" />
+                            <ValidationMessage For="() => user.Password" class="text-danger small mt-1" />
+                        </div>
+
+                        @if(!string.IsNullOrEmpty(ErrorMessage)) {
+                            <div class="alert alert-danger mb-3">
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                @ErrorMessage
+                            </div>
+                        }
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg @ButtonDisabled">
+                                <span class="spinner-border spinner-border-sm me-2 d-none" role="status" aria-hidden="true"></span>
+                                <i class="bi bi-box-arrow-in-right me-1"></i>
+                                @Localizator["Login"]
+                            </button>
+                        </div>
+                    </EditForm>
+                </div>
+                <div class="card-footer bg-light text-center">
+                    <p class="mb-2">@Localizator["SignInTextRedirect"]</p>
+                    <a href="/Users/Signin" class="btn btn-outline-primary">
+                        <i class="bi bi-person-plus me-1"></i>
+                        @Localizator["SignIn"]
+                    </a>
+                    <div class="mt-3">
+                        <small class="text-muted">
+                            <i class="bi bi-info-circle me-1"></i>
+                            @Localizator["DontForgetToSavePassword"]
+                        </small>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</EditForm>
-<p>@Localizator["SignInTextRedirect"]<a href="/Users/Signin" class="link-info">@Localizator["AddressForSomething"]</a></p>
-<p>@Localizator["DontForgetToSavePassword"]</p>
+</div>
 
 @code {
     [SupplyParameterFromForm]

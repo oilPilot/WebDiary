@@ -7,38 +7,86 @@
 
 <PageTitle>MyDiary</PageTitle>
 
-<h3>@Localizator["SignIn"]</h3>
-
 @if(String.IsNullOrEmpty(Message)) {
-    <EditForm Model="user" OnValidSubmit="SignIn" FormName="SigninForm">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        <div class="mt-3">
-            <div class="mt-3">
-                @Localizator["AskUsername"]
-                <InputText type="text" class="form-full-width" @bind-value="user!.UserName" />
-                <ValidationMessage For="() => user.UserName" />
-            </div>
-            <div class="mt-3">
-                @Localizator["AskNewPassword"]
-                <InputText type="password" class="form-full-width" @bind-value="user.Password" />
-                <ValidationMessage For="() => user.Password" />
-            </div>
-            <div class="mt-3">
-                @Localizator["AskSelfdescription"]
-                <InputTextArea @bind-value="user.Description" class="no-resize form-full-width" />
-                <ValidationMessage For="() => user.Description" />
-            </div>
-            <div class="mt-3">
-                <button type="submit" class="btn btn-primary @ButtonDisabled">@Localizator["SignIn"]</button>
-            </div>
-            <div class="text-nowrap">
-                <p class="fs-5 fw-semibold text-danger">@ErrorMessage</p>
+    <div class="container-fluid py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="card shadow-lg border-0">
+                    <div class="card-header bg-success text-white text-center py-4">
+                        <i class="bi bi-person-plus-fill fs-1 mb-2"></i>
+                        <h3 class="card-title mb-0">@Localizator["SignIn"]</h3>
+                    </div>
+                    <div class="card-body p-4">
+                        <EditForm Model="user" OnValidSubmit="SignIn" FormName="SigninForm">
+                            <DataAnnotationsValidator />
+                            <ValidationSummary class="alert alert-danger" />
+
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    <i class="bi bi-person-fill text-primary me-1"></i>
+                                    @Localizator["AskUsername"]
+                                </label>
+                                <InputText type="text" class="form-control form-control-lg" @bind-value="user!.UserName" placeholder="@Localizator["AskUsername"]" />
+                                <ValidationMessage For="() => user.UserName" class="text-danger small mt-1" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    <i class="bi bi-key-fill text-warning me-1"></i>
+                                    @Localizator["AskNewPassword"]
+                                </label>
+                                <InputText type="password" class="form-control form-control-lg" @bind-value="user.Password" placeholder="@Localizator["AskNewPassword"]" />
+                                <ValidationMessage For="() => user.Password" class="text-danger small mt-1" />
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label">
+                                    <i class="bi bi-card-text text-info me-1"></i>
+                                    @Localizator["AskSelfdescription"]
+                                </label>
+                                <InputTextArea @bind-value="user.Description" class="form-control" rows="3" placeholder="@Localizator["AskSelfdescription"]" />
+                                <ValidationMessage For="() => user.Description" class="text-danger small mt-1" />
+                            </div>
+
+                            @if(!string.IsNullOrEmpty(ErrorMessage)) {
+                                <div class="alert alert-danger mb-3">
+                                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                    @ErrorMessage
+                                </div>
+                            }
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-success btn-lg @ButtonDisabled">
+                                    <span class="spinner-border spinner-border-sm me-2 d-none" role="status" aria-hidden="true"></span>
+                                    <i class="bi bi-person-plus me-1"></i>
+                                    @Localizator["SignIn"]
+                                </button>
+                            </div>
+                        </EditForm>
+                    </div>
+                </div>
             </div>
         </div>
-    </EditForm>
+    </div>
 } else {
-    <p class="fs-4 fw-semibold">@Message</p>
+    <div class="container-fluid py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="card shadow-lg border-0">
+                    <div class="card-body text-center p-5">
+                        <i class="bi bi-check-circle-fill text-success fs-1 mb-3"></i>
+                        <h4 class="text-success mb-3">Registration Successful!</h4>
+                        <p class="fs-5 fw-semibold">@Message</p>
+                        <p class="text-muted">Please check your email for account verification instructions.</p>
+                        <a href="/Users/Login" class="btn btn-primary mt-3">
+                            <i class="bi bi-box-arrow-in-right me-1"></i>
+                            Go to Login
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 
 @code {

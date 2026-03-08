@@ -3,36 +3,130 @@
 
 <PageTitle>MyDiary</PageTitle>
 
-<AuthorizeView>
-    <Authorized>
-        <h1>@Localizator["HomeHeadAuth"]@context.User.Identity!.Name!</h1>
-    </Authorized>
-    <NotAuthorized>
-        <h1>@Localizator["HomeHeadNonAuth"]</h1>
-    </NotAuthorized>
-</AuthorizeView>
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-6">
+            <div class="text-center mb-5">
+                <AuthorizeView>
+                    <Authorized>
+                        <div class="hero-section bg-primary text-white rounded-3 p-4 mb-4 shadow">
+                            <h1 class="display-4 fw-bold mb-2">
+                                <i class="bi bi-journal-bookmark-fill me-3"></i>
+                                @Localizator["HomeHeadAuth"]@context.User.Identity!.Name!
+                            </h1>
+                            <p class="lead mb-0">Welcome back to your personal diary space</p>
+                        </div>
+                    </Authorized>
+                    <NotAuthorized>
+                        <div class="hero-section bg-gradient text-primary rounded-3 p-4 mb-4 shadow">
+                            <h1 class="display-4 fw-bold mb-2">
+                                <i class="bi bi-journal-text me-3"></i>
+                                @Localizator["HomeHeadNonAuth"]
+                            </h1>
+                            <p class="lead mb-0">Start your journey of self-reflection and growth</p>
+                        </div>
+                    </NotAuthorized>
+                </AuthorizeView>
+            </div>
 
-<div id="settings" class="align-items-center">
-    <p>@Localizator["SettingsText"]</p>
-    <div class="d-flex align-items-center ms-2">
-        <SelectLanguage />
-        <div class="ms-4" />
-        <ThemeSwitch />
+            <!-- Settings Card -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-gear-fill text-primary me-2"></i>
+                        @Localizator["SettingsText"]
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex flex-wrap align-items-center gap-3">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-translate text-info me-2"></i>
+                            <SelectLanguage />
+                        </div>
+                        <div class="vr d-none d-md-block"></div>
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-palette-fill text-warning me-2"></i>
+                            <ThemeSwitch />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Experimental Features Card -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-flask text-warning me-2"></i>
+                        @Localizator["ExperimentalSettingsText"]
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <AuthorizeView>
+                        <Authorized>
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-file-earmark-pdf-fill text-danger me-2"></i>
+                                <ExperimentalPDFsave />
+                            </div>
+                            <small class="text-muted mt-2">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Try our experimental PDF export feature
+                            </small>
+                        </Authorized>
+                        <NotAuthorized>
+                            <div class="alert alert-info mb-0">
+                                <i class="bi bi-lock-fill me-2"></i>
+                                <strong>@Localizator["ExperimentalSettingsNonAuth"]</strong>
+                                <br>
+                                <small>Please sign in to access experimental features</small>
+                            </div>
+                        </NotAuthorized>
+                    </AuthorizeView>
+                </div>
+            </div>
+
+            <!-- Quick Actions for Authenticated Users -->
+            <AuthorizeView>
+                <Authorized>
+                    <div class="card shadow-sm mt-4">
+                        <div class="card-header bg-light">
+                            <h5 class="card-title mb-0">
+                                <i class="bi bi-lightning-charge-fill text-success me-2"></i>
+                                Quick Actions
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-2">
+                                <!-- Disabled because entries are created inside groups which placed in navbar
+                                <div class="col-6 col-md-3">
+                                    <a href="/Diary" class="btn btn-outline-primary w-100 d-flex flex-column align-items-center py-3">
+                                        <i class="bi bi-pencil-square fs-4 mb-1"></i>
+                                        <small>Write Entry</small>
+                                    </a>
+                                </div> -->
+                                <div class="col-6 col-md-3">
+                                    <a href="/Statistics" class="btn btn-outline-info w-100 d-flex flex-column align-items-center py-3">
+                                        <i class="bi bi-bar-chart-line fs-4 mb-1"></i>
+                                        <small>View Stats</small>
+                                    </a>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <a href="/Users" class="btn btn-outline-secondary w-100 d-flex flex-column align-items-center py-3">
+                                        <i class="bi bi-person-gear fs-4 mb-1"></i>
+                                        <small>Account</small>
+                                    </a>
+                                </div>
+                                <!-- Disabled because groups are showcased in navbar and there is no need to duplicate it here
+                                <div class="col-6 col-md-3">
+                                    <a href="/Groups" class="btn btn-outline-success w-100 d-flex flex-column align-items-center py-3">
+                                        <i class="bi bi-people-fill fs-4 mb-1"></i>
+                                        <small>Groups</small>
+                                    </a>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                </Authorized>
+            </AuthorizeView>
+        </div>
     </div>
 </div>
-
-<div id="experimental" class="align-items-center">
-    <p>@Localizator["ExperimentalSettingsText"]</p>
-    <AuthorizeView>
-        <Authorized>
-            <div class="d-flex align-items-center ms-4">
-                <ExperimentalPDFsave />
-            </div>
-        </Authorized>
-        <NotAuthorized><p class="fw-bold ms-4">@Localizator["ExperimentalSettingsNonAuth"]</p></NotAuthorized>
-    </AuthorizeView>
-</div>
-
-@code {
-    
-}

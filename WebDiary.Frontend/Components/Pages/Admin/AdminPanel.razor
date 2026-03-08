@@ -4,35 +4,102 @@
 
 
 <AuthorizeView Roles="Admin" Context="AdminContext">
-    <div class="mt-4 d-flex align-items-center">
-        <button class="ms-2 btn btn-@(openedFunction == 1 ? @"primary" : @"secondary")"
-            @onclick="() => openedFunction = 1">@Localizator["AdminAction1"]</button>
-        <button class="ms-2 btn btn-@(openedFunction == 2 ? @"primary" : @"secondary")"
-            @onclick="() => openedFunction = 2">@Localizator["AdminAction2"]</button>
-        <button class="ms-2 btn btn-@(openedFunction == 3 ? @"primary" : @"secondary")"
-            @onclick="() => openedFunction = 3">@Localizator["AdminAction3"]</button>
-        <button class="ms-2 btn btn-@(openedFunction == 4 ? @"primary" : @"secondary")"
-            @onclick="() => openedFunction = 4">@Localizator["AdminAction4"]</button>
-        <button class="ms-2 btn btn-@(openedFunction == 5 ? @"primary" : @"secondary")"
-            @onclick="() => openedFunction = 5">@Localizator["AdminAction5"]</button>
-        @*<button class="btn btn-@(openedFunction == 6 ? @"primary" : @"secondary")"
-            @onclick="() => openedFunction = 6">User Impersonation (Admin can “log in as user” for debugging.)</button>*@
-    </div>
-    @if(openedFunction == 1) {
-        <ManageUsersAdmin />
-    } else if (openedFunction == 2) {
-        <ManageGroupsAdmin />
-    } else if (openedFunction == 3) {
-        <ModerateEntriesAdmin />
-    } else if (openedFunction == 4) {
-        <LogsView />
-    } else if (openedFunction == 5) {
-        <AdminStatistics />
-    } else if (openedFunction == 6) {
-        <p>Opened User Impersonation</p>
-        <p>Admin can “log in as user” for debugging.</p>
-    }
+    <div class="container-fluid py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-8">
+                <!-- Header -->
+                <div class="text-center mb-4">
+                    <h2 class="display-6 fw-bold text-danger mb-2">
+                        <i class="bi bi-shield-lock-fill me-3"></i>
+                        Administrator Panel
+                    </h2>
+                    <p class="text-muted mb-0">Manage users, groups, and system settings</p>
+                </div>
 
+                <!-- Action Buttons -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-tools me-2"></i>
+                            Administrative Actions
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6 col-lg-3">
+                                <button class="btn btn-outline-primary w-100 d-flex align-items-center justify-content-center py-3 @(openedFunction == 1 ? "active" : "")"
+                                        @onclick="() => openedFunction = 1">
+                                    <div class="text-center">
+                                        <i class="bi bi-people-fill fs-4 mb-1"></i>
+                                        <div class="small">@Localizator["AdminAction1"]</div>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col-md-6 col-lg-3">
+                                <button class="btn btn-outline-success w-100 d-flex align-items-center justify-content-center py-3 @(openedFunction == 2 ? "active" : "")"
+                                        @onclick="() => openedFunction = 2">
+                                    <div class="text-center">
+                                        <i class="bi bi-diagram-3-fill fs-4 mb-1"></i>
+                                        <div class="small">@Localizator["AdminAction2"]</div>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col-md-6 col-lg-3">
+                                <button class="btn btn-outline-warning w-100 d-flex align-items-center justify-content-center py-3 @(openedFunction == 3 ? "active" : "")"
+                                        @onclick="() => openedFunction = 3">
+                                    <div class="text-center">
+                                        <i class="bi bi-eye-fill fs-4 mb-1"></i>
+                                        <div class="small">@Localizator["AdminAction3"]</div>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col-md-6 col-lg-3">
+                                <button class="btn btn-outline-info w-100 d-flex align-items-center justify-content-center py-3 @(openedFunction == 4 ? "active" : "")"
+                                        @onclick="() => openedFunction = 4">
+                                    <div class="text-center">
+                                        <i class="bi bi-journal-text fs-4 mb-1"></i>
+                                        <div class="small">@Localizator["AdminAction4"]</div>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col-md-6 col-lg-3">
+                                <button class="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-center py-3 @(openedFunction == 5 ? "active" : "")"
+                                        @onclick="() => openedFunction = 5">
+                                    <div class="text-center">
+                                        <i class="bi bi-bar-chart-line-fill fs-4 mb-1"></i>
+                                        <div class="small">@Localizator["AdminAction5"]</div>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Area -->
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
+                        @if(openedFunction == 1) {
+                            <ManageUsersAdmin />
+                        } else if (openedFunction == 2) {
+                            <ManageGroupsAdmin />
+                        } else if (openedFunction == 3) {
+                            <ModerateEntriesAdmin />
+                        } else if (openedFunction == 4) {
+                            <LogsView />
+                        } else if (openedFunction == 5) {
+                            <AdminStatistics />
+                        } else {
+                            <div class="text-center py-5">
+                                <i class="bi bi-shield-check fs-1 text-muted mb-3"></i>
+                                <h4 class="text-muted">Select an administrative action</h4>
+                                <p class="text-muted">Choose from the options above to manage different aspects of the system</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </AuthorizeView>
 
 

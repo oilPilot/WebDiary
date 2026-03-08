@@ -1,13 +1,13 @@
-﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <root>
   	<data name="404Title" xml:space="preserve">
-		<value>404 – Nicht gefunden</value>
+		<value>404 - Nicht gefunden</value>
 	</data>
   	<data name="404Text" xml:space="preserve">
 		<value>Die von Ihnen angeforderte Ressource wurde nicht gefunden.</value>
 	</data>
   	<data name="LoadingDiaries" xml:space="preserve">
-		<value>Warten Sie, Tagebücher und Gruppen werden geladen …</value>
+		<value>Warten Sie, Tagebucher und Gruppen werden geladen...</value>
 	</data>
   	<data name="MainPageButtonText" xml:space="preserve">
 		<value>Schicken</value>
@@ -16,13 +16,13 @@
 		<value>Nicht validiert</value>
 	</data>
   	<data name="NotValidatedText" xml:space="preserve">
-		<value>Ihre E-Mail-Adresse ist nicht bestätigt. Bestätigen Sie sie zuerst.</value>
+		<value>Ihre E-Mail-Adresse ist nicht bestatigt. Bestatigen Sie sie zuerst.</value>
 	</data>
   	<data name="UnathorizedTitle" xml:space="preserve">
 		<value>Nicht autorisiert</value>
 	</data>
   	<data name="UnathorizedText" xml:space="preserve">
-		<value>Sie müssen sich anmelden, um diese Seite anzuzeigen.</value>
+		<value>Sie mussen sich anmelden, um diese Seite anzuzeigen.</value>
 	</data>
   	<data name="CollapseInMainPage" xml:space="preserve">
 		<value>Ausblenden</value>
@@ -31,22 +31,22 @@
 		<value>Entschuldigung, Sie sind nicht berechtigt, auf diese Seite zuzugreifen.</value>
 	</data>
   	<data name="NotAuthPageText2" xml:space="preserve">
-		<value>Möglicherweise müssen Sie sich als anderer Benutzer anmelden.</value>
+		<value>Moglicherweise mussen Sie sich als anderer Benutzer anmelden.</value>
 	</data>
   	<data name="CreateGroupVar1" xml:space="preserve">
 		<value>Name Ihrer Gruppe:</value>
 	</data>
   	<data name="DeleteGroupPart1" xml:space="preserve">
-		<value>Möchten Sie die Gruppe "</value>
+		<value>Mochten Sie die Gruppe "</value>
 	</data>
   	<data name="DeleteGroupPart2" xml:space="preserve">
-		<value>" und ihre Tagebücher wirklich löschen?</value>
+		<value>" und ihre Tagebucher wirklich loschen?</value>
 	</data>
   	<data name="CancelButtonText" xml:space="preserve">
 		<value>Stornieren</value>
 	</data>
   	<data name="DeleteButtonText" xml:space="preserve">
-		<value>Löschen</value>
+		<value>Loschen</value>
 	</data>
   	<data name="SaveButtonText" xml:space="preserve">
 		<value>Speichern</value>
@@ -70,16 +70,16 @@
 		<value>Entwicklung</value>
 	</data>
   	<data name="Display" xml:space="preserve">
-		<value>sumgebung werden ausführlichere Informationen zu dem aufgetretenen Fehler angezeigt.</value>
+		<value>sumgebung werden ausfuhrlichere Informationen zu dem aufgetretenen Fehler angezeigt.</value>
 	</data>
   	<data name="ErrorPageMainTextPart1" xml:space="preserve">
-		<value>Die Entwicklungsumgebung sollte für bereitgestellte Anwendungen nicht aktiviert werden.</value>
+		<value>Die Entwicklungsumgebung sollte fur bereitgestellte Anwendungen nicht aktiviert werden.</value>
 	</data>
   	<data name="ErrorPageMainTextPart2" xml:space="preserve">
-		<value>Dies kann dazu führen, dass Endbenutzern vertrauliche Informationen aus Ausnahmen angezeigt werden.</value>
+		<value>Dies kann dazu fuhren, dass Endbenutzern vertrauliche Informationen aus Ausnahmen angezeigt werden.</value>
 	</data>
   	<data name="ErrorPageMainTextPart3" xml:space="preserve">
-		<value>Aktivieren Sie für das lokale Debuggen die </value>
+		<value>Aktivieren Sie fur das lokale Debuggen die </value>
 	</data>
   	<data name="ErrorPageMainTextPart4" xml:space="preserve">
 		<value>sumgebung, indem Sie die Umgebungsvariable</value>
@@ -91,10 +91,10 @@
 		<value>und die App neu starten.</value>
 	</data>
   	<data name="ChangePinGroup1" xml:space="preserve">
-		<value>Legen Sie einen PIN-Code für diese Gruppe fest (Achtung: Sie können ihn später nicht mehr ändern, falls Sie ihn vergessen):</value>
+		<value>Legen Sie einen PIN-Code fur diese Gruppe fest (Achtung: Sie konnen ihn spater nicht mehr andern, falls Sie ihn vergessen):</value>
 	</data>
   	<data name="ChangePinGroup2" xml:space="preserve">
-		<value>Aktuellen PIN-Code bestätigen:</value>
+		<value>Aktuellen PIN-Code bestatigen:</value>
 	</data>
   	<data name="ChangePinGroup3" xml:space="preserve">
 		<value>Die vorherigen PIN-Codes sind unterschiedlich. Haben Sie ihn richtig eingegeben?</value>
@@ -106,13 +106,13 @@
 		<value>Versuchen</value>
 	</data>
   	<data name="AddPinHeader" xml:space="preserve">
-		<value>Pin zur Gruppe hinzufügen</value>
+		<value>Pin zur Gruppe hinzufugen</value>
 	</data>
   	<data name="IncorrectPinText" xml:space="preserve">
 		<value>Der PIN-Code ist falsch.</value>
 	</data>
   	<data name="CheckPinHeader" xml:space="preserve">
-		<value>PIN für Gruppe prüfen</value>
+		<value>PIN fur Gruppe prufen</value>
 	</data>
   	<data name="AddThematicGroup" xml:space="preserve">
 		<value>Add thematic group</value>
@@ -121,13 +121,13 @@
 		<value>Redaktionsgruppe </value>
 	</data>
   	<data name="DeletingGroupHeader" xml:space="preserve">
-		<value>Gruppe löschen </value>
+		<value>Gruppe loschen </value>
 	</data>
   	<data name="StatisticsHeader" xml:space="preserve">
 		<value>Statistikseite</value>
 	</data>
   	<data name="DateRangePick" xml:space="preserve">
-		<value>Wählen Sie den Datumsbereich aus, aus dem Sie Statistiken abrufen möchten:</value>
+		<value>Wahlen Sie den Datumsbereich aus, aus dem Sie Statistiken abrufen mochten:</value>
 	</data>
   	<data name="LoadStatistics" xml:space="preserve">
 		<value>Laststatistik</value>
@@ -139,10 +139,10 @@
 		<value>Datum</value>
 	</data>
   	<data name="StatisticsTableData3" xml:space="preserve">
-		<value>Einträge zählen</value>
+		<value>Eintrage zahlen</value>
 	</data>
   	<data name="StatisticsTableData4" xml:space="preserve">
-		<value>Symbole zählen</value>
+		<value>Symbole zahlen</value>
 	</data>
   	<data name="StatisticsTableData5" xml:space="preserve">
 		<value>Durchschnittliche Symbole pro Eintrag</value>
@@ -154,12 +154,42 @@
 		<value>Summen:</value>
 	</data>
   	<data name="NoData" xml:space="preserve">
-		<value>Für den ausgewählten Zeitraum wurden keine Statistiken gefunden.</value>
+		<value>Fur den ausgewahlten Zeitraum wurden keine Statistiken gefunden.</value>
 	</data>
   	<data name="NotEnoughDataForChart" xml:space="preserve">
-		<value>Nicht genügend Datenpunkte, um ein aussagekräftiges Diagramm zu erstellen.</value>
+		<value>Nicht genugend Datenpunkte, um ein aussagekraftiges Diagramm zu erstellen.</value>
 	</data>
   	<data name="LoadChart" xml:space="preserve">
 		<value>Statistiken in Diagramm laden</value>
+	</data>
+  	<data name="NoDiariesYet" xml:space="preserve">
+		<value>Noch keine Tagebucheintrage vorhanden.</value>
+	</data>
+  	<data name="PreviousYear" xml:space="preserve">
+		<value>Vorheriges Jahr</value>
+	</data>
+  	<data name="NextYear" xml:space="preserve">
+		<value>Nachstes Jahr</value>
+	</data>
+  	<data name="DiariesCountInMonth" xml:space="preserve">
+		<value>Eintrage: {0}</value>
+	</data>
+  	<data name="OpenMonth" xml:space="preserve">
+		<value>Eintrage anzeigen</value>
+	</data>
+  	<data name="BackToYearMonth" xml:space="preserve">
+		<value>Zuruck zu Jahr/Monat</value>
+	</data>
+  	<data name="NoDiariesInMonth" xml:space="preserve">
+		<value>Keine Eintrage in diesem Monat.</value>
+	</data>
+  	<data name="MoodLabel" xml:space="preserve">
+		<value>Stimmungs-Emoji</value>
+	</data>
+  	<data name="MoodPlaceholder" xml:space="preserve">
+		<value>Stimmung wahlen</value>
+	</data>
+  	<data name="ResizeHint" xml:space="preserve">
+		<value>Sie konnen den Editor vertikal skalieren.</value>
 	</data>
 </root>

@@ -1,11 +1,11 @@
 ﻿@page "/Diary/{id:int}"
+@using System.Globalization
 @using System.Security.Claims
 @using System.Text.Json
 @using Blazored.LocalStorage
 @inject DiaryClient DiaryClient
 @inject DiaryGroupClient DiaryGroupClient
 @inject NavigationManager NavigationManager
-@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserClient UserClient
 @inject HttpClient HttpClient
 @inject IStringLocalizer<Resources.MainResource> Localizator
@@ -18,102 +18,131 @@
     <Authorized>
         <DialogueTemplate @ref="modalPin" HeaderText=@Localizator["CheckPinHeader"]>
             <BodyTemplate>
-                    <p>@Localizator["CheckPinGroup1"]</p>
-                    <InputText type="password"  class="full-width" @bind-Value="PinCode"></InputText>
+                <p>@Localizator["CheckPinGroup1"]</p>
+                <InputText type="password" class="full-width" @bind-Value="PinCode"></InputText>
             </BodyTemplate>
             <FooterTemplate>
-                    <p class="fs-5 fw-semibold text-danger">@ErrorMessage</p>
-                    <button type="button" class="btn btn-primary"
-                        @onclick="TryCheckPinAsync">@Localizator["EnterButtonText"]</button>
+                <p class="fs-5 fw-semibold text-danger">@ErrorMessage</p>
+                <button type="button" class="btn btn-primary" @onclick="TryCheckPinAsync">@Localizator["EnterButtonText"]</button>
             </FooterTemplate>
         </DialogueTemplate>
 
-        @if(diaries is null) {
+        @if (diaries is null)
+        {
             <p>@Localizator["LoadingDiaries"]</p>
-        } else {
-            @if(PageTitle != "PIN") {
-                if(@isValidated) {
+        }
+        else
+        {
+            @if (PageTitle != "PIN")
+            {
+                if (isValidated)
+                {
                     <h1>@PageTitle</h1>
-                    <div>
-                        @foreach(var date in diaries.GroupBy(diary => diary.Date).OrderBy(date => date.Key)
-                                                        .Select(diary => diary.First().Date)) {
-                            <ol>
-                                <p>@date
-                                <button class="btn btn-outline-primary" data-bs-toggle="collapse"
-                                    data-bs-target="#@date">@Localizator["CollapseInMainPage"]</button>
-                                </p>
-                            @foreach(var diary in diaries.Where(diary => diary.Date == date)) {
-                                <li class="ms-2 collapse nonumeration" id="@date">
-                                    <ol>
-                                        <p>@diary.Time @diary.mood
-                                        <button class="btn btn-outline-secondary" data-bs-toggle="collapse"
-                                            data-bs-target="#@diary.Id">@Localizator["CollapseInMainPage"]</button>
-                                        </p>
-                                        <li class="ms-4 nonumeration collapse" id="@diary.Id">
-                                            <p class="new-line-work">@((MarkupString)diary.Text)</p>
+
+                    @if (YearsWithDiaries.Count == 0)
+                    {
+                        <p class="text-body-secondary">@Localizator["NoDiariesYet"]</p>
+                    }
+                    else
+                    {
+                        <section class="main-page-browser">
+                            <div class="year-pagination-wrap">
+                                <button class="btn btn-outline-secondary" @onclick="PreviousYear" disabled="@(!CanGoToPreviousYear)">@Localizator["PreviousYear"]</button>
+                                <ul class="pagination mb-0">
+                                    @for (int i = 0; i < YearsWithDiaries.Count; i++)
+                                    {
+                                        var year = YearsWithDiaries[i];
+                                        var index = i;
+                                        <li class="page-item @(i == selectedYearIndex ? "active" : string.Empty)">
+                                            <button type="button" class="page-link" @onclick="(() => SelectYearByIndex(index))">@year</button>
                                         </li>
-                                    </ol>
-                                </li>
-                            }
-                            </ol>
-                        }
-                    </div>
-                    <EditForm Model="diary" OnValidSubmit="AddDiaryAsync" FormName="SendDiary" class="footer">
-                        <div class="mb-2 me-2 ms-2" style="height: 100px;">
-                            @*<BlazoredTextEditor @ref="@richEditor" Placeholder="Start writing your diary...">
-                                <ToolbarContent>
-                                    <select class="ql-header">
-                                        <option selected=""></option>
-                                        <option value="1"></option>
-                                        <option value="2"></option>
-                                        <option value="5"></option>
-                                    </select>
-                                    <span class="ql-formats">
-                                        <button class="ql-bold"></button>
-                                        <button class="ql-italic"></button>
-                                        <button class="ql-underline"></button>
-                                        <button class="ql-strike"></button>
-                                    </span>
-                                    <span class="ql-formats">
-                                        <select class="ql-color"></select>
-                                        <select class="ql-background"></select>
-                                    </span>
-                                    <span class="ql-formats">
-                                        <button class="ql-list" value="ordered"></button>
-                                        <button class="ql-list" value="bullet"></button>
-                                    </span>
-                                    <span class="ql-formats">
-                                        <button class="ql-link"></button>
-                                    </span>
-                                </ToolbarContent>
-                                <EditorContent>
-                                    
-                                </EditorContent>
-                            </BlazoredTextEditor>*@
-                            <div id="editor" @ref="richEditor"></div>
-                            <div>
-                                <button class="btn btn-secondary ms-2" type="submit">@Localizator["MainPageButtonText"]</button>
-                                <select @bind="diary!.mood">
-                                    <option value="—">you can select mood</option>
-                                    <option value="🙂">🙂</option>
-                                    <option value="😁">😁</option>
-                                    <option value="😌">😌</option>
-                                    <option value="🤔">🤔</option>
-                                    <option value="😴">😴</option>
-                                    <option value="😐">😐</option>
-                                    <option value="😥">😥</option>
-                                    <option value="😳">😳</option>
-                                    <option value="😔">😔</option>
-                                    <option value="😤">😤</option>
-                                    <option value="😱">😱</option>
-                                    <option value="🤬">🤬</option>
-                                    <option value="(^▽^)">(^▽^)</option>
-                                    <option value="(づ｡ ◕‿‿◕｡) づ">(づ｡ ◕‿‿◕｡) づ</option>
-                                </select>
+                                    }
+                                </ul>
+                                <button class="btn btn-outline-secondary" @onclick="NextYear" disabled="@(!CanGoToNextYear)">@Localizator["NextYear"]</button>
                             </div>
+
+                            @if (selectedMonth is null)
+                            {
+                                <div class="months-grid">
+                                    @foreach (var month in MonthsForSelectedYear)
+                                    {
+                                        var monthText = MonthName(month.Month);
+                                        <article class="month-card">
+                                            <h2>@monthText</h2>
+                                            <p>@Localizator["DiariesCountInMonth", month.Count]</p>
+                                            <button type="button" class="btn btn-primary" @onclick="(() => OpenMonth(month.Month))">@Localizator["OpenMonth"]</button>
+                                        </article>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <section class="month-details mt-3">
+                                    <div class="month-details-head">
+                                        <button class="btn btn-outline-secondary" @onclick="BackToMonthGrid">@Localizator["BackToYearMonth"]</button>
+                                        <h2 class="h4 mb-0">@MonthName(selectedMonth.Value) @SelectedYear</h2>
+                                    </div>
+
+                                    @if (SelectedMonthDiariesByDate.Count() == 0)
+                                    {
+                                        <p class="text-body-secondary mt-3">@Localizator["NoDiariesInMonth"]</p>
+                                    }
+                                    else
+                                    {
+                                        <div class="date-list mt-3">
+                                            @foreach (var dateGroup in SelectedMonthDiariesByDate)
+                                            {
+                                                <details>
+                                                    <summary>@dateGroup.Key.ToString("D", CultureInfo.CurrentCulture)</summary>
+                                                    <div class="time-list">
+                                                        @foreach (var dayDiary in dateGroup.OrderBy(d => d.Time))
+                                                        {
+                                                            <details>
+                                                                <summary>@dayDiary.Time.ToString("HH:mm") @dayDiary.mood</summary>
+                                                                <div class="diary-text">@((MarkupString)dayDiary.Text)</div>
+                                                            </details>
+                                                        }
+                                                    </div>
+                                                </details>
+                                            }
+                                        </div>
+                                    }
+                                </section>
+                            }
+                        </section>
+                    }
+
+                    <EditForm Model="diary" OnValidSubmit="AddDiaryAsync" FormName="SendDiary" class="diary-editor-form">
+                        <div class="editor-shell mb-5">
+                            <label class="form-label" for="moodSelect">@Localizator["MoodLabel"]</label>
+                            <select id="moodSelect" class="form-select mood-select" @bind="diary!.mood">
+                                <option value="" disabled selected>@Localizator["MoodPlaceholder"]</option>
+                                <option value="😁">😁</option>
+                                <option value="🙂">🙂</option>
+                                <option value="😌">😌</option>
+                                <option value="🤔">🤔</option>
+                                <option value="😐">😐</option>
+                                <option value="😴">😴</option>
+                                <option value="😥">😥</option>
+                                <option value="😳">😳</option>
+                                <option value="😔">😔</option>
+                                <option value="😤">😤</option>
+                                <option value="😱">😱</option>
+                                <option value="🤬">🤬</option>
+                                <option value="(^▽^)">(^▽^)</option>
+                                <option value="<&lt;3">(&lt;3</option>
+                            </select>
+
+                            <div class="editor-resize-wrap" title="@Localizator["ResizeHint"]">
+                                <div id="editor" @ref="richEditor"></div>
+                            </div>
+
+                            <button class="btn btn-success send-btn" type="submit">@Localizator["MainPageButtonText"]</button>
                         </div>
                     </EditForm>
-                } else {
+                }
+                else
+                {
                     <PageTitle>Diary - @Localizator["NotValidatedTitle"]</PageTitle>
                     <h1>@Localizator["NotValidatedTitle"]</h1>
                     <p>@Localizator["NotValidatedText"]</p>
@@ -131,7 +160,7 @@
 @code {
     [Parameter]
     public int? id { get; set; }
-    //public BlazoredTextEditor richEditor { get; set;} = new();
+
     private ElementReference richEditor { get; set; }
     private bool shouldInitializeEditor = false;
     private DialogueTemplate? modalPin;
@@ -141,109 +170,212 @@
     private DiaryGroup? group;
     public string? PageTitle;
     private bool isValidated;
-    [CascadingParameter] protected Task<AuthenticationState>? AuthStat { get; set; }
 
-    protected override async Task OnInitializedAsync() {
-        if(id is null)
+    private int selectedYearIndex = 0;
+    private int? selectedMonth;
+
+    [CascadingParameter]
+    protected Task<AuthenticationState>? AuthStat { get; set; }
+
+    private List<int> YearsWithDiaries => diaries?
+        .Select(d => d.Date.Year)
+        .Distinct()
+        .OrderBy(y => y)
+        .ToList() ?? new();
+
+    private int SelectedYear => YearsWithDiaries.Count == 0 ? DateTime.Now.Year : YearsWithDiaries[Math.Clamp(selectedYearIndex, 0, YearsWithDiaries.Count - 1)];
+
+    private bool CanGoToPreviousYear => selectedYearIndex > 0;
+
+    private bool CanGoToNextYear => selectedYearIndex < YearsWithDiaries.Count - 1;
+
+    private IEnumerable<MonthSummary> MonthsForSelectedYear {
+        get {
+            var grouped = diaries?
+                .Where(d => d.Date.Year == SelectedYear)
+                .GroupBy(d => d.Date.Month)
+                .ToDictionary(g => g.Key, g => g.Count()) ?? new Dictionary<int, int>();
+
+            return Enumerable.Range(1, 12).Select(month => new MonthSummary(month, grouped.GetValueOrDefault(month, 0)));
+        }
+    }
+
+    private IEnumerable<IGrouping<DateOnly, Diary>> SelectedMonthDiariesByDate => diaries?
+        .Where(d => d.Date.Year == SelectedYear && d.Date.Month == selectedMonth)
+        .GroupBy(d => d.Date)
+        .OrderBy(g => g.Key)
+        ?? Enumerable.Empty<IGrouping<DateOnly, Diary>>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (id is null)
             throw new Exception("id in Diaries page is null.");
-        diary ??= new() {
+
+        diary ??= new()
+        {
             Text = "",
             GroupId = id!.Value
         };
+
         await base.OnInitializedAsync();
 
-        var User = (await AuthStat!).User;
-        if(User.Identity != null && User.Identity.IsAuthenticated) {
-            int loggedUserId = Convert.ToInt32(User.FindFirstValue("userId"));
-            User user = await UserClient.GetUserByIdAsync(loggedUserId);
-            isValidated = user.IsValidated;
-        } else {
+        var user = (await AuthStat!).User;
+        if (user.Identity != null && user.Identity.IsAuthenticated)
+        {
+            int loggedUserId = Convert.ToInt32(user.FindFirstValue("userId"));
+            User loadedUser = await UserClient.GetUserByIdAsync(loggedUserId);
+            isValidated = loadedUser.IsValidated;
+        }
+        else
+        {
             NavigationManager.NavigateTo("/Users/Login");
         }
     }
 
-    protected override async Task OnParametersSetAsync() {
-        if(id is null)
+    protected override async Task OnParametersSetAsync()
+    {
+        if (id is null)
             throw new Exception("id in Diaries page is null.");
-        try {
+
+        try
+        {
             group = await DiaryGroupClient.GetGroupAsync(id.Value);
-            diary = new() {
+            diary = new()
+            {
                 Text = "",
                 GroupId = id!.Value
             };
+
             diaries = await DiaryClient.GetDiariesOfGroupAsync(group.Id);
-            if (!string.IsNullOrEmpty(group.PinCode)) {
+            selectedYearIndex = YearsWithDiaries.Count - 1;
+            selectedMonth = null;
+
+            if (!string.IsNullOrEmpty(group.PinCode))
+            {
                 modalPin!.Open();
                 PageTitle = "PIN";
-            } else {
+            }
+            else
+            {
                 PageTitle = group.Name;
-                if(isValidated)
+                if (isValidated)
                     shouldInitializeEditor = true;
             }
-        } catch (Exception Exception) {
-            if(Exception.Message == "Response status code does not indicate success: 404 (Not Found).") {
+        }
+        catch (Exception exception)
+        {
+            if (exception.Message == "Response status code does not indicate success: 404 (Not Found).")
+            {
                 RedirectTo404();
             }
-            Console.WriteLine(Exception);
+            Console.WriteLine(exception);
         }
+
         await base.OnParametersSetAsync();
     }
 
-    protected async override Task OnAfterRenderAsync(bool firstRender) {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
         if (shouldInitializeEditor)
         {
-                await JS.InvokeVoidAsync("initializeQuillEditor");
-            try {
+            try
+            {
                 await JS.InvokeVoidAsync("initializeQuillEditor");
                 shouldInitializeEditor = false;
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 Console.WriteLine("Quill init failed: " + ex.Message);
             }
+
             StateHasChanged();
         }
 
         await base.OnAfterRenderAsync(firstRender);
     }
 
-    private void RedirectTo404() {
+    private void SelectYearByIndex(int index)
+    {
+        selectedYearIndex = Math.Clamp(index, 0, Math.Max(0, YearsWithDiaries.Count - 1));
+        selectedMonth = null;
+    }
+
+    private void PreviousYear()
+    {
+        if (CanGoToPreviousYear)
+        {
+            selectedYearIndex--;
+            selectedMonth = null;
+        }
+    }
+
+    private void NextYear()
+    {
+        if (CanGoToNextYear)
+        {
+            selectedYearIndex++;
+            selectedMonth = null;
+        }
+    }
+
+    private void OpenMonth(int month)
+    {
+        selectedMonth = month;
+    }
+
+    private void BackToMonthGrid()
+    {
+        selectedMonth = null;
+    }
+
+    private string MonthName(int month)
+    {
+        return CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(month);
+    }
+
+    private void RedirectTo404()
+    {
         NavigationManager.NavigateTo("NotFoundResource");
     }
 
-    private void CorrectPin() {
+    private void CorrectPin()
+    {
         PageTitle = group!.Name;
-        if(isValidated)
+        if (isValidated)
             shouldInitializeEditor = true;
     }
 
-    async Task AddDiaryAsync() {
+    async Task AddDiaryAsync()
+    {
         var js = await JS.InvokeAsync<JsonElement>("getClientTime");
         var isoUtc = js.GetProperty("isoUtc").GetString();
-        
+
         var offset = js.GetProperty("offsetMinutes").GetInt32();
-        if(isoUtc == null)
+        if (isoUtc == null)
             isoUtc = "";
-        var utc = DateTime.Parse(isoUtc, null, System.Globalization.DateTimeStyles.AdjustToUniversal);
-        
+
+        var utc = DateTime.Parse(isoUtc, null, DateTimeStyles.AdjustToUniversal);
+
         diary!.Text = await JS.InvokeAsync<string>("getQuillContent");
         diary.CreatedUtc = utc;
         diary.UtcOffsetMinutes = offset;
-        
+
         await DiaryClient.AddDiaryAsync(diary!);
         await localStorage.SetItemAsStringAsync("NewDiaryAutoSavedText", string.Empty);
         StateHasChanged();
         NavigationManager.Refresh(true);
     }
 
-    // Modals Methods
     private string? ErrorMessage;
     private string? PinCode;
 
-    private async Task TryCheckPinAsync() {
+    private async Task TryCheckPinAsync()
+    {
         ArgumentNullException.ThrowIfNull(group);
 
         var response = (await HttpClient.GetAsync($"/auth/pincode/isequal/{PinCode}/{group!.Id}?culture={CultureInfo.CurrentCulture}"));
-        if(!response.IsSuccessStatusCode) {
+        if (!response.IsSuccessStatusCode)
+        {
             ErrorMessage = Localizator["IncorrectPinText"];
             return;
         }
@@ -252,5 +384,7 @@
         modalPin!.Close();
     }
 
+    private record MonthSummary(int Month, int Count);
 }
+
 

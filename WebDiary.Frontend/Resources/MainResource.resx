@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <root>
   	<data name="404Title" xml:space="preserve">
 		<value>404 - Not found</value>
@@ -177,4 +177,35 @@
   	<data name="LoadChart" xml:space="preserve">
 		<value>Load statistics onto chart</value>
 	</data>
+  	<data name="NoDiariesYet" xml:space="preserve">
+		<value>No diary entries yet.</value>
+	</data>
+  	<data name="PreviousYear" xml:space="preserve">
+		<value>Previous year</value>
+	</data>
+  	<data name="NextYear" xml:space="preserve">
+		<value>Next year</value>
+	</data>
+  	<data name="DiariesCountInMonth" xml:space="preserve">
+		<value>Entries: {0}</value>
+	</data>
+  	<data name="OpenMonth" xml:space="preserve">
+		<value>Show entries</value>
+	</data>
+  	<data name="BackToYearMonth" xml:space="preserve">
+		<value>Back to year/month</value>
+	</data>
+  	<data name="NoDiariesInMonth" xml:space="preserve">
+		<value>No entries in this month.</value>
+	</data>
+  	<data name="MoodLabel" xml:space="preserve">
+		<value>Mood emoji</value>
+	</data>
+  	<data name="MoodPlaceholder" xml:space="preserve">
+		<value>Select mood</value>
+	</data>
+  	<data name="ResizeHint" xml:space="preserve">
+		<value>You can resize this editor vertically.</value>
+	</data>
 </root>
+

@@ -9,7 +9,7 @@ public static class MoodHelper
         {"🤔", 0}, {"😐", 0}, {"😴", -1}, // Neutral
         {"😥", -1}, {"😳", -1}, {"😔", -1}, // Negative
         {"😤", -2}, {"😱", -2}, {"🤬", -3}, // VERY Negative
-        {"(^▽^)", 1}, {"(づ｡ ◕‿‿◕｡) づ", 2} // Kaomoji's
+        {"(^▽^)", 1}, {"(づ｡ ◕‿‿◕｡) づ", 2}, {"<&lt;3", 2} // Kaomoji's
     };
 
     public static int GetMoodValue(string mood)

@@ -12,6 +12,7 @@
     Polishing:  Add User Impersonation; Add max logs count as filter; Add most active users stat;
 
 ## Known Issues:
+    fix collapses (sometimes collapses ovveride themselve if changing pages)
     Currently none;
 
 ## Architecture improvements:

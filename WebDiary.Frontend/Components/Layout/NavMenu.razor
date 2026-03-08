@@ -252,7 +252,7 @@
         if(cookieAgreementModal != null)
             cookieAgreementModal.Close();
     }
-    private async Task OpenPinGroup(DiaryGroup _group) {
+    private void OpenPinGroup(DiaryGroup _group) {
         firstPinExists = !string.IsNullOrEmpty(_group.PinCode);
         group = _group;
         group.PinCode = "";

@@ -123,6 +123,8 @@
             }
         };
         // Define data
+        if(statsForDates == null)
+            return;
         List<object> dates = statsForDates.Select(s => s.Date.ToString("yyyy-MM-dd")).Cast<object>().ToList();
         List<object> entriesCounts = statsForDates.Select(s => s.EntriesCount).Cast<object>().ToList();
         var symbolsCounts = statsForDates.Select(s => s.SymbolsCount).Cast<object>().ToList();

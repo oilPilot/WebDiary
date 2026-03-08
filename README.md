@@ -1,4 +1,4 @@
-# 🖥 Personal Diary Web App
+# Personal Diary Web App
 This is web application built with ASP.NET Core and Blazor that allows users to log daily experiences, categorize them and manage entries with timestamps.
 
 ### Live demo:
@@ -24,7 +24,7 @@ This is web application built with ASP.NET Core and Blazor that allows users to 
 * Unit tests
 
 
-## 🧗 Installation on local machine
+## Installation on local machine
 ### Prerequisites:
 * .NET 9
 * Postgres SQL
@@ -60,7 +60,7 @@ The application integrates with Mailgun for email notifications.
 Due to sandbox limitations, email sending is enabled only for development and testing environments.
 The integration is implemented using environment-based configuration.
 
-## 🛠️ Tech Stack
+## Tech Stack
 * ASP.NET Core
 * Entity Framework Core
 * Serilog
@@ -70,7 +70,7 @@ The integration is implemented using environment-based configuration.
 * xUnit and Moq for unit tests
 * Git for version control
 
-## 📈 Planned Improvements
+## Planned Improvements
 * Realize messaging between users
 * Fix glitches
 * You can look more in ROADMAP.md
@@ -83,5 +83,5 @@ The integration is implemented using environment-based configuration.
 * Admin dashboards
 * Company internal diaries/logs
 
-## 🤝 Contributing
+## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.

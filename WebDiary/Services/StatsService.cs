@@ -49,10 +49,13 @@ public class StatsService : IStatsService
         return users;
     }
 
-    public async Task<List<User>> GetNewInactiveUsersAsync(int daysInactive = 30)
+    public async Task<List<UserDTO>> GetNewInactiveUsersAsync(int daysInactive = 30)
     {
         var maxTime = DateTime.UtcNow.AddDays(-daysInactive);
-        var users = await dbContext.users.Where(user => user.LastLoginAtUTC <= maxTime).ToListAsync();
+        var users = await dbContext.users
+            .Where(user => user.LastLoginAtUTC <= maxTime)
+            .Select(user => user.toDTO())
+            .ToListAsync();
         return users;
     }
 

@@ -1,6 +1,4 @@
 ﻿@page "/Users/Signin"
-@using System.Security.Cryptography
-
 @inject NavigationManager NavigationManager
 @inject UserClient UserClient
 @inject AuthenticationStateProvider AuthStateProvider
@@ -60,42 +58,21 @@
     public async Task SignIn() {
         ButtonDisabled = "disabled";
         ErrorMessage = "";
-        List<User> users = await UserClient.GetUsersAsync();
-        if( users.Any(userDb => userDb.UserName == user!.UserName)) {
+        try
+        {
+            await UserClient.AddUserAsync(user!);
+            Message = Localizator["ValidateMust"];
+        }
+        catch (InvalidOperationException ex) when (ex.Message == "UsernameAlreadyUsed")
+        {
             ErrorMessage = Localizator["UsernameAlreadyUsed"];
-            return;
+            ButtonDisabled = "";
         }
-        /*
-        var response = await HttpClient.GetAsync($"/auth/email/isunique/{user!.Email}");
-        if( response.IsSuccessStatusCode ) {
-            ErrorMessage = Localizator["EmailAlreadyUsed"];
-            return;
+        catch
+        {
+            ErrorMessage = Localizator["WrongOnBackend"];
+            ButtonDisabled = "";
         }
-        */
-        // Adding changes to DB
-        var token = RandomNumberGenerator.GetBytes(32);
-        user!.ActionToken = token;
-        user.ActionDateEnd = DateTime.Now.AddMinutes(300);
-        await UserClient.AddUserAsync(user!);
-
-        // Seeing in DB id of new user
-        //user = await UserClient.GetUserByEmailAsync(user.Email!);
-
-        // Creating callbackUrl
-        var Base64Token = Convert.ToBase64String(token).Replace('+', '-').Replace('/', '_');
-        var callbackUrl = NavigationManager.GetUriWithQueryParameters(NavigationManager.BaseUri + "Users/Validate",
-            new Dictionary<string, object?>() { {"token", Base64Token}, {"userId", user.Id} });
-
-        /* NO EMAILS MORE
-        // using backend to send email
-        _ = HttpClient.PostAsJsonAsync("/auth/sendEmail", new { userId = user.Id, CallbackUrl = callbackUrl, IsValidation = true })
-            .ContinueWith(exception => {
-                Console.WriteLine(exception);
-                ErrorMessage = Localizator["WrongOnBackend"]; }
-            , TaskContinuationOptions.OnlyOnFaulted);
-        // Now show that everything is fine. 
-        */
-        Message = Localizator["ValidateMust"];
     }
 
     protected override async Task OnInitializedAsync() {

@@ -18,8 +18,8 @@ public static class Users
             Description = user.Description,
             CreatedAtUTC = DateTime.UtcNow,
             LastLoginAtUTC = DateTime.UtcNow,
-            ActionToken = user.ActionToken,
-            ActionDateEnd = user.ActionDateEnd,
+            ActionToken = null,
+            ActionDateEnd = null,
             IsValidated = true // false should be, but emails are disabled
         };
     }
@@ -28,14 +28,14 @@ public static class Users
         var hasher = new PasswordHasher<User>();
         return new User {
             Id = currentUser.Id,
-            UserName = user.UserName != null ? user.UserName : currentUser.UserName,
-            Password = user.Password != null ? hasher.HashPassword(currentUser, user.Password) : hasher.HashPassword(currentUser, currentUser.Password),
+            UserName = !string.IsNullOrWhiteSpace(user.UserName) ? user.UserName.Trim() : currentUser.UserName,
+            Password = user.Password != null ? hasher.HashPassword(currentUser, user.Password) : currentUser.Password,
             Description = user.Description != null ? user.Description : currentUser.Description,
             // Email = user.Email != null ? user.Email : currentUser.Email,
             CreatedAtUTC = currentUser.CreatedAtUTC,
             LastLoginAtUTC = user.LastLoginAtUTC != null ? user.LastLoginAtUTC.Value : currentUser.LastLoginAtUTC,
-            ActionToken = user.ActionToken,
-            ActionDateEnd = user.ActionDateEnd,
+            ActionToken = currentUser.ActionToken,
+            ActionDateEnd = currentUser.ActionDateEnd,
             Role = currentUser.Role,
             IsValidated = user.IsValidated != null ? user.IsValidated.Value : currentUser.IsValidated
         };

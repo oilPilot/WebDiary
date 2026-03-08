@@ -6,6 +6,7 @@
 @inject DiaryClient DiaryClient
 @inject DiaryGroupClient DiaryGroupClient
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthProvider
 @inject UserClient UserClient
 @inject HttpClient HttpClient
 @inject IStringLocalizer<Resources.MainResource> Localizator
@@ -373,7 +374,9 @@
     {
         ArgumentNullException.ThrowIfNull(group);
 
-        var response = (await HttpClient.GetAsync($"/auth/pincode/isequal/{PinCode}/{group!.Id}?culture={CultureInfo.CurrentCulture}"));
+        var response = await ((CustomAuthenticationStateProvider)AuthProvider).AuthorizedRequestAsync(() =>
+            HttpClient.PostAsJsonAsync($"/auth/pincode/verify?culture={CultureInfo.CurrentCulture}",
+                new { Pin = PinCode, GroupId = group!.Id }));
         if (!response.IsSuccessStatusCode)
         {
             ErrorMessage = Localizator["IncorrectPinText"];
@@ -386,5 +389,3 @@
 
     private record MonthSummary(int Month, int Count);
 }
-
-

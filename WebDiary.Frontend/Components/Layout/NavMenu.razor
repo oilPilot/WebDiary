@@ -219,7 +219,9 @@
 
         ErrorMessage = "";
         if(firstPinExists) {
-            var response = (await HttpClient.GetAsync($"/auth/pincode/isequal/{writedFirstPin}/{group!.Id}?culture={CultureInfo.CurrentCulture}"));
+            var response = await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).AuthorizedRequestAsync(() =>
+                HttpClient.PostAsJsonAsync($"/auth/pincode/verify?culture={CultureInfo.CurrentCulture}",
+                    new { Pin = writedFirstPin, GroupId = group!.Id }));
             if(!response.IsSuccessStatusCode) {
                 ErrorMessage = LocalizatorMain["ChangePinGroup3"];
                 return;

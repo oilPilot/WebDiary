@@ -66,6 +66,7 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
         try {
             await _localStorage.RemoveItemAsync("token");
             await _localStorage.RemoveItemAsync("refreshToken");
+            _httpClient.DefaultRequestHeaders.Authorization = null;
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         } catch (Exception ex)
         {
@@ -92,10 +93,20 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
         if(result == null) return false;
         await _localStorage.SetItemAsync("token", result.token);
         await _localStorage.SetItemAsync("refreshToken", result.refreshToken);
+        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", result.token);
         NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         return true;
     }
     public async Task<HttpResponseMessage> AuthorizedRequestAsync(Func<Task<HttpResponseMessage>> action) {
+        if(_httpClient.DefaultRequestHeaders.Authorization == null)
+        {
+            var token = await _localStorage.GetItemAsync<string>("token");
+            if(!string.IsNullOrWhiteSpace(token))
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
+        }
+
         var response = await action();
         if(response.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
             bool refreshed = await CheckTokenExpiration();

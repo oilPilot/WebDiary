@@ -18,9 +18,6 @@ public record class CreateUserDTO
     [Required]
     public required string Password { get; set; }
     public string Description { get; set; } = "";
-    //public required string Email { get; set; }
-    public byte[]? ActionToken { get; set; }
-    public DateTime? ActionDateEnd { get; set; }
 }
 
 public record class UpdateUserDTO
@@ -31,6 +28,4 @@ public record class UpdateUserDTO
     //public string? Email { get; set; }
     public DateTime? LastLoginAtUTC { get; set; }
     public bool? IsValidated { get; set; }
-    public byte[]? ActionToken { get; set; }
-    public DateTime? ActionDateEnd { get; set; }
 }

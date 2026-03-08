@@ -1,4 +1,5 @@
 using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 namespace WebDiary.Controllers;
@@ -7,6 +8,7 @@ namespace WebDiary.Controllers;
 [ApiController]
 public class LanguageController : ControllerBase
 {
+    [AllowAnonymous]
     public IActionResult Set(string culture, string redirectUri)
     {
         if (culture != null)
@@ -21,6 +23,11 @@ public class LanguageController : ControllerBase
                 SameSite = SameSiteMode.None,
                 Secure = true
             });
+        }
+
+        if (!Url.IsLocalUrl(redirectUri))
+        {
+            redirectUri = "/";
         }
 
         return Redirect(redirectUri);

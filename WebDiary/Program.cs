@@ -1,4 +1,5 @@
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -36,7 +37,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidAudience = builder.Configuration["Jwt:Audience"],
             ValidateAudience = true
         });
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorizationBuilder()
+    .SetFallbackPolicy(new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build());
 builder.Services.AddControllers();
 builder.Services.AddLocalization();
 builder.Services.AddEndpointsApiExplorer();
@@ -93,7 +97,7 @@ var localizationOptions = new RequestLocalizationOptions().
 app.UseRequestLocalization(localizationOptions);
 Log.Information("Added Localization to app");
 
-app.MapGet("/health", () => "Healthy!");
+app.MapGet("/health", () => "Healthy!").AllowAnonymous();
 
 //app.AddDiariesEndpoints();
 //app.AddGroupsEndpoints();

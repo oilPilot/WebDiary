@@ -195,7 +195,9 @@
     }
     private async Task UpdateAccountAsync() {
         ErrorMessage = "";
-        var response = (await HttpClient.GetAsync($"/auth/password/isequal/{newUser!.Password}/{user!.Id}?culture={CultureInfo.CurrentCulture}"));
+        var response = await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).AuthorizedRequestAsync(() =>
+            HttpClient.PostAsJsonAsync($"/auth/password/verify?culture={CultureInfo.CurrentCulture}",
+                new { Password = newUser!.Password }));
         if( response.IsSuccessStatusCode ) {
             if(!String.IsNullOrEmpty(newPassword))
                 newUser.Password = newPassword;

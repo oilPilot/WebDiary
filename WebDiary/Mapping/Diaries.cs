@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 using WebDiary.DTO;
 using WebDiary.Entities;
+using WebDiary.Helpers;
 
 namespace WebDiary.Mapping;
 
@@ -10,11 +11,12 @@ public static class Diaries
 {
     public static Diary ToEntity(this CreateDiaryDTO diaryDTO) {
         DateTime localTime = diaryDTO.CreatedUtc.AddMinutes(diaryDTO.UtcOffsetMinutes);
+        var sanitizedText = DiaryHtmlSanitizer.Sanitize(diaryDTO.Text);
         var baseText = new HtmlDocument();
-        baseText.LoadHtml(diaryDTO.Text);
+        baseText.LoadHtml(sanitizedText);
         return new Diary {
-            Text = diaryDTO.Text,
-            BaseText = baseText.DocumentNode.InnerHtml,
+            Text = sanitizedText,
+            BaseText = HtmlEntity.DeEntitize(baseText.DocumentNode.InnerText),
             Date = DateOnly.FromDateTime(localTime),
             Time = TimeOnly.FromDateTime(localTime),
             CreatedUtc = diaryDTO.CreatedUtc,
@@ -26,7 +28,7 @@ public static class Diaries
     public static DiaryDTO ToDTO(this Diary diary) {
         return new DiaryDTO {
             Id = diary.Id,
-            Text = diary.Text,
+            Text = DiaryHtmlSanitizer.Sanitize(diary.Text),
             Date = diary.Date,
             Time = diary.Time,
             GroupId = diary.GroupId,

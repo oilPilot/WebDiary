@@ -74,6 +74,11 @@ function getQuillContent() {
     return quill.root.innerHTML;
 }
 
+// Code for Localization
+function setCulture(culture) {
+    document.cookie = `.AspNetCore.Culture=c=${culture}|uic=${culture}; path=/; max-age=315360000; samesite=lax`;
+}
+
 // Code for Export
 
 async function downloadDiaryPdf(url) {

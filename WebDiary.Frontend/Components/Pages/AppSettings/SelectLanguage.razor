@@ -1,41 +1,42 @@
-﻿@using Microsoft.AspNetCore.Localization
 @using System.Globalization
 @inject NavigationManager NavigationManager
-@inject IConfiguration config
-@inject IJSRuntime IJSRuntime
+@inject IJSRuntime JS
 @inject IStringLocalizer<Resources.SettingsResource> Localizator
 
 <p class="align-items-center fw-bold" style="margin-top: 10px;">@Localizator["LanguageText"]</p>
-<InputSelect class="ms-2" @bind-value="@Culture" style="width: 100px;">
+<InputSelect class="ms-2"
+             @bind-Value="_cultureName"
+             @bind-Value:after="OnCultureChangedAsync"
+             style="width: 100px;">
     <option value="en">@Localizator["LanguageEng"]</option>
     <option value="de">@Localizator["LanguageGer"]</option>
 </InputSelect>
 
 @code {
-    protected override void OnInitialized() {
-        Culture = CultureInfo.CurrentCulture;
-    }
-    private async Task OnCultureChangedAsync(CultureInfo value)
-    {
-        var uri = new Uri(NavigationManager.Uri).GetComponents(UriComponents.AbsoluteUri, UriFormat.Unescaped);
-        var cultureEscaped = Uri.EscapeDataString(value.Name);
-        var uriEscaped = Uri.EscapeDataString(uri);
+    private const string DefaultCulture = "en";
+    private string _cultureName = DefaultCulture;
 
-        await IJSRuntime.InvokeVoidAsync("eval", $"document.cookie = '.AspNetCore.Culture=c={value.Name}|uic={value.Name}; path=/';");
-        NavigationManager.NavigateTo($"{config["ApiConnection"]}/Language/Set?culture={cultureEscaped}&redirectUri={uriEscaped}", true);
-    }
-    private CultureInfo _culture = CultureInfo.CurrentCulture;
-    private CultureInfo Culture
+    protected override void OnInitialized()
     {
-        get => _culture;
-        set
+        _cultureName = CultureInfo.CurrentCulture.TwoLetterISOLanguageName switch
         {
-            if (_culture != value)
-            {
-                _culture = value;
-                _ = OnCultureChangedAsync(value);
-            }
-        }
+            "de" => "de",
+            _ => DefaultCulture
+        };
     }
 
+    private async Task OnCultureChangedAsync()
+    {
+        if (string.IsNullOrWhiteSpace(_cultureName))
+            return;
+
+        var culture = new CultureInfo(_cultureName);
+        CultureInfo.CurrentCulture = culture;
+        CultureInfo.CurrentUICulture = culture;
+        CultureInfo.DefaultThreadCurrentCulture = culture;
+        CultureInfo.DefaultThreadCurrentUICulture = culture;
+
+        await JS.InvokeVoidAsync("setCulture", culture.Name);
+        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+    }
 }

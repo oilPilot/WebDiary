@@ -68,10 +68,16 @@
                                     @foreach (var month in MonthsForSelectedYear)
                                     {
                                         var monthText = MonthName(month.Month);
-                                        <article class="month-card">
+                                        var hasEntries = month.Count > 0;
+                                        <article class="month-card @(hasEntries ? string.Empty : "month-card-empty")">
                                             <h2>@monthText</h2>
                                             <p>@Localizator["DiariesCountInMonth", month.Count]</p>
-                                            <button type="button" class="btn btn-primary" @onclick="(() => OpenMonth(month.Month))">@Localizator["OpenMonth"]</button>
+                                            <button type="button"
+                                                    class="btn btn-primary"
+                                                    @onclick="(() => OpenMonth(month.Month))"
+                                                    disabled="@(!hasEntries)">
+                                                @Localizator["OpenMonth"]
+                                            </button>
                                         </article>
                                     }
                                 </div>
@@ -321,6 +327,9 @@
 
     private void OpenMonth(int month)
     {
+        if (!MonthsForSelectedYear.Any(m => m.Month == month && m.Count > 0))
+            return;
+
         selectedMonth = month;
     }
 

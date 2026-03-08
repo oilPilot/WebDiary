@@ -31,6 +31,10 @@
     background: color-mix(in srgb, var(--bs-body-bg) 90%, var(--bs-primary) 10%);
 }
 
+.month-card-empty {
+    background: color-mix(in srgb, var(--bs-body-bg) 94%, var(--bs-secondary) 6%);
+}
+
 .month-card h2 {
     font-size: 1.05rem;
     margin: 0;

@@ -17,4 +17,5 @@ public class User
     public DateTime? ActionDateEnd { get; set; }
     public string? RefreshToken { get; set; }
     public DateTime? RefreshTokenDateEnd { get; set; }
+    public string? MasterPassword { get; set; }
 }

@@ -1,7 +1,10 @@
 @using Serilog
+@using System.Security.Claims
 @inject UserClient userClient
 @inject IStringLocalizer<Resources.AdminResource> Localizator
 @inject NavigationManager NavigationManager
+@inject HttpClient HttpClient
+@inject AuthenticationStateProvider AuthProvider
 
 <div class="mt-4 mb-4 d-flex">
     <div class="mt-2">
@@ -24,6 +27,7 @@
         <th>@Localizator["TableUserHeader3"]</th>
         <th>@Localizator["TableUserHeader4"]</th>
         <th>@Localizator["TableUserHeader5"]</th>
+        <th>Master Password</th>
         <th>@Localizator["TableUserHeader6"]</th>
     </TableHeader>
     <RowTemplate Context="user">
@@ -32,6 +36,9 @@
         <td>@(user.IsValidated ? Localizator["TableIsActiveYes"] : Localizator["TableIsActiveNo"])</td>
         <td>@user.Role</td>
         <td>@user.Description</td>
+        <td>
+            <button class="btn btn-info ms-1 mb-1" @onclick="() => OpenMasterPasswordDialogue(user)">@(masterPasswordStatus.ContainsKey(user.Id) && masterPasswordStatus[user.Id] ? "Edit" : "Set")</button>
+        </td>
         <th>
             <button class="btn btn-secondary ms-1 mb-1" @onclick="() => ChangeActive(user)">@(user.IsValidated ? Localizator["TableAction1"] : Localizator["TableAction2"])</button>
             <button class="btn btn-danger ms-2 mb-1" @onclick="() => OpenDialogueWithUser(user, ResetPasswordDialogue)">@Localizator["TableAction3"]</button>
@@ -76,19 +83,37 @@
         <button type="button" class="btn btn-danger" @onclick="ResetPasswordAsync">@Localizator["ContinueButton"]</button>
     </FooterTemplate>
 </DialogueTemplate>
-
+<DialogueTemplate @ref="MasterPasswordDialogue" HeaderText="Master Password Management">
+    <BodyTemplate>
+        <p>Set or edit master password for @User.UserName</p>
+        <InputText type="password" class="form-control" @bind-Value="masterPasswordInput" placeholder="Enter master password" />
+        @if (!string.IsNullOrEmpty(masterPasswordError))
+        {
+            <p class="text-danger mt-2">@masterPasswordError</p>
+        }
+    </BodyTemplate>
+    <FooterTemplate>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="() => MasterPasswordDialogue!.Close()">@Localizator["CancelButtonText"]</button>
+        <button type="button" class="btn btn-primary" @onclick="SetMasterPasswordForUserAsync">Save</button>
+    </FooterTemplate>
+</DialogueTemplate>
 @code {
     List<User>? users { get; set; }
     List<User>? usersSearching { get; set; }
     private DialogueTemplate? giveAdminRightsDialogue { get; set; }
     private DialogueTemplate? DeleteUserDialogue { get; set; }
     private DialogueTemplate? ResetPasswordDialogue { get; set; }
+    private DialogueTemplate? MasterPasswordDialogue { get; set; }
     // Filter data
     private string userNameFilter = "";
     private string RoleFilter = "";
     // For logging actions done by Admin
     private string? adminId;
     private string? adminUserName;
+    // Master password management
+    private string masterPasswordInput = "";
+    private string masterPasswordError = "";
+    private Dictionary<int, bool> masterPasswordStatus = new();
     [CascadingParameter] protected Task<AuthenticationState>? AuthStat { get; set; }
 
     protected async override Task OnInitializedAsync()
@@ -99,6 +124,73 @@
         var user = (await AuthStat!).User;
         adminId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         adminUserName = user.FindFirst(ClaimTypes.Name)?.Value;
+        
+        // Load master password status for all users
+        if (users != null)
+        {
+            foreach (var u in users)
+            {
+                await CheckMasterPasswordStatus(u.Id);
+            }
+        }
+    }
+
+    private async Task CheckMasterPasswordStatus(int userId)
+    {
+        try
+        {
+            var response = await HttpClient.GetAsync($"auth/masterpassword/isset/{userId}");
+            if (response.IsSuccessStatusCode)
+            {
+                var isSet = await response.Content.ReadFromJsonAsync<bool>();
+                masterPasswordStatus[userId] = isSet;
+            }
+        }
+        catch
+        {
+            masterPasswordStatus[userId] = false;
+        }
+    }
+
+    private void OpenMasterPasswordDialogue(User user)
+    {
+        User = user;
+        masterPasswordInput = "";
+        masterPasswordError = "";
+        MasterPasswordDialogue?.Open();
+    }
+
+    private async Task SetMasterPasswordForUserAsync()
+    {
+        if (string.IsNullOrWhiteSpace(masterPasswordInput))
+        {
+            masterPasswordError = "Password cannot be empty";
+            return;
+        }
+
+        try
+        {
+            var response = await HttpClient.PostAsJsonAsync(
+                $"auth/masterpassword/set/{User.Id}",
+                new { MasterPassword = masterPasswordInput });
+            
+            if (response.IsSuccessStatusCode)
+            {
+                Log.Information("Admin with Username '{UserName}' & id '{UserId}' had " +
+                                "set master password for user with Username '{UpdateUserName}' & id '{UpdateUserId}'",
+                                adminUserName, adminId, User.UserName, User.Id);
+                await CheckMasterPasswordStatus(User.Id);
+                MasterPasswordDialogue?.Close();
+            }
+            else
+            {
+                masterPasswordError = "Failed to set master password";
+            }
+        }
+        catch
+        {
+            masterPasswordError = "Error setting master password";
+        }
     }
 
     private async Task ChangeActive(User user) {

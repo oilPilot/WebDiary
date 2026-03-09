@@ -166,6 +166,76 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
             return Ok("Are equal");
         return BadRequest(localizer["PasswordsNotEqual"].Value);
     }
+
+    [Authorize]
+    [HttpPost("masterpassword/verify")]
+    public async Task<IActionResult> VerifyMasterPasswordAsync(VerifyMasterPasswordModel masterPasswordRequest)
+    {
+        var currentUserId = GetCurrentUserId();
+        if(currentUserId is null)
+        {
+            return Unauthorized();
+        }
+
+        var verify = await authService.CheckMasterPasswordEquality(masterPasswordRequest.MasterPassword, currentUserId.Value);
+        if (verify == PasswordVerificationResult.Success)
+            return Ok("Are equal");
+        return BadRequest(localizer["PasswordsNotEqual"].Value);
+    }
+
+    [Authorize]
+    [HttpGet("masterpassword/isset")]
+    public async Task<IActionResult> IsMasterPasswordSetAsync()
+    {
+        var currentUserId = GetCurrentUserId();
+        if(currentUserId is null)
+        {
+            return Unauthorized();
+        }
+
+        var user = await dbContext.users.FindAsync(currentUserId.Value);
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(!string.IsNullOrEmpty(user.MasterPassword));
+    }
+
+    [Authorize]
+    [HttpPost("masterpassword/set")]
+    public async Task<IActionResult> SetMasterPasswordAsync(SetMasterPasswordModel masterPasswordRequest)
+    {
+        var currentUserId = GetCurrentUserId();
+        if(currentUserId is null)
+        {
+            return Unauthorized();
+        }
+
+        await authService.SetMasterPassword(currentUserId.Value, masterPasswordRequest.MasterPassword);
+        return Ok("Master password set");
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPost("masterpassword/set/{userId:int}")]
+    public async Task<IActionResult> SetMasterPasswordForUserAsync(int userId, SetMasterPasswordModel masterPasswordRequest)
+    {
+        await authService.SetMasterPassword(userId, masterPasswordRequest.MasterPassword);
+        return Ok("Master password set for user");
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpGet("masterpassword/isset/{userId:int}")]
+    public async Task<IActionResult> IsMasterPasswordSetForUserAsync(int userId)
+    {
+        var user = await dbContext.users.FindAsync(userId);
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(!string.IsNullOrEmpty(user.MasterPassword));
+    }
     
     // THERE ARE GOES METHODS THAT REQUIRE EMAILS
     [AllowAnonymous]

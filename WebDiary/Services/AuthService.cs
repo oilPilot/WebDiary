@@ -41,9 +41,31 @@ public class AuthService : IAuthService
     {
         var user = await dbContext.users.FindAsync(userId);
         if (user == null)
-            throw new Exception("Not found group");
+            throw new Exception("Not found user");
         var hasher = new PasswordHasher<User>();
         return hasher.VerifyHashedPassword(user, user.Password, password);
+    }
+
+    public async Task<PasswordVerificationResult> CheckMasterPasswordEquality(string masterPassword, int userId)
+    {
+        var user = await dbContext.users.FindAsync(userId);
+        if (user == null)
+            throw new Exception("Not found user");
+        if(string.IsNullOrEmpty(user.MasterPassword)) {
+            return PasswordVerificationResult.Failed;
+        }
+        var hasher = new PasswordHasher<User>();
+        return hasher.VerifyHashedPassword(user, user.MasterPassword, masterPassword);
+    }
+
+    public async Task SetMasterPassword(int userId, string masterPassword)
+    {
+        var user = await dbContext.users.FindAsync(userId);
+        if (user == null)
+            throw new Exception("Not found user");
+        var hasher = new PasswordHasher<User>();
+        user.MasterPassword = hasher.HashPassword(user, masterPassword);
+        await dbContext.SaveChangesAsync();
     }
     public async Task ResetPassword(User user, string newPassword)
     {

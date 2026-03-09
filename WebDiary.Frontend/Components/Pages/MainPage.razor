@@ -3,6 +3,7 @@
 @using System.Security.Claims
 @using System.Text.Json
 @using Blazored.LocalStorage
+@using Blazored.SessionStorage
 @inject DiaryClient DiaryClient
 @inject DiaryGroupClient DiaryGroupClient
 @inject NavigationManager NavigationManager
@@ -11,6 +12,7 @@
 @inject HttpClient HttpClient
 @inject IStringLocalizer<Resources.MainResource> Localizator
 @inject ILocalStorageService localStorage
+@inject ISessionStorageService sessionStorage
 @inject IJSRuntime JS
 
 <PageTitle>MyDiary</PageTitle>
@@ -25,6 +27,7 @@
             <FooterTemplate>
                 <p class="fs-5 fw-semibold text-danger">@ErrorMessage</p>
                 <button type="button" class="btn btn-primary" @onclick="TryCheckPinAsync">@Localizator["EnterButtonText"]</button>
+                <button type="button" class="btn btn-link" @onclick="NavigateToHomeForMasterPassword">Edit Master Password</button>
             </FooterTemplate>
         </DialogueTemplate>
 
@@ -259,8 +262,18 @@
 
             if (!string.IsNullOrEmpty(group.PinCode))
             {
-                modalPin!.Open();
-                PageTitle = "PIN";
+                var masterPasswordVerified = await sessionStorage.GetItemAsync<bool>("masterPasswordVerified");
+                if (!masterPasswordVerified)
+                {
+                    modalPin!.Open();
+                    PageTitle = "PIN";
+                }
+                else
+                {
+                    PageTitle = group.Name;
+                    if (isValidated)
+                        shouldInitializeEditor = true;
+                }
             }
             else
             {
@@ -394,6 +407,11 @@
 
         CorrectPin();
         modalPin!.Close();
+    }
+
+    private void NavigateToHomeForMasterPassword()
+    {
+        NavigationManager.NavigateTo("/");
     }
 
     private record MonthSummary(int Month, int Count);

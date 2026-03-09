@@ -1,5 +1,8 @@
 ﻿@page "/"
+@using Blazored.SessionStorage
 @inject IStringLocalizer<Resources.MainResource> Localizator
+@inject HttpClient HttpClient
+@inject ISessionStorageService sessionStorage
 
 <PageTitle>MyDiary</PageTitle>
 
@@ -96,13 +99,6 @@
                         </div>
                         <div class="card-body">
                             <div class="row g-2">
-                                <!-- Disabled because entries are created inside groups which placed in navbar
-                                <div class="col-6 col-md-3">
-                                    <a href="/Diary" class="btn btn-outline-primary w-100 d-flex flex-column align-items-center py-3">
-                                        <i class="bi bi-pencil-square fs-4 mb-1"></i>
-                                        <small>Write Entry</small>
-                                    </a>
-                                </div> -->
                                 <div class="col-6 col-md-3">
                                     <a href="/Statistics" class="btn btn-outline-info w-100 d-flex flex-column align-items-center py-3">
                                         <i class="bi bi-bar-chart-line fs-4 mb-1"></i>
@@ -115,18 +111,179 @@
                                         <small>Account</small>
                                     </a>
                                 </div>
-                                <!-- Disabled because groups are showcased in navbar and there is no need to duplicate it here
                                 <div class="col-6 col-md-3">
-                                    <a href="/Groups" class="btn btn-outline-success w-100 d-flex flex-column align-items-center py-3">
-                                        <i class="bi bi-people-fill fs-4 mb-1"></i>
-                                        <small>Groups</small>
-                                    </a>
-                                </div> -->
+                                    <button @onclick="OpenMasterPasswordModal" class="btn btn-outline-warning w-100 d-flex flex-column align-items-center py-3">
+                                        <i class="bi bi-key-fill fs-4 mb-1"></i>
+                                        <small>Master Password</small>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </Authorized>
             </AuthorizeView>
+
+            <!-- Master Password Modal -->
+            <DialogueTemplate @ref="masterPasswordModal" HeaderText="Global Master Password">
+                <BodyTemplate>
+                    @if (string.IsNullOrEmpty(masterPassword))
+                    {
+                        <p>Set a global master password to unlock all your groups with PINs in one go.</p>
+                        <InputText type="password" class="form-control" @bind-Value="newMasterPassword" placeholder="Enter new master password" />
+                    }
+                    else
+                    {
+                        <p>Enter your global master password to unlock all groups for this session.</p>
+                        <InputText type="password" class="form-control" @bind-Value="enteredMasterPassword" placeholder="Enter master password" />
+                    }
+                </BodyTemplate>
+                <FooterTemplate>
+                    <p class="fs-5 fw-semibold text-danger">@masterPasswordError</p>
+                    @if (string.IsNullOrEmpty(masterPassword))
+                    {
+                        <button type="button" class="btn btn-primary" @onclick="SetMasterPasswordAsync">Set Password</button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-primary" @onclick="VerifyMasterPasswordAsync">Unlock All</button>
+                        <button type="button" class="btn btn-secondary" @onclick="StartEditMasterPassword">Edit Password</button>
+                    }
+                    <button type="button" class="btn btn-secondary" @onclick="CloseMasterPasswordModal">Cancel</button>
+                </FooterTemplate>
+            </DialogueTemplate>
         </div>
     </div>
 </div>
+
+@code {
+    private DialogueTemplate? masterPasswordModal;
+    private string? masterPassword;
+    private string newMasterPassword = "";
+    private string enteredMasterPassword = "";
+    private string masterPasswordError = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CheckMasterPasswordStatus();
+    }
+
+    private async Task CheckMasterPasswordStatus()
+    {
+        try
+        {
+            var response = await HttpClient.GetAsync("auth/masterpassword/isset");
+            if (response.IsSuccessStatusCode)
+            {
+                var isSet = await response.Content.ReadFromJsonAsync<bool>();
+                masterPassword = isSet ? "set" : null; // Dummy value
+            }
+        }
+        catch
+        {
+            // Ignore errors
+        }
+    }
+
+    private void OpenMasterPasswordModal()
+    {
+        masterPasswordError = "";
+        newMasterPassword = "";
+        enteredMasterPassword = "";
+        masterPasswordModal?.Open();
+    }
+
+    private void CloseMasterPasswordModal()
+    {
+        masterPasswordModal?.Close();
+    }
+
+    private async Task SetMasterPasswordAsync()
+    {
+        if (string.IsNullOrWhiteSpace(newMasterPassword))
+        {
+            masterPasswordError = "Password cannot be empty";
+            return;
+        }
+
+        try
+        {
+            var response = await HttpClient.PostAsJsonAsync("auth/masterpassword/set", new { MasterPassword = newMasterPassword });
+            if (response.IsSuccessStatusCode)
+            {
+                // Clear session verification since password changed
+                await sessionStorage.RemoveItemAsync("masterPasswordVerified");
+                await CheckMasterPasswordStatus();
+                masterPasswordModal?.Close();
+            }
+            else
+            {
+                masterPasswordError = "Failed to set master password";
+            }
+        }
+        catch
+        {
+            masterPasswordError = "Error setting master password";
+        }
+    }
+
+    private async Task VerifyMasterPasswordAsync()
+    {
+        if (string.IsNullOrWhiteSpace(enteredMasterPassword))
+        {
+            masterPasswordError = "Password cannot be empty";
+            return;
+        }
+
+        try
+        {
+            var response = await HttpClient.PostAsJsonAsync("auth/masterpassword/verify", new { MasterPassword = enteredMasterPassword });
+            if (response.IsSuccessStatusCode)
+            {
+                // Set in session that master password is verified
+                await sessionStorage.SetItemAsync("masterPasswordVerified", true);
+                masterPasswordModal?.Close();
+                // TODO: Notify other components that groups are unlocked
+            }
+            else
+            {
+                masterPasswordError = "Incorrect master password";
+            }
+        }
+        catch
+        {
+            masterPasswordError = "Error verifying master password";
+        }
+    }
+
+    private async Task StartEditMasterPassword()
+    {
+        // Verify current password first
+        if (string.IsNullOrWhiteSpace(enteredMasterPassword))
+        {
+            masterPasswordError = "Enter current password first";
+            return;
+        }
+
+        try
+        {
+            var response = await HttpClient.PostAsJsonAsync("auth/masterpassword/verify", new { MasterPassword = enteredMasterPassword });
+            if (response.IsSuccessStatusCode)
+            {
+                // Switch to set new password mode
+                masterPassword = null;
+                newMasterPassword = "";
+                enteredMasterPassword = "";
+                masterPasswordError = "";
+                // The modal will now show the "Set Password" UI
+            }
+            else
+            {
+                masterPasswordError = "Incorrect password";
+            }
+        }
+        catch
+        {
+            masterPasswordError = "Error verifying password";
+        }
+    }
+}

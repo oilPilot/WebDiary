@@ -42,6 +42,8 @@ services:
       POSTGRES_DB: webdiary
       POSTGRES_USER: webdiary
       POSTGRES_PASSWORD: webdiary_password
+    ports:
+      - "5432:5432"
     volumes:
       - webdiary-db-data:/var/lib/postgresql/data
     healthcheck:

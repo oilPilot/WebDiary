@@ -2,6 +2,7 @@
 @using Plotly.Blazor.Traces
 @using Serilog
 @using System.Drawing
+@using WebDiary.Frontend.Models
 @inject UserClient userClient
 @inject StatsClient statsClient
 @inject IStringLocalizer<Resources.AdminResource> Localizator
@@ -27,15 +28,38 @@
     </div>
 </div>
 
-<div class="mt-2 d-flex">
-    <p>@Localizator["BasicDataText1"]</p>
-    <ul>
+<div class="mt-2 d-flex flex-wrap align-items-center">
+    <p class="me-3">@Localizator["BasicDataText1"]</p>
+    <ul class="mb-0">
         <li><p><strong>@Localizator["BasicDataText2"] @newUsers</strong></p></li>
         <li><p>@Localizator["BasicDataText3"] @newEntries</p></li>
         <li><p>@Localizator["BasicDataText4"] @users?.Count()</p></li>
         <li><p>@Localizator["BasicDataText5"] @activeUsers</p></li>
     </ul>
 </div>
+
+<div class="mt-3 d-flex align-items-center">
+    <label class="me-2">Top most active users:</label>
+    <InputNumber class="form-control w-auto" @bind-value="topCount" @onchange="_ => hadChangedTopCount = true" />
+    <button class="btn btn-sm btn-primary ms-2" @onclick="LoadTopUsers">Load</button>
+</div>
+@if(mostActiveUsers != null)
+{
+    <div class="mt-3">
+        <TableTemplate Items="mostActiveUsers" CssClassesToAdd="table-to-bottom-scroll-y" >
+            <TableHeader>
+                <th>@Localizator["TableUserHeader1"]</th>
+                <th>@Localizator["TableUserHeader2"]</th>
+                <th>Entries</th>
+            </TableHeader>
+            <RowTemplate Context="u">
+                <td>@u.UserId</td>
+                <td>@u.UserName</td>
+                <td>@u.EntriesCount</td>
+            </RowTemplate>
+        </TableTemplate>
+    </div>
+}
 
 @if(usersInactive == null || data == null) {
     <div class="mt-2 d-flex">
@@ -76,6 +100,7 @@
 @code {
     List<User>? users { get; set; } = new List<User>();
     List<User>? usersInactive { get; set; }
+    List<UserActivity>? mostActiveUsers { get; set; }
     // Filter data
     private DateOnly? usersDate = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-7);
     private DateOnly? entriesDate = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-7);
@@ -83,6 +108,8 @@
     private int newUsers = 0;
     private int newEntries = 0;
     private int activeUsers = 0;
+    private int topCount = 5;
+    private bool hadChangedTopCount = false;
     // Chart data
     PlotlyChart? chart;
     Config? config;
@@ -94,6 +121,7 @@
         base.OnInitialized();
         users = await userClient.GetUsersAsync();
         await UpdateSearch();
+        await LoadTopUsers();
     }
 
     private async Task UpdateSearch() {
@@ -144,5 +172,13 @@
             scatterEntries,
             scatterSymbols
         };
+    }
+
+    private async Task LoadTopUsers() {
+        if(hadChangedTopCount)
+        {
+            // nothing extra required; statsClient handles limit
+        }
+        mostActiveUsers = await statsClient.GetMostActiveUsers(topCount);
     }
 }

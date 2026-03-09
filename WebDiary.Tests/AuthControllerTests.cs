@@ -20,6 +20,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using WebDiary.Model;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace WebDiary.Tests;
 
@@ -43,7 +44,7 @@ public class AuthControllerTests
     }
 
     [Fact]
-    public async Task LoginAsync_ReturnsNotFoundWhenUserDoesNotExist() {
+    public async Task LoginAsync_ReturnsUnauthorizedWhenUserDoesNotExist() {
         // Arrange
         using var dbContext = new DiariesContext(_options);
         var controller = GetControllerWithContext(dbContext);
@@ -55,7 +56,7 @@ public class AuthControllerTests
         var result = await controller.LoginAsync(model);
 
         // Assert
-        Assert.IsType<NotFoundObjectResult>(result);
+        Assert.IsType<UnauthorizedObjectResult>(result);
     }
     [Fact]
     public async Task LoginAsync_ReturnsUnauthorizedWhenPasswordWrong() {
@@ -110,6 +111,42 @@ public class AuthControllerTests
 
         // Assert
         Assert.IsType<OkObjectResult>(result);
+    }
+
+    [Fact]
+    public async Task ImpersonateUser_ReturnsNotFound_WhenTargetDoesntExist()
+    {
+        using var dbContext = new DiariesContext(_options);
+        var controller = GetControllerWithContext(dbContext);
+        // mark current user as admin for the HttpContext (though attribute isn't evaluated)
+        controller.ControllerContext = new Microsoft.AspNetCore.Mvc.ControllerContext {
+            HttpContext = new DefaultHttpContext { User = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimTypes.Role, "Admin") })) }
+        };
+
+        var result = await controller.ImpersonateUser(42);
+        Assert.IsType<NotFoundResult>(result);
+    }
+
+    [Fact]
+    public async Task ImpersonateUser_ReturnsTokens_WhenTargetExists()
+    {
+        using var dbContext = new DiariesContext(_options);
+        var admin = new User { UserName = "admin", Password = "pw", Role = "Admin", Description = "", IsValidated = true };
+        var regular = new User { UserName = "bob", Password = "pw", Role = "Default", Description = "", IsValidated = true };
+        dbContext.users.Add(admin);
+        dbContext.users.Add(regular);
+        dbContext.SaveChanges();
+        var controller = GetControllerWithContext(dbContext);
+        controller.ControllerContext = new Microsoft.AspNetCore.Mvc.ControllerContext {
+            HttpContext = new DefaultHttpContext { User = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimTypes.Role, "Admin") })) }
+        };
+        _mockConfig.Setup(config => config["Jwt:Issuer"]).Returns("test");
+        _mockConfig.Setup(config => config["Jwt:Audience"]).Returns("testers");
+        _mockConfig.Setup(config => config["Jwt:Key"]).Returns("supersecretkey1234567890LongerAndLongerToInfinityAndBeyond!");
+
+        var result = await controller.ImpersonateUser(regular.Id);
+        var ok = Assert.IsType<OkObjectResult>(result);
+        Assert.NotNull(ok.Value);
     }
 
     [Fact]

@@ -45,7 +45,7 @@ public class SigninTests : TestContext
     public async Task SigninPage_ExistingUsername_ShowsError()
     {
         // Arrange
-        var mockUserClient = new Mock<UserClient>(new HttpClient(new MockHttpMessageHandler()));
+        var mockUserClient = new Mock<UserClient>(new HttpClient(new MockHttpMessageHandler()), (AuthenticationStateProvider?)null);
         mockUserClient.Setup(u => u.GetUsersAsync()).ReturnsAsync(new List<User> {
             new User { UserName = "existing" }
         });
@@ -76,7 +76,7 @@ public class SigninTests : TestContext
         });
         var httpClient = new HttpClient(handler) { BaseAddress = new Uri("http://localhost:5281") };
         Services.AddSingleton<HttpClient>(httpClient);
-        var mockUserClient = new Mock<UserClient>(httpClient);
+        var mockUserClient = new Mock<UserClient>(httpClient, (AuthenticationStateProvider?)null);
         mockUserClient.Setup(u => u.GetUsersAsync()).ReturnsAsync(new List<User>());
 
         Services.AddSingleton<UserClient>(mockUserClient.Object);

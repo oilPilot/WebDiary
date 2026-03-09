@@ -183,6 +183,22 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
         return BadRequest(localizer["PasswordsNotEqual"].Value);
     }
 
+    // administrative endpoint that allows an admin to impersonate another user by
+    // providing fresh JWT tokens for that account. This is intentionally protected
+    // by the "Admin" role attribute.
+    [Authorize(Roles = "Admin")]
+    [HttpPost("impersonate/{userId}")]
+    public async Task<IActionResult> ImpersonateUser(int userId)
+    {
+        var user = await dbContext.users.FindAsync(userId);
+        if (user == null)
+            return NotFound();
+
+        Log.Information("Administrator {Admin} impersonating user {Impersonated}",
+            User.Identity?.Name, user.UserName);
+        return await CreatingTokens(user);
+    }
+
     [Authorize]
     [HttpGet("masterpassword/isset")]
     public async Task<IActionResult> IsMasterPasswordSetAsync()

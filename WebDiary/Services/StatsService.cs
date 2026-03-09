@@ -79,6 +79,22 @@ public class StatsService : IStatsService
         return returnList;
     }
 
+    public async Task<List<UserActivityDTO>> GetMostActiveUsersAsync(int limit)
+    {
+        // determine users who have written the most diary entries overall
+        // each diary is linked through a group so we group by the owning user
+        var query = dbContext.users
+            .Select(u => new UserActivityDTO {
+                UserId = u.Id,
+                UserName = u.UserName,
+                EntriesCount = dbContext.diaries.Count(d => d.Group.UserId == u.Id)
+            })
+            .OrderByDescending(x => x.EntriesCount)
+            .Take(limit);
+
+        return await query.ToListAsync();
+    }
+
     // Helpers
 
     private List<StatsDayDTO> CalculateStats(List<Diary> diaries)

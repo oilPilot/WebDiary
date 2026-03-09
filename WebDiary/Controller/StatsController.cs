@@ -61,6 +61,11 @@ public class StatsController(IStatsService statsService) : ControllerBase
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Get30DaysStats() => Ok(await statsService.NewEntriesIn30DaysForChart());
 
+    [HttpGet("adminMostActiveUsers")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> GetMostActiveUsers(int limit = 5) =>
+        Ok(await statsService.GetMostActiveUsersAsync(limit));
+
     private DateTime ToDateTime(DateOnly fromPeriod) => fromPeriod.ToDateTime(TimeOnly.MinValue);
 
     private int? GetCurrentUserId()

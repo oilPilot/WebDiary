@@ -71,6 +71,15 @@
                                     </div>
                                 </button>
                             </div>
+                            <div class="col-md-6 col-lg-3">
+                                <button class="btn btn-outline-dark w-100 d-flex align-items-center justify-content-center py-3 @(openedFunction == 6 ? "active" : "")"
+                                        @onclick="() => openedFunction = 6">
+                                    <div class="text-center">
+                                        <i class="bi bi-person-lines-fill fs-4 mb-1"></i>
+                                        <div class="small">Impersonate</div>
+                                    </div>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -88,6 +97,8 @@
                             <LogsView />
                         } else if (openedFunction == 5) {
                             <AdminStatistics />
+                        } else if (openedFunction == 6) {
+                            <AdminImpersonation />
                         } else {
                             <div class="text-center py-5">
                                 <i class="bi bi-shield-check fs-1 text-muted mb-3"></i>

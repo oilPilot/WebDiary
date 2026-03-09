@@ -45,4 +45,10 @@ public class StatsClient(HttpClient httpClient, AuthenticationStateProvider auth
         return await response.Content.ReadFromJsonAsync<List<AdminStatsModel>>()
             ?? new List<AdminStatsModel>();
     }
+
+    public async Task<List<UserActivity>> GetMostActiveUsers(int limit = 5) {
+        var response = await ((CustomAuthenticationStateProvider)authenticationStateProvider).AuthorizedRequestAsync(() =>
+            httpClient.GetAsync($"stats/adminMostActiveUsers?limit={limit}"));
+        return await response.Content.ReadFromJsonAsync<List<UserActivity>>() ?? new List<UserActivity>();
+    }
 }

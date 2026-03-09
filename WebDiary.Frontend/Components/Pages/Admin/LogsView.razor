@@ -2,12 +2,12 @@
 @inject LogRecordClient logsClient
 @inject IStringLocalizer<Resources.AdminResource> Localizator
 
-<div class="mt-4 mb-4 d-flex">
-    @*<div class="mt-2">
+<div class="mt-4 mb-4 d-flex flex-wrap align-items-center">
+    <div class="mt-2">
         @Localizator["FilterSet8"]
-        <InputNumber class="form-full-width ms-2" @bind-value="countTake" @onclick="() => hadChangedCount = true"
+        <InputNumber class="form-full-width ms-2" @bind-value="countTake"
             aria-placeholder="@Localizator[@"FilterSet8"]" style="width: auto;" />
-    </div> IT'S NOT WORKING*@
+    </div>
     <div class="mt-2 ms-2">
         @Localizator["FilterSet7"]
         <InputSelect class="form-full-width ms-2" @bind-value="LevelFilter" style="width: auto;">
@@ -56,7 +56,6 @@
     List<LogRecord>? logsSearching { get; set; }
     // Filter data
     private int? countTake = 100;
-    private bool hadChangedCount = false;
     private int LevelFilter = 2;
     private DateOnly? DateFilter = null;
     private string? MessageFilter = null;
@@ -79,18 +78,11 @@
         await logsClient.ClearLogsAsync();
         Log.Warning("Admin with Username '{AdminName}' & id '{AdminId}'" +
                         " had cleared all logs.", adminUserName, adminId);
-        hadChangedCount = true;
         await UpdateSearch();
     }
 
     private async Task UpdateSearch() {
-        if(hadChangedCount) {
-            if(countTake == 0 || countTake == null)
-                logs = await logsClient.GetLogRecordsAsync(int.MaxValue);
-            else
-                logs = await logsClient.GetLogRecordsAsync(countTake.Value);
-        }
-
+        logs = await logsClient.GetLogRecordsAsync(countTake.Value);
         logsSearching = logs!;
 
         if(LevelFilter != 2)
@@ -99,5 +91,8 @@
             logsSearching = logsSearching.Where(logRecord => DateOnly.FromDateTime(logRecord.Timestamp) == DateFilter).ToList();
         if(!String.IsNullOrEmpty(MessageFilter))
             logsSearching = logsSearching.Where(logRecord => logRecord.Message.Contains(MessageFilter)).ToList();
+        
+        StateHasChanged();
     }
+
 }

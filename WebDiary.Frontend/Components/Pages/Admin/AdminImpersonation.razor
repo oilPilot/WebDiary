@@ -1,0 +1,73 @@
+@using WebDiary.Frontend.Models
+@inject UserClient userClient
+@inject HttpClient httpClient
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthProvider
+@inject IStringLocalizer<Resources.AdminResource> Localizator
+
+<div class="mt-4">
+    <h4>Impersonate user</h4>
+    <p>Select one of the users below to take over their session for troubleshooting.</p>
+
+    @if(users == null)
+    {
+        <p>@Localizator["LoadingDataAdmin1"]</p>
+    }
+    else
+    {
+        <TableTemplate Items="users" CssClassesToAdd="table-to-bottom-scroll-y">
+            <TableHeader>
+                <th>@Localizator["TableUserHeader1"]</th>
+                <th>@Localizator["TableUserHeader2"]</th>
+                <th>@Localizator["TableUserHeader4"]</th>
+                <th></th>
+            </TableHeader>
+            <RowTemplate Context="u">
+                <td>@u.Id</td>
+                <td>@u.UserName</td>
+                <td>@u.Role</td>
+                <td>
+                    <button class="btn btn-sm btn-warning" @onclick="() => Impersonate(u.Id)">
+                        Impersonate
+                    </button>
+                </td>
+            </RowTemplate>
+        </TableTemplate>
+    }
+
+    @if(errorMessage != null)
+    {
+        <div class="alert alert-danger mt-2">@errorMessage</div>
+    }
+</div>
+
+@code {
+    List<User>? users;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        users = await userClient.GetUsersAsync();
+    }
+
+    private async Task Impersonate(int userId)
+    {
+        errorMessage = null;
+        var response = await httpClient.PostAsync($"auth/impersonate/{userId}", null);
+        if(response.IsSuccessStatusCode)
+        {
+            var tokens = await response.Content.ReadFromJsonAsync<RefreshResponse>();
+            if(tokens != null)
+            {
+                await ((CustomAuthenticationStateProvider)AuthProvider).LoginUserAsync(tokens.token, tokens.refreshToken);
+                NavigationManager.NavigateTo("/");
+            }
+        }
+        else
+        {
+            errorMessage = await response.Content.ReadAsStringAsync();
+        }
+    }
+
+    private class RefreshResponse { public string token { get; set; } = ""; public string refreshToken { get; set; } = ""; }
+}

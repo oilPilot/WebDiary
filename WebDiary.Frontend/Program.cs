@@ -3,10 +3,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using WebDiary.Frontend.Models.Auth;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
-using WebDiary.Frontend.Components;
 using Microsoft.AspNetCore.Localization;
 using Blazored.SessionStorage;
 using Serilog;
+using WebDiary.Frontend;
+using WebDiary.Frontend.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 var connstring = builder.Configuration.GetConnectionString("DiariesConnection");

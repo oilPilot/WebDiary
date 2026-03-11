@@ -7,7 +7,7 @@ public class Diary
 {
     public int Id { get; set; }
     public required string Text { get; set; }
-    public required string BaseText { get; set; } // Used in StatsService to not remove algorithmically tags each time
+    public required string BaseText { get; set; }
     // Local display parts
     public DateOnly Date { get; set; }
     public TimeOnly Time { get; set; }

@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using WebDiary.Data;
 using WebDiary.Endpoints;
+using WebDiary.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 var connstring = builder.Configuration.GetConnectionString("DiariesConnection");
@@ -27,8 +28,10 @@ builder.Services.AddDbContextPool<DiariesContext>(options =>
 Log.Information("Configured DbContext with connection string" /*{ConnectionString}", connstring 'ONLY FOR DEVELOPERS'*/);
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options => 
-        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters() {
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+        {
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidateIssuer = true,
             ValidateLifetime = true,
@@ -36,12 +39,28 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             ValidAudience = builder.Configuration["Jwt:Audience"],
             ValidateAudience = true
-        });
+        };
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var accessToken = context.Request.Query["access_token"];
+                var path = context.HttpContext.Request.Path;
+                if (!string.IsNullOrWhiteSpace(accessToken) && path.StartsWithSegments("/hubs/chat"))
+                {
+                    context.Token = accessToken;
+                }
+
+                return Task.CompletedTask;
+            }
+        };
+    });
 builder.Services.AddAuthorizationBuilder()
     .SetFallbackPolicy(new AuthorizationPolicyBuilder()
         .RequireAuthenticatedUser()
         .Build());
 builder.Services.AddControllers();
+builder.Services.AddSignalR();
 builder.Services.AddLocalization();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddScoped<IStatsService, StatsService>();
@@ -105,6 +124,7 @@ app.MapGet("/health", () => "Healthy!").AllowAnonymous();
 //app.AddLogsEndpoint();
 app.AddEveryEndpoint();
 app.MapControllers();
+app.MapHub<ChatHub>("/hubs/chat");
 Log.Information("Added Endpoints and Controllers to app");
 
 try

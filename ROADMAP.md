@@ -1,5 +1,4 @@
 ## Planned Features:
-    9. Messaging between users. (via SignalR hub with events)
     10. Add archivated groups
 
 ## Features to Polish yet:
@@ -24,5 +23,6 @@
 * AdminPanel.razor
 * MainPage.razor
 * LogsView.razor
+* Chatrooms.razor
 * Everything else already translated;
 

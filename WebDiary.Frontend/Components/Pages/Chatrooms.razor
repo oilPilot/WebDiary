@@ -1,0 +1,793 @@
+@page "/Chatrooms"
+@attribute [Authorize]
+@using System.Security.Cryptography
+@using System.Text
+@using Microsoft.AspNetCore.Authorization
+@using Blazored.LocalStorage
+@using Microsoft.AspNetCore.SignalR.Client
+@inject ILocalStorageService LocalStorage
+@inject HttpClient HttpClient
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@implements IAsyncDisposable
+
+<PageTitle>Chatrooms</PageTitle>
+
+<div class="container-fluid py-4 chatrooms-page">
+    <div class="row g-3">
+        <div class="col-lg-4">
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">
+                        <i class="bi bi-diagram-3-fill text-primary me-2"></i>
+                        Server Chatrooms
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <small class="text-muted d-block mb-2">
+                        Public/Admin rooms are server-backed and keep up to 150 messages from the last 72 hours.
+                    </small>
+
+                    <h6 class="mt-2">Public</h6>
+                    @foreach (var room in PublicServerRooms)
+                    {
+                        <button class="btn btn-outline-primary room-btn @(selectedRoom?.ServerRoomId == room.Id ? "active" : string.Empty)"
+                                @onclick="() => SelectServerRoomAsync(room)">
+                            @room.Name
+                        </button>
+                    }
+
+                    <h6 class="mt-3">Admin</h6>
+                    @foreach (var room in AdminServerRooms)
+                    {
+                        <button class="btn btn-outline-warning room-btn @(selectedRoom?.ServerRoomId == room.Id ? "active" : string.Empty)"
+                                @onclick="() => SelectServerRoomAsync(room)">
+                            @room.Name
+                        </button>
+                    }
+
+                    <!-- Creation of server rooms is disabled for simplicity.
+                    <div class="alert alert-secondary mb-0 mt-3">
+                        Server chatrooms are managed elsewhere. Creation is disabled here.
+                    </div> -->
+                </div>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">
+                        <i class="bi bi-house-lock-fill text-success me-2"></i>
+                        Local Chatrooms
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <small class="text-muted d-block mb-2">
+                        Local rooms are client-managed only. Join requires room name and secret shared outside the app.
+                    </small>
+
+                    @foreach (var room in localRooms)
+                    {
+                        <div class="d-flex gap-2 align-items-center mb-2">
+                            <button class="btn btn-outline-success room-btn flex-fill @(selectedRoom?.RoomKey == room.RoomKey ? "active" : string.Empty)"
+                                    @onclick="() => SelectLocalRoomAsync(room)">
+                                @room.Name
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm"
+                                    title="Delete local room"
+                                    @onclick="() => DeleteLocalRoomAsync(room)">
+                                <i class="bi bi-trash3"></i>
+                            </button>
+                        </div>
+                    }
+
+                    <div class="border rounded p-2 mt-3">
+                        <label class="form-label mb-1">Create local room</label>
+                        <InputText class="form-control mb-2" @bind-Value="newLocalRoomName" placeholder="Room name" />
+                        <InputText class="form-control mb-2" @bind-Value="newLocalRoomSecret" placeholder="Secret (optional, auto if empty)" />
+                        <button class="btn btn-sm btn-success" @onclick="CreateLocalRoomAsync">Create and Join</button>
+                    </div>
+
+                    <div class="border rounded p-2 mt-3">
+                        <label class="form-label mb-1">Join local room</label>
+                        <InputText class="form-control mb-2" @bind-Value="joinLocalRoomName" placeholder="Room name" />
+                        <InputText class="form-control mb-2" @bind-Value="joinLocalRoomSecret" placeholder="Shared secret" />
+                        <button class="btn btn-sm btn-outline-success" @onclick="JoinLocalRoomAsync">Join</button>
+                    </div>
+
+                    <div class="border rounded p-2 mt-3">
+                        <label class="form-label mb-1">Change local room secret</label>
+                        <InputSelect class="form-select mb-2" @bind-Value="changeSecretRoomId">
+                            <option value="">Select room</option>
+                            @foreach (var room in localRooms)
+                            {
+                                <option value="@room.Id">@room.Name</option>
+                            }
+                        </InputSelect>
+                        <InputText class="form-control mb-2" @bind-Value="changeSecretValue" placeholder="New secret" />
+                        <button class="btn btn-sm btn-outline-warning" @onclick="ChangeLocalRoomSecretAsync">Change Secret</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card shadow-sm chat-card">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-chat-dots-fill me-2"></i>
+                        @(selectedRoom?.DisplayName ?? "Select a chatroom")
+                    </h5>
+                    @if (selectedRoom is not null)
+                    {
+                        <span class="badge text-bg-secondary text-uppercase">@selectedRoom.RoomType</span>
+                    }
+                </div>
+                <div class="card-body">
+                    @if (isLoading || isConnecting)
+                    {
+                        <p class="mb-0">Connecting to chat...</p>
+                    }
+                    else if (!string.IsNullOrWhiteSpace(connectionError))
+                    {
+                        <div class="alert alert-danger mb-0">@connectionError</div>
+                    }
+                    else if (selectedRoom is null)
+                    {
+                        <p class="text-muted mb-0">Select any room to start chatting.</p>
+                    }
+                    else
+                    {
+                        @if (selectedRoom.RoomType == "local")
+                        {
+                            var localRoom = localRooms.FirstOrDefault(room => room.RoomKey == selectedRoom.RoomKey);
+                            if (localRoom is not null)
+                            {
+                                <div class="alert alert-secondary py-2 mb-3">
+                                    Share outside the app: <strong>@localRoom.Name</strong> + <strong>@localRoom.Secret</strong>
+                                </div>
+                            }
+                        }
+
+                        <div class="chat-thread mb-3">
+                            @if (CurrentMessages.Count == 0)
+                            {
+                                <p class="text-muted mb-0">No messages yet.</p>
+                            }
+                            else
+                            {
+                                @foreach (var message in CurrentMessages)
+                                {
+                                    <article class="chat-message @(message.IsFromCurrentUser ? "own" : string.Empty)">
+                                        <div class="chat-meta">
+                                            <strong>@message.Sender</strong>
+                                            <small>@message.SentAtUtc.ToLocalTime().ToString("HH:mm:ss")</small>
+                                        </div>
+                                        <div>@message.Content</div>
+                                    </article>
+                                }
+                            }
+                        </div>
+
+                        <div class="input-group">
+                            <input type="text" class="form-control"
+                                       @bind-Value="outgoingMessage"
+                                       @bind-Value:event="oninput"
+                                       @onkeydown="HandleMessageKeyDown"
+                                       placeholder="Type a message..." />
+                            <button class="btn btn-primary" @onclick="SendMessageAsync">Send</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private const string LocalRoomStorageKey = "chatrooms.local.rooms.v1";
+    private const string LocalRoomMessagesStorageKey = "chatrooms.local.messages.v1";
+    private const int MaxLocalMessages = 150;
+
+    private HubConnection? hubConnection;
+    private readonly List<ServerRoomSummary> serverRooms = [];
+    private readonly List<LocalRoomRecord> localRooms = [];
+    private readonly Dictionary<string, List<ChatMessageViewModel>> messagesByRoom = [];
+    private readonly Dictionary<string, List<LocalMessageRecord>> localMessagesByRoomKey = [];
+
+    private SelectedRoom? selectedRoom;
+
+    private bool isLoading = true;
+    private bool isConnecting;
+    private string connectionError = "";
+
+    private string newLocalRoomName = "";
+    private string newLocalRoomSecret = "";
+    private string joinLocalRoomName = "";
+    private string joinLocalRoomSecret = "";
+    private string changeSecretRoomId = "";
+    private string changeSecretValue = "";
+
+    private string outgoingMessage = "";
+    private string currentUserName = "";
+
+    private IEnumerable<ServerRoomSummary> PublicServerRooms => serverRooms.Where(room => room.Type == "public");
+    private IEnumerable<ServerRoomSummary> AdminServerRooms => serverRooms.Where(room => room.Type == "admin");
+
+    private List<ChatMessageViewModel> CurrentMessages =>
+        selectedRoom is not null && messagesByRoom.TryGetValue(selectedRoom.RoomKey, out var messages)
+            ? messages
+            : [];
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+
+        await InitializeAsync();
+        StateHasChanged();
+    }
+
+    private async Task InitializeAsync()
+    {
+        isConnecting = true;
+        connectionError = "";
+
+        try
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            currentUserName = authState.User.Identity?.Name ?? "";
+
+            localRooms.AddRange(await LoadLocalRoomsAsync());
+            await LoadLocalMessagesAsync();
+
+            await CreateHubConnectionAsync();
+            await LoadServerRoomsAsync();
+
+            var firstRoom = serverRooms.FirstOrDefault();
+            if (firstRoom is not null)
+            {
+                await SelectServerRoomAsync(firstRoom);
+            }
+        }
+        catch (Exception ex)
+        {
+            connectionError = $"Failed to initialize chat: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+            isConnecting = false;
+        }
+    }
+
+    private async Task CreateHubConnectionAsync()
+    {
+        var apiBaseAddress = HttpClient.BaseAddress ?? throw new Exception("API base address is missing.");
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(new Uri(apiBaseAddress, "/hubs/chat"), options =>
+            {
+                options.AccessTokenProvider = () => LocalStorage.GetItemAsync<string>("token").AsTask();
+            })
+            .WithAutomaticReconnect()
+            .Build();
+
+        hubConnection.On<ChatMessageDto>("ReceiveMessage", async message =>
+        {
+            if (!messagesByRoom.TryGetValue(message.RoomKey, out var roomMessages))
+            {
+                roomMessages = [];
+                messagesByRoom[message.RoomKey] = roomMessages;
+            }
+
+            var viewModel = ToViewModel(message);
+            roomMessages.Add(viewModel);
+            if (message.RoomType == "local")
+            {
+                PersistLocalMessage(message);
+            }
+            await InvokeAsync(StateHasChanged);
+        });
+
+        hubConnection.Reconnecting += _ =>
+        {
+            connectionError = "Chat reconnecting...";
+            return Task.CompletedTask;
+        };
+        hubConnection.Reconnected += _ =>
+        {
+            connectionError = "";
+            return Task.CompletedTask;
+        };
+
+        await hubConnection.StartAsync();
+    }
+
+    private async Task LoadServerRoomsAsync()
+    {
+        await EnsureHubConnectionReadyAsync();
+        var fetchedRooms = await hubConnection!.InvokeAsync<List<ServerRoomSummary>>("GetServerChatRoomsAsync");
+        serverRooms.Clear();
+        serverRooms.AddRange(fetchedRooms.OrderBy(room => room.Type).ThenBy(room => room.Name));
+    }
+
+    private async Task SelectServerRoomAsync(ServerRoomSummary room)
+    {
+        try
+        {
+            await EnsureHubConnectionReadyAsync();
+            await LeaveCurrentRoomAsync();
+
+            var result = await hubConnection!.InvokeAsync<ServerRoomJoinResult>("JoinServerRoomAsync", room.Id);
+            selectedRoom = new SelectedRoom
+            {
+                DisplayName = result.Room.Name,
+                RoomType = result.Room.Type,
+                RoomKey = result.RoomKey,
+                ServerRoomId = result.Room.Id
+            };
+            messagesByRoom[result.RoomKey] = result.Messages.Select(ToViewModel).ToList();
+            connectionError = "";
+        }
+        catch (Exception ex)
+        {
+            connectionError = ex.Message;
+        }
+    }
+
+    private async Task CreateLocalRoomAsync()
+    {
+        if (string.IsNullOrWhiteSpace(newLocalRoomName))
+        {
+            return;
+        }
+
+        var roomName = newLocalRoomName.Trim();
+        var roomSecret = string.IsNullOrWhiteSpace(newLocalRoomSecret)
+            ? Convert.ToHexString(RandomNumberGenerator.GetBytes(6))
+            : newLocalRoomSecret.Trim();
+        if (roomSecret.Length < 6)
+        {
+            connectionError = "Local room secret must be at least 6 characters.";
+            return;
+        }
+
+        var localRoom = new LocalRoomRecord
+        {
+            Id = Guid.NewGuid().ToString("N"),
+            Name = roomName,
+            Secret = roomSecret
+        };
+
+        localRooms.Add(localRoom);
+        await SaveLocalRoomsAsync();
+
+        newLocalRoomName = "";
+        newLocalRoomSecret = "";
+
+        await SelectLocalRoomAsync(localRoom);
+    }
+
+    private async Task JoinLocalRoomAsync()
+    {
+        if (string.IsNullOrWhiteSpace(joinLocalRoomName) || string.IsNullOrWhiteSpace(joinLocalRoomSecret))
+        {
+            return;
+        }
+
+        var roomName = joinLocalRoomName.Trim();
+        var roomSecret = joinLocalRoomSecret.Trim();
+        if (roomSecret.Length < 6)
+        {
+            connectionError = "Local room secret must be at least 6 characters.";
+            return;
+        }
+
+        try
+        {
+            await EnsureHubConnectionReadyAsync();
+            await LeaveCurrentRoomAsync();
+
+            var joinToken = BuildLocalJoinToken(roomName, roomSecret);
+            var roomKey = await hubConnection!.InvokeAsync<string>("JoinLocalRoomAsync", joinToken);
+            var savedRoom = localRooms.FirstOrDefault(room =>
+                room.Name.Equals(roomName, StringComparison.OrdinalIgnoreCase) &&
+                room.Secret == roomSecret);
+            if (savedRoom is not null)
+            {
+                savedRoom.RoomKey = roomKey;
+                await SaveLocalRoomsAsync();
+            }
+
+            selectedRoom = new SelectedRoom
+            {
+                DisplayName = roomName,
+                RoomType = "local",
+                RoomKey = roomKey,
+                ServerRoomId = null
+            };
+            if (!messagesByRoom.ContainsKey(roomKey))
+            {
+                messagesByRoom[roomKey] = LoadLocalMessagesForRoomKey(roomKey);
+            }
+
+            joinLocalRoomName = "";
+            joinLocalRoomSecret = "";
+            connectionError = "";
+        }
+        catch (Exception ex)
+        {
+            connectionError = ex.Message;
+        }
+    }
+
+    private async Task SelectLocalRoomAsync(LocalRoomRecord room)
+    {
+        try
+        {
+            await EnsureHubConnectionReadyAsync();
+            await LeaveCurrentRoomAsync();
+
+            var joinToken = BuildLocalJoinToken(room.Name, room.Secret);
+            var roomKey = await hubConnection!.InvokeAsync<string>("JoinLocalRoomAsync", joinToken);
+            room.RoomKey = roomKey;
+
+            selectedRoom = new SelectedRoom
+            {
+                DisplayName = room.Name,
+                RoomType = "local",
+                RoomKey = roomKey,
+                ServerRoomId = null
+            };
+            if (!messagesByRoom.ContainsKey(roomKey))
+            {
+                messagesByRoom[roomKey] = LoadLocalMessagesForRoomKey(roomKey);
+            }
+
+            await SaveLocalRoomsAsync();
+            connectionError = "";
+        }
+        catch (Exception ex)
+        {
+            connectionError = ex.Message;
+        }
+    }
+
+    private async Task DeleteLocalRoomAsync(LocalRoomRecord room)
+    {
+        var roomKey = !string.IsNullOrWhiteSpace(room.RoomKey)
+            ? room.RoomKey
+            : BuildLocalRoomKey(room.Name, room.Secret);
+
+        messagesByRoom.Remove(roomKey);
+        if (hubConnection is not null && hubConnection.State == HubConnectionState.Connected)
+        {
+            await hubConnection.InvokeAsync("LeaveRoomAsync", roomKey);
+        }
+
+        if (selectedRoom?.RoomType == "local" && selectedRoom.RoomKey == roomKey)
+        {
+            selectedRoom = null;
+        }
+
+        localRooms.Remove(room);
+        localMessagesByRoomKey.Remove(roomKey);
+        await SaveLocalMessagesAsync();
+        await SaveLocalRoomsAsync();
+    }
+
+    private async Task ChangeLocalRoomSecretAsync()
+    {
+        if (string.IsNullOrWhiteSpace(changeSecretRoomId) || string.IsNullOrWhiteSpace(changeSecretValue))
+        {
+            return;
+        }
+
+        var room = localRooms.FirstOrDefault(r => r.Id == changeSecretRoomId);
+        if (room is null)
+        {
+            connectionError = "Local room not found.";
+            return;
+        }
+
+        var oldKey = BuildLocalRoomKey(room.Name, room.Secret);
+        var newSecret = changeSecretValue.Trim();
+        if (newSecret.Length < 6)
+        {
+            connectionError = "Local room secret must be at least 6 characters.";
+            return;
+        }
+
+        room.Secret = newSecret;
+        room.RoomKey = "";
+        changeSecretValue = "";
+        changeSecretRoomId = "";
+        connectionError = "";
+        await SaveLocalRoomsAsync();
+
+        var newKey = BuildLocalRoomKey(room.Name, room.Secret);
+        if (localMessagesByRoomKey.TryGetValue(oldKey, out var stored))
+        {
+            localMessagesByRoomKey.Remove(oldKey);
+            localMessagesByRoomKey[newKey] = stored;
+            await SaveLocalMessagesAsync();
+        }
+
+        if (messagesByRoom.TryGetValue(oldKey, out var cached))
+        {
+            messagesByRoom.Remove(oldKey);
+            messagesByRoom[newKey] = cached;
+        }
+
+        if (selectedRoom?.RoomType == "local" && selectedRoom.DisplayName == room.Name)
+        {
+            await SelectLocalRoomAsync(room);
+        }
+    }
+
+    private async Task SendMessageAsync()
+    {
+        if (selectedRoom is null || string.IsNullOrWhiteSpace(outgoingMessage))
+        {
+            return;
+        }
+
+        try
+        {
+            await EnsureHubConnectionReadyAsync();
+            var message = outgoingMessage.Trim();
+
+            if (selectedRoom.ServerRoomId is int serverRoomId)
+            {
+                await hubConnection!.InvokeAsync("SendServerMessageAsync", serverRoomId, message);
+            }
+            else
+            {
+                await hubConnection!.InvokeAsync("SendLocalMessageAsync", selectedRoom.RoomKey, message);
+            }
+
+            outgoingMessage = "";
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            connectionError = ex.Message;
+        }
+    }
+
+    private async Task HandleMessageKeyDown(KeyboardEventArgs args)
+    {
+        if (args.Key == "Enter")
+        {
+            await SendMessageAsync();
+        }
+    }
+
+    private async Task LeaveCurrentRoomAsync()
+    {
+        if (hubConnection is null || selectedRoom is null || string.IsNullOrWhiteSpace(selectedRoom.RoomKey))
+        {
+            return;
+        }
+
+        await hubConnection.InvokeAsync("LeaveRoomAsync", selectedRoom.RoomKey);
+    }
+
+    private async Task EnsureHubConnectionReadyAsync()
+    {
+        if (hubConnection is null)
+        {
+            throw new Exception("Chat connection is not initialized.");
+        }
+
+        if (hubConnection.State == HubConnectionState.Disconnected)
+        {
+            await hubConnection.StartAsync();
+        }
+    }
+
+    private static string BuildLocalJoinToken(string roomName, string roomSecret)
+    {
+        return $"{roomName.Trim()}::{roomSecret.Trim()}";
+    }
+
+    private static string BuildLocalRoomKey(string roomName, string roomSecret)
+    {
+        var joinToken = BuildLocalJoinToken(roomName, roomSecret);
+        var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(joinToken));
+        return $"local-room:{Convert.ToHexString(bytes)}";
+    }
+
+    private async Task<List<LocalRoomRecord>> LoadLocalRoomsAsync()
+    {
+        try
+        {
+            var rooms = await LocalStorage.GetItemAsync<List<LocalRoomRecord>>(LocalRoomStorageKey) ?? [];
+            var updated = false;
+            foreach (var room in rooms)
+            {
+                if (string.IsNullOrWhiteSpace(room.Id))
+                {
+                    room.Id = Guid.NewGuid().ToString("N");
+                    updated = true;
+                }
+            }
+
+            if (updated)
+            {
+                await LocalStorage.SetItemAsync(LocalRoomStorageKey, rooms);
+            }
+
+            return rooms;
+        }
+        catch
+        {
+            return [];
+        }
+    }
+
+    private async Task SaveLocalRoomsAsync()
+    {
+        await LocalStorage.SetItemAsync(LocalRoomStorageKey, localRooms);
+    }
+
+    private async Task LoadLocalMessagesAsync()
+    {
+        try
+        {
+            var stored = await LocalStorage.GetItemAsync<Dictionary<string, List<LocalMessageRecord>>>(LocalRoomMessagesStorageKey);
+            if (stored is null)
+            {
+                return;
+            }
+
+            localMessagesByRoomKey.Clear();
+            var migrated = false;
+            foreach (var entry in stored)
+            {
+                if (entry.Key.StartsWith("local-room:", StringComparison.OrdinalIgnoreCase))
+                {
+                    localMessagesByRoomKey[entry.Key] = entry.Value ?? [];
+                    continue;
+                }
+
+                var room = localRooms.FirstOrDefault(r => r.Id == entry.Key);
+                if (room is not null)
+                {
+                    var roomKey = BuildLocalRoomKey(room.Name, room.Secret);
+                    localMessagesByRoomKey[roomKey] = entry.Value ?? [];
+                    migrated = true;
+                }
+            }
+
+            if (migrated)
+            {
+                await SaveLocalMessagesAsync();
+            }
+        }
+        catch
+        {
+            // Ignore message cache errors
+        }
+    }
+
+    private async Task SaveLocalMessagesAsync()
+    {
+        await LocalStorage.SetItemAsync(LocalRoomMessagesStorageKey, localMessagesByRoomKey);
+    }
+
+    private List<ChatMessageViewModel> LoadLocalMessagesForRoomKey(string roomKey)
+    {
+        if (localMessagesByRoomKey.TryGetValue(roomKey, out var stored))
+        {
+            return stored.Select(record => new ChatMessageViewModel
+            {
+                Sender = record.Sender,
+                Content = record.Content,
+                SentAtUtc = record.SentAtUtc,
+                IsFromCurrentUser = string.Equals(record.Sender, currentUserName, StringComparison.Ordinal)
+            }).ToList();
+        }
+
+        return [];
+    }
+
+    private void PersistLocalMessage(ChatMessageDto message)
+    {
+        if (!localMessagesByRoomKey.TryGetValue(message.RoomKey, out var stored))
+        {
+            stored = [];
+            localMessagesByRoomKey[message.RoomKey] = stored;
+        }
+
+        stored.Add(new LocalMessageRecord
+        {
+            Sender = message.Sender,
+            Content = message.Content,
+            SentAtUtc = message.SentAtUtc
+        });
+
+        if (stored.Count > MaxLocalMessages)
+        {
+            stored.RemoveRange(0, stored.Count - MaxLocalMessages);
+        }
+
+        _ = SaveLocalMessagesAsync();
+    }
+
+    private ChatMessageViewModel ToViewModel(ChatMessageDto message)
+    {
+        return new ChatMessageViewModel
+        {
+            Sender = message.Sender,
+            Content = message.Content,
+            SentAtUtc = message.SentAtUtc,
+            IsFromCurrentUser = string.Equals(message.Sender, currentUserName, StringComparison.Ordinal)
+        };
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (hubConnection is null)
+        {
+            return;
+        }
+
+        await LeaveCurrentRoomAsync();
+        await hubConnection.DisposeAsync();
+    }
+
+    private sealed class ServerRoomSummary
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+        public string Type { get; set; } = "";
+    }
+
+    private sealed class ChatMessageDto
+    {
+        public string RoomKey { get; set; } = "";
+        public string RoomType { get; set; } = "";
+        public string Sender { get; set; } = "";
+        public string Content { get; set; } = "";
+        public DateTime SentAtUtc { get; set; }
+    }
+
+    private sealed class ServerRoomJoinResult
+    {
+        public string RoomKey { get; set; } = "";
+        public ServerRoomSummary Room { get; set; } = new();
+        public List<ChatMessageDto> Messages { get; set; } = [];
+    }
+
+    private sealed class LocalRoomRecord
+    {
+        public string Id { get; set; } = "";
+        public string Name { get; set; } = "";
+        public string Secret { get; set; } = "";
+        public string RoomKey { get; set; } = "";
+    }
+
+    private sealed class LocalMessageRecord
+    {
+        public string Sender { get; set; } = "";
+        public string Content { get; set; } = "";
+        public DateTime SentAtUtc { get; set; }
+    }
+
+    private sealed class ChatMessageViewModel
+    {
+        public string Sender { get; set; } = "";
+        public string Content { get; set; } = "";
+        public DateTime SentAtUtc { get; set; }
+        public bool IsFromCurrentUser { get; set; }
+    }
+
+    private sealed class SelectedRoom
+    {
+        public string DisplayName { get; set; } = "";
+        public string RoomType { get; set; } = "";
+        public string RoomKey { get; set; } = "";
+        public int? ServerRoomId { get; set; }
+    }
+}

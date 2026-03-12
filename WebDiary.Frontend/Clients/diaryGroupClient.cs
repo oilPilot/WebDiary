@@ -28,6 +28,12 @@ public class DiaryGroupClient
         return await response.Content.ReadFromJsonAsync<List<DiaryGroup>>() ?? new List<DiaryGroup>();
     }
         
+    virtual public async Task<List<DiaryGroup>> GetArchivedGroupsAsync(int userId)
+    {
+        var response = await AuthorizedRequestAsync(() => httpClient.GetAsync("groups/archived"));
+        return await response.Content.ReadFromJsonAsync<List<DiaryGroup>>() ?? new List<DiaryGroup>();
+    }
+        
     virtual public async Task<DiaryGroup> GetGroupAsync(int id)
     {
         var response = await AuthorizedRequestAsync(() => httpClient.GetAsync($"groups/{id}"));

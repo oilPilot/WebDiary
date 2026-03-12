@@ -30,13 +30,37 @@ public static class GroupEndpoints
             if (principal.IsInRole("Admin"))
             {
                 return Results.Ok(await dbContext.diaryGroups
+                    .Where(diaryGroup => !diaryGroup.IsArchived)
                     .Select(diaryGroup => diaryGroup.toDTO())
                     .AsNoTracking()
                     .ToListAsync());
             }
 
             return Results.Ok(await dbContext.diaryGroups
-                .Where(diaryGroup => diaryGroup.UserId == userId.Value)
+                .Where(diaryGroup => diaryGroup.UserId == userId.Value && !diaryGroup.IsArchived)
+                .Select(diaryGroup => diaryGroup.toDTO())
+                .AsNoTracking()
+                .ToListAsync());
+        });
+        group.MapGet("/archived", async (ClaimsPrincipal principal, DiariesContext dbContext) =>
+        {
+            var userId = GetCurrentUserId(principal);
+            if (userId is null)
+            {
+                return Results.Unauthorized();
+            }
+
+            if (principal.IsInRole("Admin"))
+            {
+                return Results.Ok(await dbContext.diaryGroups
+                    .Where(diaryGroup => diaryGroup.IsArchived)
+                    .Select(diaryGroup => diaryGroup.toDTO())
+                    .AsNoTracking()
+                    .ToListAsync());
+            }
+
+            return Results.Ok(await dbContext.diaryGroups
+                .Where(diaryGroup => diaryGroup.UserId == userId.Value && diaryGroup.IsArchived)
                 .Select(diaryGroup => diaryGroup.toDTO())
                 .AsNoTracking()
                 .ToListAsync());
@@ -49,8 +73,8 @@ public static class GroupEndpoints
             }
 
             return Results.Ok(await dbContext.diaryGroups
-                .Where(group => group.UserId == userId)
-                .Select(group => group.toDTO())
+                .Where(diaryGroup => diaryGroup.UserId == userId && !diaryGroup.IsArchived)
+                .Select(diaryGroup => diaryGroup.toDTO())
                 .AsNoTracking()
                 .ToListAsync());
         });

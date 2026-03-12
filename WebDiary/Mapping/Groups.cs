@@ -12,7 +12,8 @@ public static class Groups
         return new DiaryGroup() {
             Name = createGroup.Name,
             UserId = createGroup.UserId,
-            PinCode = !string.IsNullOrEmpty(createGroup.PinCode) ? hasher.HashPassword(new DiaryGroup() {Name = ""}, createGroup.PinCode) : ""
+            PinCode = !string.IsNullOrEmpty(createGroup.PinCode) ? hasher.HashPassword(new DiaryGroup() {Name = ""}, createGroup.PinCode) : "",
+            IsArchived = false
         };
     }
     public static DiaryGroup toEntity(this UpdateGroupDTO newGroup, int id, int userId) {
@@ -21,14 +22,16 @@ public static class Groups
             Id = id,
             Name = newGroup.Name,
             UserId = userId,
-            PinCode = !string.IsNullOrEmpty(newGroup.PinCode) ? hasher.HashPassword(new DiaryGroup() {Name = ""}, newGroup.PinCode) : ""
+            PinCode = !string.IsNullOrEmpty(newGroup.PinCode) ? hasher.HashPassword(new DiaryGroup() {Name = ""}, newGroup.PinCode) : "",
+            IsArchived = newGroup.IsArchived
         };
     }
     public static GroupDTO toDTO(this DiaryGroup group) {
         return new GroupDTO {
             Id = group.Id,
             Name = group.Name,
-            PinCode = !string.IsNullOrEmpty(group.PinCode) ? "Exists" : ""
+            PinCode = !string.IsNullOrEmpty(group.PinCode) ? "Exists" : "",
+            IsArchived = group.IsArchived
         };
     }
 }

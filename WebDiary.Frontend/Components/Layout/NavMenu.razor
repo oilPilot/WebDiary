@@ -50,6 +50,11 @@
                         <span class="bi bi-chat-dots-fill me-3" aria-hidden="true"></span> Chatrooms
                     </NavLink>
                 </div>
+                <div class="nav-item px-3 d-flex">
+                    <NavLink class="nav-link" href="/ArchivedGroups" Match="NavLinkMatch.All">
+                        <span class="bi bi-archive me-3" aria-hidden="true"></span> Archived Groups
+                    </NavLink>
+                </div>
 
                 <AuthorizeView Roles="Admin">
                     <Authorized>
@@ -74,6 +79,8 @@
                                     @onclick="() => OpenPinGroup(group)" @onclick:preventDefault="true" @onclick:stopPropagation="true"/>
                                 <button type="button" class="btn btn-secondary biLocal bi-pencil-square-black-nav-menu"
                                     @onclick="() => OpenPinChangeUpdating(group)" @onclick:preventDefault="true" @onclick:stopPropagation="true"/>
+                                <button type="button" class="btn btn-warning biLocal bi-archive"
+                                    @onclick="() => OpenArchiveConfirmation(group)" @onclick:preventDefault="true" @onclick:stopPropagation="true"/>
                                 <button type="button" class="btn btn-danger btn-close"
                                     @onclick="() => OpenPinChangeDeleting(group)" @onclick:preventDefault="true" @onclick:stopPropagation="true"/>
                                 @* "propagation" generally means the spreading or dissemination of information or changes through a system
@@ -166,6 +173,17 @@
             </FooterTemplate>
         </DialogueTemplate>
 
+        <DialogueTemplate @ref="modalArchiveConfirm" HeaderText=@("Archive Group")>
+            <BodyTemplate>
+                <p class="fs-5">Are you sure you want to archive this group?</p>
+                <p class="text-muted">You can unarchive it later from the Archived Groups page.</p>
+            </BodyTemplate>
+            <FooterTemplate>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="() => modalArchiveConfirm!.Close()">Cancel</button>
+                <button type="button" class="btn btn-warning" @onclick="ArchiveGroupAsync">Archive</button>
+            </FooterTemplate>
+        </DialogueTemplate>
+
     </nav>
 </div>
 
@@ -177,6 +195,7 @@
     private DialogueTemplate? modalPin;
     private DialogueTemplate? cookieAgreementModal;
     private DialogueTemplate? modalLogout;
+    private DialogueTemplate? modalArchiveConfirm;
     [CascadingParameter] protected Task<AuthenticationState>? AuthStat { get; set; }
 
     protected async override Task OnInitializedAsync() {
@@ -288,6 +307,21 @@
         HeaderName = $"{LocalizatorMain["EditingGroupHeader"]}\"{group.Name}\"";
         if(modalChangeGroup != null)
             modalChangeGroup.Open();
+    }
+
+    private void OpenArchiveConfirmation(DiaryGroup _group) {
+        group = _group;
+        if(modalArchiveConfirm != null)
+            modalArchiveConfirm.Open();
+    }
+
+    private async Task ArchiveGroupAsync() {
+        ArgumentNullException.ThrowIfNull(group);
+        group.IsArchived = true;
+        await DiaryGroupClient.UpdateGroupAsync(group);
+        if(modalArchiveConfirm != null)
+            modalArchiveConfirm.Close();
+        NavigationManager.Refresh(true);
     }
 
 }

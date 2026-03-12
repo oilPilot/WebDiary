@@ -24,14 +24,14 @@ WebDiary consists of three containerized services:
 |---------|-------|------|---------|
 | **backend** | webdiary:latest | 5281 | ASP.NET Core API |
 | **frontend** | webdiary-frontend:latest | 5282 | Blazor Server UI |
-| **db** | postgres:16-alpine | 5432 | PostgreSQL Database |
+| **db** | postgres:16 | 5432 | PostgreSQL Database |
 
 ### Architecture Benefits
 
-- 🐳 **Containerization**: Each service runs in isolated environment
-- 📦 **Scalability**: Easy horizontal scaling with orchestration tools
-- 🔄 **Consistency**: Same environment across development and production
-- 🚀 **Deployment**: One-command deployment with Docker Compose
+- **Containerization**: Each service runs in isolated environment
+- **Scalability**: Easy horizontal scaling with orchestration tools
+- **Consistency**: Same environment across development and production
+- **Deployment**: One-command deployment with Docker Compose
 
 ## Quick Start
 
@@ -654,25 +654,25 @@ docker-compose exec db pg_isready -U webdiary
 
 ## Best Practices
 
-✅ **Security**
+**Security**
 - Use secrets for sensitive data
 - Run containers as non-root user (already implemented)
 - Keep base images updated
 - Scan images for vulnerabilities
 
-✅ **Performance**
+**Performance**
 - Use multi-stage builds (already implemented)
 - Enable build cache
 - Optimize layer caching
 - Use .dockerignore
 
-✅ **Reliability**
+**Reliability**
 - Use restart policies
 - Implement health checks
 - Set resource limits
 - Log aggregation
 
-✅ **Maintenance**
+**Maintenance**
 - Tag images with versions
 - Document configuration
 - Test before production

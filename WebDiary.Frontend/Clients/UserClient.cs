@@ -31,7 +31,7 @@ public class UserClient
     //virtual public async Task<User> GetUserByEmailAsync(string email) =>
     //    await httpClient.GetFromJsonAsync<User>($"users/byemail/{email}") ?? throw new Exception("User wasn't found");
 
-    public async Task AddUserAsync(User user) {
+    virtual public async Task AddUserAsync(User user) {
         var response = await httpClient.PostAsJsonAsync<User>("users", user);
         if(response.StatusCode == System.Net.HttpStatusCode.Conflict) {
             throw new InvalidOperationException("UsernameAlreadyUsed");

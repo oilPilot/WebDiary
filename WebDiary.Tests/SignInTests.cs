@@ -1,4 +1,5 @@
 using Bunit;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Moq;
@@ -49,6 +50,9 @@ public class SigninTests : TestContext
         mockUserClient.Setup(u => u.GetUsersAsync()).ReturnsAsync(new List<User> {
             new User { UserName = "existing" }
         });
+        // Mock AddUserAsync to throw exception for existing username
+        mockUserClient.Setup(u => u.AddUserAsync(It.IsAny<User>()))
+            .ThrowsAsync(new InvalidOperationException("UsernameAlreadyUsed"));
 
         Services.AddSingleton<UserClient>(mockUserClient.Object);
         RegisterMocks(skipUserClient: true);

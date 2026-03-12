@@ -53,34 +53,6 @@ WebDiary is a comprehensive digital diary platform for personal journaling and m
 - System statistics and usage analytics
 - User activity monitoring
 
-### Planned Features
-
-**Enhanced Collaboration**
-- Shared diary groups for collaboration with friends
-- Role-based access control for group members
-- Real-time chat and discussions within groups
-- Group activity tracking and audit logs
-
-**Intelligence & Automation**
-- Automatic mood suggestion using AI emoji analysis
-- Custom mood scoring system
-- Statistics caching for performance optimization
-
-**Email & Notifications**
-- Email notifications for account events
-- Email-based account recovery (in development)
-- Login notifications
-
-**Advanced Features**
-- Mobile application (React Native)
-- Advanced search with Elasticsearch
-- Data encryption at rest
-- Multi-factor authentication (MFA)
-- Two-factor authentication (2FA)
-- API versioning
-- GraphQL API option
-- Dark mode support
-
 ## Technology Stack
 
 ### Backend
@@ -99,8 +71,7 @@ WebDiary is a comprehensive digital diary platform for personal journaling and m
 - **.NET Target**: net9.0
 - **UI Framework**: Bootstrap Blazor 9.4.2
 - **Charts**: Plotly.Blazor for interactive data visualization
-- **Rich Text Editor**: Blazored Text Editor
-- **Storage**: Blazored Local Storage + Session Storage
+- **Rich Text Editor**: Quilljs
 - **Date Picker**: BlazorDateRangePicker
 - **HTTP Client**: RestSharp
 - **Authentication**: JWT with custom AuthenticationStateProvider
@@ -116,48 +87,6 @@ WebDiary is a comprehensive digital diary platform for personal journaling and m
 - **Orchestration**: Docker Compose
 - **Development Environment**: VS Code / Visual Studio 2022
 - **CI/CD Ready**: Current deployment on Render
-
-## Project Structure
-
-```
-WebDiary/
-├── WebDiary/                    # Backend API
-│   ├── Controller/              # API controllers (Auth, Stats, Export, etc.)
-│   ├── Endpoints/               # Minimal APIs for diary, groups, logs, users
-│   ├── Services/                # Business logic (Auth, Export, Stats, Email)
-│   ├── Data/                    # EF Core DbContext and extensions
-│   ├── Entities/                # Domain models
-│   ├── DTO/                     # Data transfer objects
-│   ├── Mapping/                 # Entity to DTO mapping
-│   ├── Helpers/                 # Utilities (PDF export, HTML sanitization, mood handling)
-│   ├── Hubs/                    # SignalR hub for real-time chat
-│   ├── Resources/               # Localized strings
-│   ├── Model/                   # API request models
-│   ├── Properties/              # Launch settings
-│   ├── Dockerfile               # Backend container image
-│   ├── Program.cs               # Application startup configuration
-│   ├── appsettings.json         # Configuration
-│   └── WebDiary.csproj          # Backend project file
-│
-├── WebDiary.Frontend/           # Blazor Server Frontend
-│   ├── Components/              # Razor components and pages
-│   ├── Clients/                 # HTTP clients for API communication
-│   ├── Models/                  # Frontend view models
-│   ├── Services/                # Frontend services
-│   ├── Properties/              # Launch settings
-│   ├── Dockerfile               # Frontend container image
-│   ├── Program.cs               # Frontend startup configuration
-│   ├── appsettings.json         # Configuration
-│   └── WebDiary.Frontend.csproj # Frontend project file
-│
-├── WebDiary.Tests/              # Unit tests
-│
-├── docker-compose.yml           # Multi-service container orchestration
-├── .env.example                 # Environment variables template
-├── Dockerfile                   # (see service-specific Dockerfiles)
-├── ROADMAP.md                   # Feature roadmap
-└── README.md                    # This file
-```
 
 ## Installation & Setup
 
@@ -182,7 +111,6 @@ WebDiary/
    # Edit .env with your configuration:
    # - DIARIES_CONNECTION_STRING
    # - JWT_TOKEN_KEY (use a strong secret)
-   # - MAILGUN_API_KEY (optional, for email features)
    ```
 
 3. **Set up PostgreSQL database**
@@ -226,39 +154,6 @@ docker-compose up -d
 # Database: localhost:5432
 ```
 
-## API Endpoints
-
-### Authentication
-- `POST /auth/jwttoken/login` - Login and receive JWT token
-- `POST /auth/refresh` - Refresh JWT token
-- `POST /auth/reset-password` - Reset password
-- `POST /auth/verify-pin` - Verify group PIN
-
-### Diary Management
-- `GET /diaries` - Get user's diaries
-- `POST /diaries` - Create new diary entry
-- `GET /diaries/{id}` - Get specific diary
-- `PUT /diaries/{id}` - Update diary
-- `DELETE /diaries/{id}` - Delete diary
-
-### Groups
-- `GET /groups` - Get user's groups
-- `POST /groups` - Create new group
-- `PUT /groups/{id}` - Update group
-- `DELETE /groups/{id}` - Delete group
-- `POST /groups/{id}/members` - Add member to group
-
-### Statistics
-- `GET /stats/dashboard` - Get dashboard statistics
-- `GET /stats/mood-trends` - Get mood trend data
-- `GET /stats/activity` - Get activity metrics
-
-### Export
-- `POST /export/pdf` - Export diary as PDF
-
-### Chat (SignalR)
-- WebSocket connection: `/hubs/chat`
-
 ## Configuration
 
 ### Environment Variables
@@ -278,7 +173,6 @@ Modify `appsettings.json` for additional configuration:
 - Logging levels
 - JWT issuer and audience
 - Frontend URL
-- CORS settings
 - Database options
 
 ## Development
@@ -329,13 +223,6 @@ dotnet publish -c Release -o ./publish
 - Two-factor authentication (2FA)
 - Rate limiting
 - Request signing
-
-## Performance Optimizations
-
-- **Database Connection Pooling**: DbContextPool for efficient connection management
-- **Statistics Caching**: In-memory caching for frequently accessed stats
-- **Entity Framework Optimization**: Select-only queries, lazy loading considerations
-- **Serilog Buffering**: Efficient structured logging
 
 ## Development Status
 
@@ -397,7 +284,7 @@ This project demonstrates:
 
 - **Issues**: GitHub Issues
 - **Email**: matveyeresko1@gmail.com
-- **Portfolio**: [\[Your Portfolio Link\]](https://oilpilot.github.io/Portfolio/)
+- **Portfolio**: [Portfolio Link](https://oilpilot.github.io/Portfolio/)
 
 ---
 

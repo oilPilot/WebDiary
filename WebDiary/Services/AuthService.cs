@@ -29,7 +29,7 @@ public class AuthService : IAuthService
     {
         var group = await dbContext.diaryGroups.FindAsync(groupId);
         if (group == null)
-            throw new Exception("Not found group");
+            return PasswordVerificationResult.Failed;
         if(string.IsNullOrEmpty(group.PinCode)) {
             return PasswordVerificationResult.Failed;
         }
@@ -41,7 +41,7 @@ public class AuthService : IAuthService
     {
         var user = await dbContext.users.FindAsync(userId);
         if (user == null)
-            throw new Exception("Not found user");
+            return PasswordVerificationResult.Failed;
         var hasher = new PasswordHasher<User>();
         return hasher.VerifyHashedPassword(user, user.Password, password);
     }
@@ -62,7 +62,7 @@ public class AuthService : IAuthService
     {
         var user = await dbContext.users.FindAsync(userId);
         if (user == null)
-            throw new Exception("Not found user");
+            return;
         var hasher = new PasswordHasher<User>();
         user.MasterPassword = hasher.HashPassword(user, masterPassword);
         await dbContext.SaveChangesAsync();

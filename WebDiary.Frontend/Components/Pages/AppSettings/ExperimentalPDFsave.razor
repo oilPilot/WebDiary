@@ -4,16 +4,22 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IStringLocalizer<Resources.SettingsResource> Localizator
 
-<p style="margin-top: 10px;">@Localizator["SavePDFText"]</p>
-<select class="ms-2" @bind="selectedGroupId">
-    <option value="0">@Localizator["MainSavePDFOption"]</option>
-    @if(groups != null) {
-        @foreach(DiaryGroup group in groups) {
-            <option value="@group.Id">@group.Name</option>
-        }
-    }
-</select>
-<button class="btn btn-secondary ms-2" @onclick="SaveAsPdf">@Localizator["SavePDFButton"]</button>
+<div class="settings-card">
+    <div class="settings-content">
+        <span class="settings-title">@Localizator["SavePDFText"]</span>
+    </div>
+    <div class="settings-actions">
+        <select class="form-select settings-select" @bind="selectedGroupId">
+            <option value="0">@Localizator["MainSavePDFOption"]</option>
+            @if(groups != null) {
+                @foreach(DiaryGroup group in groups) {
+                    <option value="@group.Id">@group.Name</option>
+                }
+            }
+        </select>
+        <button class="btn btn-outline-primary" @onclick="SaveAsPdf">@Localizator["SavePDFButton"]</button>
+    </div>
+</div>
 
 @code {
     List<DiaryGroup>? groups;

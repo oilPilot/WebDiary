@@ -1,19 +1,19 @@
 ﻿@using BootstrapBlazor.Components
 
-<div class="modal fade show" tabindex="-1" style="display: @ModalDisplay;">
+<div class="modal fade show wd-dialogue" tabindex="-1" style="display: @ModalDisplay;">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content shadow-lg border-0">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title fw-bold">
+        <div class="modal-content wd-dialogue-content">
+            <div class="modal-header wd-dialogue-header">
+                <div class="wd-dialogue-title">
                     <i class="bi bi-info-circle-fill me-2"></i>
-                    @HeaderText
-                </h5>
+                    <span>@HeaderText</span>
+                </div>
                 <button type="button" class="btn-close btn-close-white" data-dismiss="modal" aria-label="Close" @onclick="() => Close()" />
             </div>
-            <div class="modal-body p-4">
+            <div class="modal-body wd-dialogue-body">
                 @BodyTemplate
             </div>
-            <div class="modal-footer bg-light">
+            <div class="modal-footer wd-dialogue-footer">
                 @FooterTemplate
             </div>
         </div>

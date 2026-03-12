@@ -6,41 +6,52 @@
 @inject ISessionStorageService SessionStorage
 @inject IConfiguration Configuration
 
-<PageTitle>MyDiary</PageTitle>
+<PageTitle>WebDiary</PageTitle>
 
-<div class="page">
+<div class="page app-shell">
     @if(AwakenedBackend == true) {
-    <div class="sidebar" style="z-index: 5;">
-        <NavMenu />
-    </div>
+        <aside class="sidebar">
+            <NavMenu />
+        </aside>
 
-    <main class="content px-4">
-    <div style="right: 10px;position: absolute;">
-        <a href="/privacy-policy">@Localizator["PrivacyPolicy"]</a>
-        <a href="/terms-of-service"class="ms-4">@Localizator["TermsOfService"]</a>
-    </div>
-    <footer class="text-center bg-body-tertiary fixed-bottom" style="padding-top: 0.4rem; padding-bottom: 0.4rem; z-index: 1;">
-        <a href="@GitHubUrl"class="ms-4">@Localizator["GitHub"]</a>
-        <a href="@PortfolioUrl"class="ms-4">@Localizator["Portfolio"]</a>
-        <a href="@ContactUrl"class="ms-4">@Localizator["Contact"]</a>
-    </footer>
-        @Body
-    </main>
+        <div class="app-main">
+            <header class="app-topbar">
+                <div class="app-topbar-links">
+                    <a class="app-topbar-link" href="/privacy-policy">@Localizator["PrivacyPolicy"]</a>
+                    <a class="app-topbar-link" href="/terms-of-service">@Localizator["TermsOfService"]</a>
+                </div>
+            </header>
+
+            <main class="content">
+                @Body
+            </main>
+
+            <footer class="app-footer">
+                <div class="app-footer-links">
+                    <a class="app-footer-link" href="@GitHubUrl">@Localizator["GitHub"]</a>
+                    <a class="app-footer-link" href="@PortfolioUrl">@Localizator["Portfolio"]</a>
+                    <a class="app-footer-link" href="@ContactUrl">@Localizator["Contact"]</a>
+                </div>
+            </footer>
+        </div>
     }
 
     @if(AwakenedBackend != true) {
-        <div class="sidebar">
+        <aside class="sidebar">
             <DummyNavMenu />
-        </div>
+        </aside>
 
-        <div class="modal-backdrop fade show">
-            <p class="fs-2 fw-semibold" style="position: absolute; left: 50vw; top: 40vh;">
-                @if(AwakenedBackend == false) {
-                    @Localizator["AwakeningBackend"]
-                } else {
-                    @Localizator["Loading"]
-                }
-            </p>
+        <div class="app-blocker">
+            <div class="app-blocker-card">
+                <div class="spinner-border text-info" role="status" aria-hidden="true"></div>
+                <p class="app-blocker-text">
+                    @if(AwakenedBackend == false) {
+                        @Localizator["AwakeningBackend"]
+                    } else {
+                        @Localizator["Loading"]
+                    }
+                </p>
+            </div>
         </div>
     }
 </div>

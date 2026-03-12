@@ -1,28 +1,28 @@
-## Planned Features:
-    10. Add archivated groups
+# Roadmap
 
-## Features to Polish yet:
-    1. Mood tracking
-    Polishing:  At midnight all empty mood states will be send to AI for setting emoji;
-    4. Statistics dashboard
-    Polishing:  Allow for Users to set points for certain mood; add caching;
+Updated March 12, 2026.
 
-## Known Issues:
-    Currently none;
+## Planned features
+- None scheduled.
 
-## Architecture improvements:
-    Currently none;
+## In progress or polishing
+- Mood tracking: at midnight, auto-fill missing mood entries with AI emoji suggestions.
+- Statistics dashboard: allow custom mood scoring and add caching.
 
-## UI/UX polishing tasks:
-    Screenshots are too old, needs updating.
+## UI and UX
+- Refresh screenshots in `screenshots/` and README.
 
-## Places to translate:
-* Home.razor
-* ManageUsersAdmin.razor
-* Statistics.razor
-* AdminPanel.razor
-* MainPage.razor
-* LogsView.razor
-* Chatrooms.razor
-* Everything else already translated;
+## Known issues
+- None reported.
 
+## Architecture improvements
+- None scheduled.
+
+## Localization gaps
+- Home.razor
+- ManageUsersAdmin.razor
+- Statistics.razor
+- AdminPanel.razor
+- MainPage.razor
+- LogsView.razor
+- Chatrooms.razor

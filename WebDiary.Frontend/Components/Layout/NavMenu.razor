@@ -12,107 +12,137 @@
 @inject HttpClient HttpClient
 @rendermode InteractiveServer
 
-<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">@topName</a>
-    </div>
-</div>
-
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
-
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="nav flex-column">
-        <div class="nav-item px-3 d-flex">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="biLocal bi-house-door-fill-nav-menu" aria-hidden="true"></span> @LocalizatorLayout["HomeTitle"]
-            </NavLink>
+<div class="app-nav">
+    <div class="nav-header">
+        <div class="nav-brand">
+            <div class="nav-mark">WD</div>
+            <div class="nav-brand-text">
+                <span class="nav-title">WebDiary</span>
+                @if(!string.IsNullOrWhiteSpace(topName)) {
+                    <span class="nav-subtitle">@topName</span>
+                }
+            </div>
         </div>
+    </div>
 
-        <AuthorizeView Context="navbarContext">
-            <Authorized>
-                <div class="nav-item px-3 d-flex">
-                    <NavLink class="nav-link" href="/Users" Match="NavLinkMatch.All">
-                        <span class="biLocal bi-person-fill-nav-menu" aria-hidden="true"></span> @LocalizatorLayout["ManageTitle"]
-                    </NavLink>
-                </div>
-                <div class="nav-item px-3 d-flex">
-                    <NavLink class="nav-link" @onclick="() => modalLogout!.Open()" Match="NavLinkMatch.All">
-                        <span class="biLocal bi-person-dash-nav-menu" aria-hidden="true"></span> @LocalizatorLayout["LogoutTitle"]
-                    </NavLink>
-                </div>
-                <div class="nav-item px-3 d-flex">
-                    <NavLink class="nav-link" href="/Statistics" Match="NavLinkMatch.All">
-                        <span class="bi bi-bar-chart-line me-3" aria-hidden="true"></span>   @LocalizatorLayout["StatisticsTitle"]
-                    </NavLink>
-                </div>
-                <div class="nav-item px-3 d-flex">
-                    <NavLink class="nav-link" href="/Chatrooms" Match="NavLinkMatch.All">
-                        <span class="bi bi-chat-dots-fill me-3" aria-hidden="true"></span> Chatrooms
-                    </NavLink>
-                </div>
-                <div class="nav-item px-3 d-flex">
-                    <NavLink class="nav-link" href="/ArchivedGroups" Match="NavLinkMatch.All">
-                        <span class="bi bi-archive me-3" aria-hidden="true"></span> Archived Groups
-                    </NavLink>
-                </div>
+    <input type="checkbox" title="Navigation menu" class="nav-toggle" id="nav-toggle-main" />
+    <label class="nav-toggle-label" for="nav-toggle-main" aria-label="Toggle navigation">
+        <span></span>
+    </label>
 
-                <AuthorizeView Roles="Admin">
-                    <Authorized>
-                        <div class="nav-item px-3 d-flex">
-                            <NavLink class="nav-link" href="/AdminPanel" Match="NavLinkMatch.All">
-                                <span class="bi bi-award-fill me-3" aria-hidden="true"></span>   @LocalizatorLayout["AdminPanelTitle"]
-                            </NavLink>
-                        </div>
-                    </Authorized>
-                </AuthorizeView>
+    <div class="nav-scrollable" onclick="document.querySelector('.nav-toggle').click()">
+        <nav class="nav-list">
+            <div class="nav-item">
+                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                    <i class="bi bi-house-door-fill nav-icon" aria-hidden="true"></i>
+                    <span>@LocalizatorLayout["HomeTitle"]</span>
+                </NavLink>
+            </div>
 
-            @if(groups is null) {
-                <p>@LocalizatorLayout["Loading"]</p>
-            } else {
-                @foreach(var group in groups!) {
-                    <div class="nav-item px-3 d-flex">
-                        <NavLink class="nav-link" href="@($"Diary/{group.Id}")" Match="NavLinkMatch.All">
-                            <span class="bi bi-lock@(String.IsNullOrEmpty(group.PinCode) ? @"" : @"-fill")" />
-                            <p class="mt-3 truncated-group-header">@group.Name</p>
-                            <div class="d-flex position-buttons">
-                                <button type="button" class="btn btn-secondary biLocal bi-pin-code"
-                                    @onclick="() => OpenPinGroup(group)" @onclick:preventDefault="true" @onclick:stopPropagation="true"/>
-                                <button type="button" class="btn btn-secondary biLocal bi-pencil-square-black-nav-menu"
-                                    @onclick="() => OpenPinChangeUpdating(group)" @onclick:preventDefault="true" @onclick:stopPropagation="true"/>
-                                <button type="button" class="btn btn-warning biLocal bi-archive"
-                                    @onclick="() => OpenArchiveConfirmation(group)" @onclick:preventDefault="true" @onclick:stopPropagation="true"/>
-                                <button type="button" class="btn btn-danger btn-close"
-                                    @onclick="() => OpenPinChangeDeleting(group)" @onclick:preventDefault="true" @onclick:stopPropagation="true"/>
-                                @* "propagation" generally means the spreading or dissemination of information or changes through a system
-                                    Here, @onclick:stopPropagation="true": Stops the event from bubbling up to parent elements
-                                    While @onclick:preventDefault="true": Stops the browser's default action (the href navigation for an <a> tag).
-                                *@
-                            </div>
+            <AuthorizeView>
+                <Authorized>
+                    <div class="nav-item">
+                        <NavLink class="nav-link" href="/Users" Match="NavLinkMatch.All">
+                            <i class="bi bi-person-circle nav-icon" aria-hidden="true"></i>
+                            <span>@LocalizatorLayout["ManageTitle"]</span>
                         </NavLink>
                     </div>
-                }
-            }
-            <div class="nav-item px-3 d-flex">
-                <button class="btn btn-primary transparent-color" type="button" @onclick="() => OpenPinChange()">
-                    <span class="biLocal bi-pencil-square-nav-menu" aria-hidden="true" /> @LocalizatorLayout["NewDiaryGroupTitle"]
-                </button>
-            </div>
-            </Authorized>
-            <NotAuthorized>
-                <div class="nav-item px-3 d-flex">
-                    <NavLink class="nav-link" href="/Users/Signin" Match="NavLinkMatch.All">
-                        <span class="biLocal bi-person-add-nav-menu" aria-hidden="true"></span> @LocalizatorLayout["SigninTitle"]
-                    </NavLink>
-                </div>
-                <div class="nav-item px-3 d-flex">
-                    <NavLink class="nav-link" href="/Users/Login" Match="NavLinkMatch.All">
-                        <span class="biLocal bi-person-check-nav-menu" aria-hidden="true"></span> @LocalizatorLayout["LoginTitle"]
-                    </NavLink>
-                </div>
-            </NotAuthorized>
-        </AuthorizeView>
-        @* DIALOGUE /// MODALS *@
-        <DialogueTemplate @ref="modalChangeGroup" HeaderText=@HeaderName>
+                    <div class="nav-item">
+                        <button type="button" class="nav-link-button" @onclick="() => modalLogout!.Open()">
+                            <i class="bi bi-box-arrow-right nav-icon" aria-hidden="true"></i>
+                            <span>@LocalizatorLayout["LogoutTitle"]</span>
+                        </button>
+                    </div>
+                    <div class="nav-item">
+                        <NavLink class="nav-link" href="/Statistics" Match="NavLinkMatch.All">
+                            <i class="bi bi-bar-chart-line nav-icon" aria-hidden="true"></i>
+                            <span>@LocalizatorLayout["StatisticsTitle"]</span>
+                        </NavLink>
+                    </div>
+                    <div class="nav-item">
+                        <NavLink class="nav-link" href="/Chatrooms" Match="NavLinkMatch.All">
+                            <i class="bi bi-chat-dots nav-icon" aria-hidden="true"></i>
+                            <span>Chatrooms</span>
+                        </NavLink>
+                    </div>
+                    <div class="nav-item">
+                        <NavLink class="nav-link" href="/ArchivedGroups" Match="NavLinkMatch.All">
+                            <i class="bi bi-archive nav-icon" aria-hidden="true"></i>
+                            <span>Archived Groups</span>
+                        </NavLink>
+                    </div>
+
+                    <AuthorizeView Roles="Admin" Context="AdminContext">
+                        <Authorized>
+                            <div class="nav-item">
+                                <NavLink class="nav-link" href="/AdminPanel" Match="NavLinkMatch.All">
+                                    <i class="bi bi-shield-star nav-icon" aria-hidden="true"></i>
+                                    <span>@LocalizatorLayout["AdminPanelTitle"]</span>
+                                </NavLink>
+                            </div>
+                        </Authorized>
+                    </AuthorizeView>
+
+                    <div class="nav-divider"></div>
+
+                    @if(groups is null) {
+                        <div class="nav-loading">@LocalizatorLayout["Loading"]</div>
+                    } else {
+                        @foreach(var group in groups!) {
+                            <div class="nav-item nav-group">
+                                <NavLink class="nav-link nav-group-link" href="@($"Diary/{group.Id}")" Match="NavLinkMatch.All">
+                                    <i class="bi @(string.IsNullOrEmpty(group.PinCode) ? "bi-unlock" : "bi-lock-fill") nav-icon" aria-hidden="true"></i>
+                                    <span class="nav-group-name">@group.Name</span>
+                                    <span class="nav-group-actions">
+                                        <button type="button" class="nav-action" title="Pin code"
+                                            @onclick="() => OpenPinGroup(group)" @onclick:preventDefault="true" @onclick:stopPropagation="true">
+                                            <i class="bi bi-pin-angle" aria-hidden="true"></i>
+                                        </button>
+                                        <button type="button" class="nav-action" title="Edit group"
+                                            @onclick="() => OpenPinChangeUpdating(group)" @onclick:preventDefault="true" @onclick:stopPropagation="true">
+                                            <i class="bi bi-pencil-square" aria-hidden="true"></i>
+                                        </button>
+                                        <button type="button" class="nav-action nav-action-warning" title="Archive group"
+                                            @onclick="() => OpenArchiveConfirmation(group)" @onclick:preventDefault="true" @onclick:stopPropagation="true">
+                                            <i class="bi bi-archive" aria-hidden="true"></i>
+                                        </button>
+                                        <button type="button" class="nav-action nav-action-danger" title="Delete group"
+                                            @onclick="() => OpenPinChangeDeleting(group)" @onclick:preventDefault="true" @onclick:stopPropagation="true">
+                                            <i class="bi bi-trash3" aria-hidden="true"></i>
+                                        </button>
+                                        @* "propagation" generally means the spreading or dissemination of information or changes through a system
+                                            Here, @onclick:stopPropagation="true": Stops the event from bubbling up to parent elements
+                                            While @onclick:preventDefault="true": Stops the browser's default action (the href navigation for an <a> tag).
+                                        *@
+                                    </span>
+                                </NavLink>
+                            </div>
+                        }
+                    }
+                    <div class="nav-item nav-cta">
+                        <button class="btn btn-primary w-100" type="button" @onclick="() => OpenPinChange()">
+                            <i class="bi bi-plus-circle me-2" aria-hidden="true"></i>
+                            <span>@LocalizatorLayout["NewDiaryGroupTitle"]</span>
+                        </button>
+                    </div>
+                </Authorized>
+                <NotAuthorized>
+                    <div class="nav-item">
+                        <NavLink class="nav-link" href="/Users/Signin" Match="NavLinkMatch.All">
+                            <i class="bi bi-person-plus nav-icon" aria-hidden="true"></i>
+                            <span>@LocalizatorLayout["SigninTitle"]</span>
+                        </NavLink>
+                    </div>
+                    <div class="nav-item">
+                        <NavLink class="nav-link" href="/Users/Login" Match="NavLinkMatch.All">
+                            <i class="bi bi-person-check nav-icon" aria-hidden="true"></i>
+                            <span>@LocalizatorLayout["LoginTitle"]</span>
+                        </NavLink>
+                    </div>
+                </NotAuthorized>
+            </AuthorizeView>
+            @* DIALOGUE /// MODALS *@
+            <DialogueTemplate @ref="modalChangeGroup" HeaderText=@HeaderName>
             <BodyTemplate>
                 @if(!isDeleting) {
                     <p>@LocalizatorMain["CreateGroupVar1"]</p>
@@ -184,7 +214,8 @@
             </FooterTemplate>
         </DialogueTemplate>
 
-    </nav>
+        </nav>
+    </div>
 </div>
 
 @code {
@@ -199,7 +230,6 @@
     [CascadingParameter] protected Task<AuthenticationState>? AuthStat { get; set; }
 
     protected async override Task OnInitializedAsync() {
-        topName = "Smart diary";
         await base.OnInitializedAsync();
         var user = (await AuthStat!).User;
         if(user.Identity != null && user.Identity.IsAuthenticated) {

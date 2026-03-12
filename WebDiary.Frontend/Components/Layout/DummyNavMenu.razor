@@ -1,29 +1,41 @@
 ﻿@inject IStringLocalizer<Resources.LayoutResource> Localizator
 
-<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">Web-diary</a>
+<div class="app-nav">
+    <div class="nav-header">
+        <div class="nav-brand">
+            <div class="nav-mark">WD</div>
+            <div class="nav-brand-text">
+                <span class="nav-title">WebDiary</span>
+                <span class="nav-subtitle">@Localizator["Loading"]</span>
+            </div>
+        </div>
     </div>
-</div>
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+    <input type="checkbox" title="Navigation menu" class="nav-toggle" id="nav-toggle-dummy" />
+    <label class="nav-toggle-label" for="nav-toggle-dummy" aria-label="Toggle navigation">
+        <span></span>
+    </label>
 
-<div class="nav-scrollable">
-    <nav class="nav flex-column">
-        <div class="nav-item px-3 d-flex">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> @Localizator["HomeTitle"]
-            </NavLink>
-        </div>
-        <div class="nav-item px-3 d-flex">
-            <NavLink class="nav-link" href="/Users/Signin" Match="NavLinkMatch.All">
-                <span class="bi bi-person-add-nav-menu" aria-hidden="true"></span> @Localizator["SigninTitle"]
-            </NavLink>
-        </div>
-        <div class="nav-item px-3 d-flex">
-            <NavLink class="nav-link" href="/Users/Login" Match="NavLinkMatch.All">
-                <span class="bi bi-person-check-nav-menu" aria-hidden="true"></span> @Localizator["LoginTitle"]
-            </NavLink>
-        </div>
-    </nav>
+    <div class="nav-scrollable" onclick="document.querySelector('.nav-toggle').click()">
+        <nav class="nav-list">
+            <div class="nav-item">
+                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                    <i class="bi bi-house-door-fill nav-icon" aria-hidden="true"></i>
+                    <span>@Localizator["HomeTitle"]</span>
+                </NavLink>
+            </div>
+            <div class="nav-item">
+                <NavLink class="nav-link" href="/Users/Signin" Match="NavLinkMatch.All">
+                    <i class="bi bi-person-plus nav-icon" aria-hidden="true"></i>
+                    <span>@Localizator["SigninTitle"]</span>
+                </NavLink>
+            </div>
+            <div class="nav-item">
+                <NavLink class="nav-link" href="/Users/Login" Match="NavLinkMatch.All">
+                    <i class="bi bi-person-check nav-icon" aria-hidden="true"></i>
+                    <span>@Localizator["LoginTitle"]</span>
+                </NavLink>
+            </div>
+        </nav>
+    </div>
 </div>

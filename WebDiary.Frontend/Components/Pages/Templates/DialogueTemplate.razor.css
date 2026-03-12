@@ -1,0 +1,36 @@
+.wd-dialogue-content {
+    border-radius: var(--wd-radius-lg);
+    border: 1px solid var(--wd-border);
+    background: var(--wd-surface-1);
+    box-shadow: var(--wd-shadow);
+    overflow: hidden;
+}
+
+.wd-dialogue-header {
+    padding: 1rem 1.25rem;
+    border: 0;
+    background: linear-gradient(135deg, var(--wd-accent) 0%, #38bdf8 100%);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.wd-dialogue-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+}
+
+.wd-dialogue-body {
+    padding: 1.25rem 1.5rem;
+    color: var(--wd-ink-2);
+}
+
+.wd-dialogue-footer {
+    background: var(--wd-surface-2);
+    border-top: 1px solid var(--wd-border);
+    padding: 0.9rem 1.25rem;
+    gap: 0.6rem;
+}

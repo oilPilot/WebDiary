@@ -3,14 +3,19 @@
 @inject IJSRuntime JS
 @inject IStringLocalizer<Resources.SettingsResource> Localizator
 
-<p class="align-items-center fw-bold" style="margin-top: 10px;">@Localizator["LanguageText"]</p>
-<InputSelect class="ms-2"
-             @bind-Value="_cultureName"
-             @bind-Value:after="OnCultureChangedAsync"
-             style="width: 100px;">
-    <option value="en">@Localizator["LanguageEng"]</option>
-    <option value="de">@Localizator["LanguageGer"]</option>
-</InputSelect>
+<div class="settings-card">
+    <div class="settings-content">
+        <span class="settings-title">@Localizator["LanguageText"]</span>
+    </div>
+    <div class="settings-actions">
+        <InputSelect class="form-select settings-select"
+                     @bind-Value="_cultureName"
+                     @bind-Value:after="OnCultureChangedAsync">
+            <option value="en">@Localizator["LanguageEng"]</option>
+            <option value="de">@Localizator["LanguageGer"]</option>
+        </InputSelect>
+    </div>
+</div>
 
 @code {
     private const string DefaultCulture = "en";

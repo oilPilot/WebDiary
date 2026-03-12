@@ -1,87 +1,78 @@
-# Personal Diary Web App
-This is web application built with ASP.NET Core and Blazor that allows users to log daily experiences, categorize them and manage entries with timestamps.
+# WebDiary
 
-### Live demo:
-* You can see live demo hosted here: https://webdiary-frontend.onrender.com
+Private diary web app built with ASP.NET Core and Blazor Server. Create diary groups, write rich entries, and review statistics from any device.
 
-### Screenshots:
+## Status
+Active development. Updated March 12, 2026.
+
+## Live demo
+https://webdiary-frontend.onrender.com
+
+## Screenshots
 ![AdminPanelOfAppScreenshot](screenshots/AdminPanel.png)
 ![MainDiariesScreenshot](screenshots/DiariesPage.png)
 ![StatisticsPageScreenshot](screenshots/StatisticsPage.png)
 
-## Features:
-* User authentication and registration
-* Categorized diary entries to named categories that you are creating
-* Automatic timestamping
-* Input validation
-* Serilog-based logging
-* Rich text formatting
-* Export to PDF
-* Light and Dark Mode
-* quick emoji scale at each diary entry;
-* Admin panel
-* Statistics page
-* Unit tests
+## Features
+- Authentication and registration
+- Diary groups with optional PIN protection
+- Rich text editor for entries
+- Automatic timestamps and validation
+- Mood tracking (emoji scale)
+- Statistics dashboard
+- Admin panel
+- PDF export (per group or all groups)
+- Light and dark themes
+- Serilog-based logging
+- Unit tests
 
+## Tech stack
+- ASP.NET Core Web API
+- Blazor Server
+- Entity Framework Core
+- PostgreSQL
+- Serilog
+- Bootstrap
+- xUnit and Moq
+- Docker (optional)
 
-## Installation on local machine
-### Prerequisites:
-* .NET 9
-* Postgres SQL
-* Visual Studio / VS Code
-### Installation
-1. Clone the repository:
-```
-git clone https://github.com/oilPilot/WebDiary.git
-cd WebDiary
-dotnet run --project WebDiary
-dotnet run --project WebDiary.Frontend
-```
-2. Before running the backend, configure the following secrets (using `dotnet user-secrets` or environment variables):
-	- `Jwt:Key` – Secret key for Jwt signing.
-	- `ConnectionStrings:DiariesConnection` – Database connection string.
-3. Note: Database migrations will run automatically
+## Quick start (local)
+1. Prerequisites: .NET 9 SDK, PostgreSQL, Visual Studio or VS Code.
+2. Configure secrets or environment variables:
+   - `Jwt:Key` - Secret key for JWT signing.
+   - `ConnectionStrings:DiariesConnection` - PostgreSQL connection string.
+3. Run the apps:
+   ```bash
+   dotnet run --project WebDiary
+   dotnet run --project WebDiary.Frontend
+   ```
+4. Database migrations run automatically on startup.
 
-## Architecture Overview
-WebDiary is structured as a separated frontend and backend application.
-1. The backend is an ASP.NET Core Web API. It is organized into:
-* Controllers handle HTTP requests.
-* Services contain business logic such.
-* Data layer using EF Core and entities.
-* DTOs defining the data contracts exposed.
-2. The frontend is a Blazor application that communicates with the backend via HttpClient. It contains:
-* Razor components responsible for UI and user interaction.
-* API client classes that encapsulate HTTP communication and CRUD operations.
-* Frontend models that match DTOs.
-The request flow is: UI component => API client => backend controller => service => database => response flows back using DTO.
+## Architecture overview
+Backend:
+- Controllers handle HTTP requests
+- Services contain business logic
+- EF Core data layer and entities
+- DTOs define API contracts
 
-## Email Integration
-The application integrates with Mailgun for email notifications.
-Due to sandbox limitations, email sending is enabled only for development and testing environments.
-The integration is implemented using environment-based configuration.
+Frontend:
+- Razor components for UI
+- API client classes for HTTP calls
+- Frontend models matching DTOs
 
-## Tech Stack
-* ASP.NET Core
-* Entity Framework Core
-* Serilog
-* Blazor Server
-* Bootstrap UI
-* Docker files (used for deployment)
-* xUnit and Moq for unit tests
-* Git for version control
+Request flow: UI component -> API client -> controller -> service -> database -> DTO response.
 
-## Planned Improvements
-* Realize messaging between users
-* Fix glitches
-* You can look more in ROADMAP.md
+## Email integration
+Mailgun is used for email notifications. Due to sandbox limitations, email sending is enabled only for development and testing environments.
 
-## Where can be used
-* Where this can be used:
-* User portals with time-tracking
-* Personal productivity apps
-* CRM task logs
-* Admin dashboards
-* Company internal diaries/logs
+## Use cases
+- Personal diary and mood tracking
+- Productivity journals
+- Internal team logs
+- Admin dashboards
+
+## Roadmap
+See `ROADMAP.md`.
 
 ## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+Pull requests are welcome. For major changes, open an issue first to discuss the proposal.

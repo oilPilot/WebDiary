@@ -1,8 +1,15 @@
 ﻿@inject IJSRuntime JS
 @inject IStringLocalizer<Resources.LayoutResource> Localizator
 
-<BootstrapBlazor.Components.SwitchButton ToggleState="@(currentTheme == "dark" ? true : false)" class="btn"
-    OnText="@(Localizator[@"DarkThemeText"])" OffText="@(Localizator[@"LightThemeText"])" @onclick="ChangeTheme" />
+<div class="settings-card">
+    <div class="settings-content">
+        <span class="settings-title">@($"{Localizator["LightThemeText"]} / {Localizator["DarkThemeText"]}")</span>
+    </div>
+    <div class="settings-actions">
+        <BootstrapBlazor.Components.SwitchButton ToggleState="@(currentTheme == "dark" ? true : false)" class="settings-toggle"
+            OnText="@(Localizator[@"DarkThemeText"])" OffText="@(Localizator[@"LightThemeText"])" @onclick="ChangeTheme" />
+    </div>
+</div>
 
 @code {
     private string currentTheme = "dark";

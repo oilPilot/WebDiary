@@ -1,0 +1,87 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:16
+    container_name: webdiary-db
+    environment:
+      POSTGRES_USER: webdiary
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-webdiary_password}
+      POSTGRES_DB: webdiary
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U webdiary"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - webdiary_network
+    restart: unless-stopped
+
+  # WebDiary Backend API
+  backend:
+    build:
+      context: .
+      dockerfile: WebDiary/Dockerfile
+    container_name: webdiary-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
+      ConnectionStrings__DiariesConnection: "Host=db;Database=webdiary;Username=webdiary;Password=${DB_PASSWORD:-webdiary_password};Port=5432"
+      Jwt__Key: ${JWT_TOKEN_KEY:-YourSuperSecretKeyChangeThis}
+      Jwt__Issuer: ${JWT_ISSUER:-DiaryIssuer}
+      Jwt__Audience: ${JWT_AUDIENCE:-PeopleFromIntelligentWorld}
+      FrontendUrl: ${FRONTEND_URL:-http://localhost:5282}
+      # Email features (experimental - in development)
+      # EmailFromSend: ${EMAIL_FROM:-noreply@webdiary.local}
+      # MAILGUN_API_KEY: ${MAILGUN_API_KEY:-}
+    ports:
+      - "5281:5281"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - webdiary_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5281/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # WebDiary Frontend (Blazor Server)
+  frontend:
+    build:
+      context: .
+      dockerfile: WebDiary.Frontend/Dockerfile
+    container_name: webdiary-frontend
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
+      ConnectionStrings__DiariesConnection: "Host=db;Database=webdiary;Username=webdiary;Password=${DB_PASSWORD:-webdiary_password};Port=5432"
+      ApiConnection: ${API_CONNECTION:-http://backend:5281}
+    ports:
+      - "5282:5282"
+    depends_on:
+      - backend
+      - db
+    networks:
+      - webdiary_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5282/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  webdiary_network:
+    driver: bridge

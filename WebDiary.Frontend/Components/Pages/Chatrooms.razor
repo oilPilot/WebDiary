@@ -572,7 +572,7 @@
 
         await hubConnection.InvokeAsync("LeaveRoomAsync", selectedRoom.RoomKey);
     }
-
+    // HELPERS
     private async Task EnsureHubConnectionReadyAsync()
     {
         if (hubConnection is null)
@@ -735,59 +735,5 @@
 
         await LeaveCurrentRoomAsync();
         await hubConnection.DisposeAsync();
-    }
-
-    private sealed class ServerRoomSummary
-    {
-        public int Id { get; set; }
-        public string Name { get; set; } = "";
-        public string Type { get; set; } = "";
-    }
-
-    private sealed class ChatMessageDto
-    {
-        public string RoomKey { get; set; } = "";
-        public string RoomType { get; set; } = "";
-        public string Sender { get; set; } = "";
-        public string Content { get; set; } = "";
-        public DateTime SentAtUtc { get; set; }
-    }
-
-    private sealed class ServerRoomJoinResult
-    {
-        public string RoomKey { get; set; } = "";
-        public ServerRoomSummary Room { get; set; } = new();
-        public List<ChatMessageDto> Messages { get; set; } = [];
-    }
-
-    private sealed class LocalRoomRecord
-    {
-        public string Id { get; set; } = "";
-        public string Name { get; set; } = "";
-        public string Secret { get; set; } = "";
-        public string RoomKey { get; set; } = "";
-    }
-
-    private sealed class LocalMessageRecord
-    {
-        public string Sender { get; set; } = "";
-        public string Content { get; set; } = "";
-        public DateTime SentAtUtc { get; set; }
-    }
-
-    private sealed class ChatMessageViewModel
-    {
-        public string Sender { get; set; } = "";
-        public string Content { get; set; } = "";
-        public DateTime SentAtUtc { get; set; }
-        public bool IsFromCurrentUser { get; set; }
-    }
-
-    private sealed class SelectedRoom
-    {
-        public string DisplayName { get; set; } = "";
-        public string RoomType { get; set; } = "";
-        public string RoomKey { get; set; } = "";
-        public int? ServerRoomId { get; set; }
     }
 }

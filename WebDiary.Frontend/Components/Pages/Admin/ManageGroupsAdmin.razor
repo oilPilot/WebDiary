@@ -138,7 +138,7 @@
                         adminUserName, adminId, Group.Name, Group.Id, newId, Group.Id);
         var newGroup = Group;
         if(newId != null)
-            newGroup.UserId = newId;
+            newGroup.OwnerId = newId;
         await groupClient.UpdateGroupAsync(newGroup);
     }
     private async Task ChangeGroupNameAsync() {

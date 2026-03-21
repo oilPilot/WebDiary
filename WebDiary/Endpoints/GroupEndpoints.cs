@@ -168,6 +168,205 @@ public static class GroupEndpoints
             return Results.NoContent();
         });
 
+        // Collaboration endpoints - manage group members and permissions
+        group.MapGet("/{id:int}/members", async (int id, ClaimsPrincipal principal, DiariesContext dbContext) =>
+        {
+            var userId = GetCurrentUserId(principal);
+            if (userId is null)
+            {
+                return Results.Unauthorized();
+            }
+
+            var groupPermission = await dbContext.groupPermissions
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.GroupId == id && p.UserId == userId);
+
+            // Only owner and editors can see the member list
+            if (groupPermission is null || groupPermission.Role == GroupRole.Viewer)
+            {
+                // Allow viewing if owner of the group
+                var group = await dbContext.diaryGroups.AsNoTracking().FirstOrDefaultAsync(g => g.Id == id);
+                if (group is null || group.UserId != userId)
+                {
+                    return Results.Forbid();
+                }
+            }
+
+            var members = await dbContext.groupPermissions
+                .Where(p => p.GroupId == id)
+                .Include(p => p.User)
+                .Include(p => p.GrantedByUser)
+                .AsNoTracking()
+                .Select(p => p.toDTO())
+                .ToListAsync();
+
+            return Results.Ok(members);
+        });
+
+        group.MapPost("/{id:int}/members", async (int id, ManageCollaborationDTO collaboration, ClaimsPrincipal principal, DiariesContext dbContext) =>
+        {
+            try
+            {
+                var userId = GetCurrentUserId(principal);
+                if (userId is null)
+                {
+                    return Results.Unauthorized();
+                }
+
+                var currentGroup = await dbContext.diaryGroups.FirstOrDefaultAsync(g => g.Id == id);
+                if (currentGroup is null)
+                {
+                    return Results.NotFound($"Group with id {id} not found.");
+                }
+
+                // Only owner can add members
+                if (currentGroup.UserId != userId && !principal.IsInRole("Admin"))
+                {
+                    return Results.Forbid();
+                }
+
+                // Find the user by username
+                var targetUser = await dbContext.users.AsNoTracking()
+                    .FirstOrDefaultAsync(u => u.UserName == collaboration.UserName);
+                if (targetUser is null)
+                {
+                    return Results.BadRequest($"User with username '{collaboration.UserName}' not found.");
+                }
+
+                // Check if permission already exists
+                var existingPermission = await dbContext.groupPermissions
+                    .FirstOrDefaultAsync(p => p.GroupId == id && p.UserId == targetUser.Id);
+                if (existingPermission is not null)
+                {
+                    return Results.BadRequest($"User '{collaboration.UserName}' is already a member of this group.");
+                }
+
+                var permission = new GroupPermission
+                {
+                    GroupId = id,
+                    UserId = targetUser.Id,
+                    GrantedByUserId = userId.Value,
+                    Role = collaboration.Role,
+                    CreatedAtUtc = DateTime.UtcNow
+                };
+
+                await dbContext.groupPermissions.AddAsync(permission);
+                await dbContext.SaveChangesAsync();
+
+                Serilog.Log.Information("Added user '{UserName}' to group '{GroupId}' with role '{Role}'",
+                    collaboration.UserName, id, collaboration.Role);
+
+                return Results.Created($"/groups/{id}/members/{targetUser.Id}", permission.toDTO());
+            }
+            catch (Exception ex)
+            {
+                Serilog.Log.Fatal("Failed to add member to group. Collaboration data: {@Data}, Exception: {Exception}",
+                    collaboration, ex);
+                return Results.Problem("Unexpected error while adding member to group.");
+            }
+        });
+
+        group.MapPut("/{id:int}/members/{targetUserId:int}", async (int id, int targetUserId, UpdateCollaborationDTO collaboration, ClaimsPrincipal principal, DiariesContext dbContext) =>
+        {
+            try
+            {
+                var userId = GetCurrentUserId(principal);
+                if (userId is null)
+                {
+                    return Results.Unauthorized();
+                }
+
+                var currentGroup = await dbContext.diaryGroups.FirstOrDefaultAsync(g => g.Id == id);
+                if (currentGroup is null)
+                {
+                    return Results.NotFound($"Group with id {id} not found.");
+                }
+
+                // Only owner can update permissions
+                if (currentGroup.UserId != userId && !principal.IsInRole("Admin"))
+                {
+                    return Results.Forbid();
+                }
+
+                var permission = await dbContext.groupPermissions
+                    .FirstOrDefaultAsync(p => p.GroupId == id && p.UserId == targetUserId);
+                if (permission is null)
+                {
+                    return Results.NotFound($"Member not found in this group.");
+                }
+
+                // Cannot change owner's role
+                if (permission.Role == GroupRole.Owner)
+                {
+                    return Results.BadRequest("Cannot modify owner's permissions.");
+                }
+
+                permission.Role = collaboration.Role;
+                permission.UpdatedAtUtc = DateTime.UtcNow;
+
+                await dbContext.SaveChangesAsync();
+
+                Serilog.Log.Information("Updated user '{UserId}' role in group '{GroupId}' to '{Role}'",
+                    targetUserId, id, collaboration.Role);
+
+                return Results.NoContent();
+            }
+            catch (Exception ex)
+            {
+                Serilog.Log.Fatal("Failed to update member role. Exception: {Exception}", ex);
+                return Results.Problem("Unexpected error while updating member role.");
+            }
+        });
+
+        group.MapDelete("/{id:int}/members/{targetUserId:int}", async (int id, int targetUserId, ClaimsPrincipal principal, DiariesContext dbContext) =>
+        {
+            try
+            {
+                var userId = GetCurrentUserId(principal);
+                if (userId is null)
+                {
+                    return Results.Unauthorized();
+                }
+
+                var currentGroup = await dbContext.diaryGroups.FirstOrDefaultAsync(g => g.Id == id);
+                if (currentGroup is null)
+                {
+                    return Results.NotFound($"Group with id {id} not found.");
+                }
+
+                // Only owner can remove members
+                if (currentGroup.UserId != userId && !principal.IsInRole("Admin"))
+                {
+                    return Results.Forbid();
+                }
+
+                var permission = await dbContext.groupPermissions
+                    .FirstOrDefaultAsync(p => p.GroupId == id && p.UserId == targetUserId);
+                if (permission is null)
+                {
+                    return Results.NotFound($"Member not found in this group.");
+                }
+
+                // Cannot remove owner
+                if (permission.Role == GroupRole.Owner)
+                {
+                    return Results.BadRequest("Cannot remove the owner from the group.");
+                }
+
+                dbContext.groupPermissions.Remove(permission);
+                await dbContext.SaveChangesAsync();
+
+                Serilog.Log.Information("Removed user '{UserId}' from group '{GroupId}'", targetUserId, id);
+
+                return Results.NoContent();
+            }
+            catch (Exception ex)
+            {
+                Serilog.Log.Fatal("Failed to remove member from group. Exception: {Exception}", ex);
+                return Results.Problem("Unexpected error while removing member from group.");
+            }
+        });
+
         return group;
     }
 

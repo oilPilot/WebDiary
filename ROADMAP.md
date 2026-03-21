@@ -5,22 +5,17 @@ Updated March 22, 2026.
 ## In Progress (Polishing Phase)
 
 ### Mood Intelligence
-- Automatic mood suggestions using AI emoji analysis at midnight
+- Automatic mood suggestions using AI
 - Missing mood entry auto-fill functionality
 - Mood pattern recognition
 
 ### Statistics Enhancement
+
 - Custom mood scoring system with flexible parameters
 - In-memory caching for statistics optimization
 - Performance improvements for analytics queries
 
 ## Planned Features (Next Phases)
-
-### Phase 1: Enhanced Collaboration (Roadmap)
-- Shared Diary Groups: Enable users to create shared diary spaces for collaboration with friends and family
-- Role-Based Access Control: Implement different permission levels (owner, editor, viewer)
-- Group Activity Tracking: Audit logs and activity metrics for collaborative diaries
-- Discussion Threads: Comment and discuss entries within group context
 
 ### Phase 2: Advanced Search & Discovery
 - Elastic search integration for advanced full-text search
@@ -28,8 +23,6 @@ Updated March 22, 2026.
 - Full-text diary content search
 
 ### Phase 3: Authentication Enhancements
-- Multi-factor authentication (MFA) support
-- Two-factor authentication (2FA) via email/SMS
 - OAuth2 integration (Google, GitHub accounts)
 
 ### Phase 4: API & Integration
@@ -50,14 +43,11 @@ Updated March 22, 2026.
 
 ## UI and UX Improvements
 
-### Current Priority
-- Improve documentation with visual guides
-- UI consistency review and updates
-
-### Future Improvements
 - Animation and microinteraction enhancements
 - Responsive breakpoint optimization
 - Print-friendly diary export styles
+- Improve documentation with visual guides
+- UI consistency review and updates
 
 ## Known Issues
 
@@ -82,17 +72,13 @@ Updated March 22, 2026.
 
 ## Architecture & Code Quality
 
-### In Progress
-- Integration test suite expansion
-- API integration testing
-- End-to-end testing with Playwright
-
 ### Planned
 - Architecture review and optimization
 - Performance profiling and bottleneck identification
-- Code quality metrics and CI/CD integration
 - Automated code review (SonarQube)
-- Load testing framework
+- Integration test suite expansion
+- API integration testing
+- End-to-end testing with Playwright
 
 ## Contributing to Roadmap
 

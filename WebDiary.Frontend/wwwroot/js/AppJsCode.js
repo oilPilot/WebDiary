@@ -74,6 +74,22 @@ function getQuillContent() {
     return quill.root.innerHTML;
 }
 
+function getEditorSelection() {
+    var quill = Quill.find(document.getElementById('editor'));
+    if (!quill) {
+        console.warn('Quill editor not found');
+        return null;
+    }
+    
+    var selection = quill.getSelection();
+    if (!selection || selection.length === 0) {
+        return null;
+    }
+    
+    var text = quill.getText(selection.index, selection.length);
+    return text.trim();
+}
+
 // Code for Localization
 function setCulture(culture) {
     document.cookie = `.AspNetCore.Culture=c=${culture}|uic=${culture}; path=/; max-age=315360000; samesite=lax`;

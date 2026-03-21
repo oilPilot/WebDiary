@@ -17,17 +17,33 @@ public class StatsService : IStatsService
 
     public async Task<List<StatsDayDTO>> GetStatsForPeriod(int userId, StatsRequestDTO DatePeriod)
     {
-//        string cacheKey = $"stats_{userId}_{year}_{month}";
-//        if (_cache.TryGetValue(cacheKey, out PeriodStatsDto cached))
-//            return cached;
-        var groupIds = await dbContext.diaryGroups.Where(group => group.UserId == userId).Select(group => group.Id).ToListAsync();
-        var diaries = await dbContext.diaries.Where(diary => groupIds.Contains(diary.GroupId)).AsNoTracking().ToListAsync();
+        // Get groups owned by user
+        var ownedGroupIds = await dbContext.diaryGroups
+            .Where(group => group.UserId == userId)
+            .Select(group => group.Id)
+            .ToListAsync();
 
-        var filtered = diaries.Where(d => d.Date >= DatePeriod.StartDate && d.Date <= DatePeriod.EndDate).ToList();
+        // Get groups where user has any permission (Editor, Viewer, or Owner)
+        var sharedGroupIds = await dbContext.groupPermissions
+            .Where(p => p.UserId == userId)
+            .Select(p => p.GroupId)
+            .ToListAsync();
+
+        var allGroupIds = ownedGroupIds.Union(sharedGroupIds).ToList();
+
+        // Get only entries owned by the current user from groups they have access to
+        // This ensures statistics are personal to the user, not group-wide
+        var diaries = await dbContext.diaries
+            .Where(diary => diary.OwnerId == userId && allGroupIds.Contains(diary.GroupId))
+            .AsNoTracking()
+            .ToListAsync();
+
+        var filtered = diaries
+            .Where(d => d.Date >= DatePeriod.StartDate && d.Date <= DatePeriod.EndDate)
+            .ToList();
 
         var stats = CalculateStats(filtered);
 
-//        _cache.Set(cacheKey, stats, TimeSpan.FromMinutes(10));
         return stats;
     }
 
@@ -81,13 +97,13 @@ public class StatsService : IStatsService
 
     public async Task<List<UserActivityDTO>> GetMostActiveUsersAsync(int limit)
     {
-        // determine users who have written the most diary entries overall
-        // each diary is linked through a group so we group by the owning user
+        // Count entries owned by each user, not just entries in groups they own
+        // This provides a more accurate view of individual user activity
         var query = dbContext.users
             .Select(u => new UserActivityDTO {
                 UserId = u.Id,
                 UserName = u.UserName,
-                EntriesCount = dbContext.diaries.Count(d => d.Group.UserId == u.Id)
+                EntriesCount = dbContext.diaries.Count(d => d.OwnerId == u.Id)
             })
             .OrderByDescending(x => x.EntriesCount)
             .Take(limit);

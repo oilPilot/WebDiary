@@ -12,6 +12,8 @@ public class DiariesContext(DbContextOptions<DiariesContext> options) : DbContex
     public virtual DbSet<LogRecord> logs => Set<LogRecord>();
     public virtual DbSet<ChatRoom> chatRooms => Set<ChatRoom>();
     public virtual DbSet<ChatMessage> chatMessages => Set<ChatMessage>();
+    public virtual DbSet<GroupPermission> groupPermissions => Set<GroupPermission>();
+    public virtual DbSet<EntryReference> entryReferences => Set<EntryReference>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -32,6 +34,60 @@ public class DiariesContext(DbContextOptions<DiariesContext> options) : DbContex
                 .HasForeignKey(message => message.ChatRoomId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
+
+        // Configure GroupPermission relationships
+        modelBuilder.Entity<GroupPermission>(entity =>
+        {
+            entity.HasIndex(p => new { p.GroupId, p.UserId }).IsUnique();
+            
+            entity.HasOne(p => p.Group)
+                .WithMany(g => g.Permissions)
+                .HasForeignKey(p => p.GroupId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(p => p.User)
+                .WithMany(u => u.GroupPermissions)
+                .HasForeignKey(p => p.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(p => p.GrantedByUser)
+                .WithMany()
+                .HasForeignKey(p => p.GrantedByUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // Configure EntryReference relationships
+        modelBuilder.Entity<EntryReference>(entity =>
+        {
+            entity.HasOne(r => r.SourceEntry)
+                .WithMany(d => d.ReferencesFromThisEntry)
+                .HasForeignKey(r => r.SourceEntryId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(r => r.ReferencedEntry)
+                .WithMany(d => d.ReferencesTo)
+                .HasForeignKey(r => r.ReferencedEntryId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // Configure Diary-Owner relationship
+        modelBuilder.Entity<Diary>(entity =>
+        {
+            entity.HasOne(d => d.Owner)
+                .WithMany(u => u.OwnedEntries)
+                .HasForeignKey(d => d.OwnerId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // Configure DiaryGroup-Owner relationship
+        modelBuilder.Entity<DiaryGroup>(entity =>
+        {
+            entity.HasOne(g => g.Owner)
+                .WithMany()
+                .HasForeignKey(g => g.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
     }
 }
+
 

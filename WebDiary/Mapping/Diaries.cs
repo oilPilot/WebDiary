@@ -32,7 +32,9 @@ public static class Diaries
             Date = diary.Date,
             Time = diary.Time,
             GroupId = diary.GroupId,
-            mood = diary.mood
+            mood = diary.mood,
+            OwnerId = diary.OwnerId,
+            OwnerUserName = diary.Owner?.UserName ?? "Unknown"
         };
     }
 }

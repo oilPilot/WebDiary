@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace WebDiary.Entities;
 
@@ -18,4 +19,8 @@ public class User
     public string? RefreshToken { get; set; }
     public DateTime? RefreshTokenDateEnd { get; set; }
     public string? MasterPassword { get; set; }
+    
+    // Navigation properties
+    public ICollection<GroupPermission> GroupPermissions { get; set; } = new List<GroupPermission>();
+    public ICollection<Diary> OwnedEntries { get; set; } = new List<Diary>();
 }

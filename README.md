@@ -53,6 +53,11 @@ WebDiary is a comprehensive digital diary platform for personal journaling and m
 - System statistics and usage analytics
 - User activity monitoring
 
+**Enhanced Collaboration**
+- Users able to share group spaces with other users
+- Role-Based permission levels (owner, editor, viewer)
+- Referencing others entries entirely or partly in your own
+
 ## Technology Stack
 
 ### Backend

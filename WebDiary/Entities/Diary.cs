@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace WebDiary.Entities;
@@ -17,5 +18,14 @@ public class Diary
     
     public int GroupId { get; set; }
     public DiaryGroup? Group { get; set; }
+    
+    // Owner of this entry - tracks who created it
+    public int OwnerId { get; set; }
+    public User? Owner { get; set; }
+    
     public required string mood { get; set; }
+    
+    // Navigation properties for entry references
+    public ICollection<EntryReference> ReferencesFromThisEntry { get; set; } = new List<EntryReference>();
+    public ICollection<EntryReference> ReferencesTo { get; set; } = new List<EntryReference>();
 }

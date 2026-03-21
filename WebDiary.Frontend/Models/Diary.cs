@@ -13,5 +13,7 @@ public class Diary
     public int? UtcOffsetMinutes { get; set; }
 
     public required int GroupId { get; set; }
+    public int OwnerId { get; set; }
+    public string? OwnerUserName { get; set; }
     public string? mood { get; set; }
 }

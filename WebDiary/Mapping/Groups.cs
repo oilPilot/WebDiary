@@ -30,8 +30,12 @@ public static class Groups
         return new GroupDTO {
             Id = group.Id,
             Name = group.Name,
+            OwnerId = group.UserId,
+            OwnerUserName = group.Owner?.UserName ?? "Unknown",
             PinCode = !string.IsNullOrEmpty(group.PinCode) ? "Exists" : "",
-            IsArchived = group.IsArchived
+            IsArchived = group.IsArchived,
+            CreatedAtUtc = group.CreatedAtUtc,
+            UpdatedAtUtc = group.UpdatedAtUtc
         };
     }
 }

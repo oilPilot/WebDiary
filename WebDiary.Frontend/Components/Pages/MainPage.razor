@@ -4,6 +4,7 @@
 @using System.Text.Json
 @using Blazored.LocalStorage
 @using Blazored.SessionStorage
+@using WebDiary.Frontend.Models
 @inject DiaryClient DiaryClient
 @inject DiaryGroupClient DiaryGroupClient
 @inject NavigationManager NavigationManager
@@ -31,6 +32,121 @@
             </FooterTemplate>
         </DialogueTemplate>
 
+        <!-- Collaboration Management Modal -->
+        <DialogueTemplate @ref="modalCollaboration" HeaderText="Manage Collaboration">
+            <BodyTemplate>
+                <div class="collaboration-sections">
+                    <!-- Existing Members Section -->
+                    <div class="collaboration-section">
+                        <h5>Existing Members</h5>
+                        @if (collaborators == null)
+                        {
+                            <p class="text-muted">Loading members...</p>
+                        }
+                        else if (collaborators.Count == 0)
+                        {
+                            <p class="text-muted">No collaborators yet. You are the owner.</p>
+                        }
+                        else
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Username</th>
+                                            <th>Role</th>
+                                            <th>Granted By</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var collab in collaborators)
+                                        {
+                                            <tr>
+                                                <td>@collab.UserName</td>
+                                                <td>
+                                                    <select class="form-select form-select-sm" @onchange="((ChangeEventArgs e) => OnRoleChangeAsync(collab.UserId, e.Value?.ToString() ?? String.Empty))">
+                                                        <option value="0" selected="@(collab.Role == 0)">Owner</option>
+                                                        <option value="1" selected="@(collab.Role == 1)">Editor</option>
+                                                        <option value="2" selected="@(collab.Role == 2)">Viewer</option>
+                                                    </select>
+                                                </td>
+                                                <td>@collab.GrantedByUserName</td>
+                                                <td>
+                                                    <button type="button" class="btn btn-sm btn-danger" @onclick="(() => OnRemoveCollaboratorAsync(collab.UserId))">Remove</button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Add New Member Section -->
+                    <div class="collaboration-section mt-4">
+                        <h5>Add New Collaborator</h5>
+                        <div class="input-group mb-2">
+                            <input type="text" class="form-control" placeholder="Enter username" @bind="newCollaboratorUsername">
+                        </div>
+                        <div class="input-group mb-3">
+                            <label class="input-group-text">Role:</label>
+                            <select class="form-select" @bind="newCollaboratorRole">
+                                <option value="1">Editor (Can create entries)</option>
+                                <option value="2">Viewer (Read-only)</option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-primary" @onclick="OnAddCollaboratorAsync" disabled="@(!CanAddCollaborator)">Add Collaborator</button>
+                        @if (!string.IsNullOrEmpty(collaborationErrorMessage))
+                        {
+                            <p class="text-danger mt-2">@collaborationErrorMessage</p>
+                        }
+                    </div>
+                </div>
+            </BodyTemplate>
+            <FooterTemplate>
+                <button type="button" class="btn btn-secondary" @onclick="CloseCollaborationModal">Close</button>
+            </FooterTemplate>
+        </DialogueTemplate>
+
+        <!-- Entry Reference Modal -->
+        <DialogueTemplate @ref="modalReference" HeaderText="Add Entry Reference">
+            <BodyTemplate>
+                @if (diaries != null)
+                {
+                    <div class="reference-form">
+                        <label class="form-label">Select entry to reference:</label>
+                        <div class="reference-entries-list">
+                            @foreach (var sourceEntry in diaries.Where(d => d.Id != selectedReferenceSourceId).OrderByDescending(d => d.Date).ThenByDescending(d => d.Time))
+                            {
+                                <div class="reference-entry-item">
+                                    <input type="radio" name="referenceEntry" value="@sourceEntry.Id" @onchange="((ChangeEventArgs e) => selectedReferenceTargetId = int.Parse(e.Value?.ToString() ?? 0.ToString()))" id="ref_@sourceEntry.Id">
+                                    <label for="ref_@sourceEntry.Id" class="ms-2">
+                                        @sourceEntry.Date.ToString("yyyy-MM-dd HH:mm") - @sourceEntry.mood
+                                        <span class="text-muted d-block small">@sourceEntry.OwnerUserName</span>
+                                    </label>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="mt-3">
+                            <label class="form-label">Excerpt (optional):</label>
+                            <textarea class="form-control" rows="3" placeholder="Enter excerpt text if referencing a specific part" @bind="referenceExcerptText"></textarea>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(referenceErrorMessage))
+                        {
+                            <p class="text-danger mt-2">@referenceErrorMessage</p>
+                        }
+                    </div>
+                }
+            </BodyTemplate>
+            <FooterTemplate>
+                <button type="button" class="btn btn-primary" @onclick="OnCreateReferenceAsync" disabled="@(!CanCreateReference)">Add Reference</button>
+                <button type="button" class="btn btn-secondary" @onclick="CloseReferenceModal">Cancel</button>
+            </FooterTemplate>
+        </DialogueTemplate>
+
         @if (diaries is null)
         {
             <p>@Localizator["LoadingDiaries"]</p>
@@ -41,7 +157,12 @@
             {
                 if (isValidated)
                 {
-                    <h1>@PageTitle</h1>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h1>@PageTitle</h1>
+                        <button type="button" class="btn btn-outline-primary" @onclick="OpenCollaborationModalAsync" title="Manage collaboration with other users">
+                            <span class="oi oi-people"></span> Manage Collaboration
+                        </button>
+                    </div>
 
                     @if (YearsWithDiaries.Count == 0)
                     {
@@ -108,8 +229,19 @@
                                                         @foreach (var dayDiary in dateGroup.OrderBy(d => d.Time))
                                                         {
                                                             <details>
-                                                                <summary>@dayDiary.Time.ToString("HH:mm") @dayDiary.mood</summary>
+                                                                <summary>
+                                                                    <span class="diary-entry-time">@dayDiary.Time.ToString("HH:mm") @dayDiary.mood</span>
+                                                                    @if (dayDiary.OwnerUserName == currentUserName)
+                                                                    {
+                                                                        <button type="button" class="btn btn-sm btn-outline-secondary ms-2" @onclick:stopPropagation="true" @onclick="async () => await OpenReferenceModalForEntryAsync(dayDiary.Id)" title="Add reference to another entry">
+                                                                            <span>+</span>
+                                                                        </button>
+                                                                    }
+                                                                </summary>
                                                                 <div class="diary-text">@((MarkupString)dayDiary.Text)</div>
+                                                                <div class="diary-meta mt-2">
+                                                                    <small class="text-muted">Written by: @dayDiary.OwnerUserName</small>
+                                                                </div>
                                                             </details>
                                                         }
                                                     </div>
@@ -147,7 +279,10 @@
                                 <div id="editor" @ref="richEditor"></div>
                             </div>
 
-                            <button class="btn btn-success send-btn" type="submit">@Localizator["MainPageButtonText"]</button>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-success send-btn" type="submit">@Localizator["MainPageButtonText"]</button>
+                                <button type="button" class="btn btn-outline-secondary" @onclick="OpenReferenceModalWithSelectionAsync" title="Add reference to another entry (select text first)">+ Add Reference</button>
+                            </div>
                         </div>
                     </EditForm>
                 }
@@ -235,6 +370,9 @@
             int loggedUserId = Convert.ToInt32(user.FindFirstValue("userId"));
             User loadedUser = await UserClient.GetUserByIdAsync(loggedUserId);
             isValidated = loadedUser.IsValidated;
+            
+            // Extract current user name for collaboration and reference management
+            await ExtractCurrentUserNameAsync();
         }
         else
         {
@@ -412,6 +550,310 @@
     private void NavigateToHomeForMasterPassword()
     {
         NavigationManager.NavigateTo("/");
+    }
+
+    // Collaboration Management State
+    private DialogueTemplate? modalCollaboration;
+    private List<GroupPermission>? collaborators;
+    private string newCollaboratorUsername = string.Empty;
+    private int newCollaboratorRole = 1; // Default to Editor
+    private string collaborationErrorMessage = string.Empty;
+    private string currentUserName = string.Empty;
+
+    // Entry Reference Management State
+    private DialogueTemplate? modalReference;
+    private int selectedReferenceSourceId = 0;
+    private int selectedReferenceTargetId = 0;
+    private string referenceExcerptText = string.Empty;
+    private string referenceErrorMessage = string.Empty;
+    private List<Diary>? availableDiaries;
+
+    // Collaboration Modal Methods
+    private async Task OpenCollaborationModalAsync()
+    {
+        if (group == null)
+            return;
+
+        collaborationErrorMessage = string.Empty;
+        newCollaboratorUsername = string.Empty;
+        newCollaboratorRole = 1;
+
+        // Load current collaborators
+        try
+        {
+            var response = await ((CustomAuthenticationStateProvider)AuthProvider).AuthorizedRequestAsync(() =>
+                HttpClient.GetAsync($"/groups/{group.Id}/members"));
+
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                var result = JsonSerializer.Deserialize<CollaborationListResponse>(json,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                collaborators = result?.Members ?? new List<GroupPermission>();
+            }
+            else
+            {
+                collaborationErrorMessage = Localizator["ErrorLoadingCollaborators"];
+            }
+        }
+        catch (Exception ex)
+        {
+            collaborationErrorMessage = $"Error: {ex.Message}";
+        }
+
+        modalCollaboration?.Open();
+    }
+
+    private void CloseCollaborationModal()
+    {
+        modalCollaboration?.Close();
+        collaborators = null;
+        newCollaboratorUsername = string.Empty;
+        newCollaboratorRole = 1;
+        collaborationErrorMessage = string.Empty;
+    }
+
+    private async Task OnAddCollaboratorAsync()
+    {
+        if (group == null || string.IsNullOrWhiteSpace(newCollaboratorUsername))
+            return;
+
+        collaborationErrorMessage = string.Empty;
+
+        try
+        {
+            var request = new ManageCollaborationRequest
+            {
+                Username = newCollaboratorUsername.Trim(),
+                Role = newCollaboratorRole
+            };
+
+            var response = await ((CustomAuthenticationStateProvider)AuthProvider).AuthorizedRequestAsync(() =>
+                HttpClient.PostAsJsonAsync($"/groups/{group.Id}/members", request));
+
+            if (response.IsSuccessStatusCode)
+            {
+                // Reload collaborators
+                await OpenCollaborationModalAsync();
+                newCollaboratorUsername = string.Empty;
+                newCollaboratorRole = 1;
+            }
+            else
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                collaborationErrorMessage = $"Error: {content}";
+            }
+        }
+        catch (Exception ex)
+        {
+            collaborationErrorMessage = $"Error: {ex.Message}";
+        }
+
+        StateHasChanged();
+    }
+
+    private async Task OnRoleChangeAsync(int userId, string newRole)
+    {
+        if (group == null || collaborators == null)
+            return;
+
+        collaborationErrorMessage = string.Empty;
+
+        try
+        {
+            if (!int.TryParse(newRole, out var roleValue))
+                return;
+
+            var request = new UpdateCollaborationRequest
+            {
+                Role = roleValue
+            };
+
+            var response = await ((CustomAuthenticationStateProvider)AuthProvider).AuthorizedRequestAsync(() =>
+                HttpClient.PutAsJsonAsync($"/groups/{group.Id}/members/{userId}", request));
+
+            if (response.IsSuccessStatusCode)
+            {
+                // Update local collaborator role
+                var collaborator = collaborators.FirstOrDefault(c => c.UserId == userId);
+                if (collaborator != null)
+                {
+                    collaborator.Role = roleValue;
+                }
+            }
+            else
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                collaborationErrorMessage = $"Error: {content}";
+            }
+        }
+        catch (Exception ex)
+        {
+            collaborationErrorMessage = $"Error: {ex.Message}";
+        }
+
+        StateHasChanged();
+    }
+
+    private async Task OnRemoveCollaboratorAsync(int userId)
+    {
+        if (group == null || collaborators == null)
+            return;
+
+        collaborationErrorMessage = string.Empty;
+
+        try
+        {
+            var response = await ((CustomAuthenticationStateProvider)AuthProvider).AuthorizedRequestAsync(() =>
+                HttpClient.DeleteAsync($"/groups/{group.Id}/members/{userId}"));
+
+            if (response.IsSuccessStatusCode)
+            {
+                // Remove from local list
+                collaborators.RemoveAll(c => c.UserId == userId);
+            }
+            else
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                collaborationErrorMessage = $"Error: {content}";
+            }
+        }
+        catch (Exception ex)
+        {
+            collaborationErrorMessage = $"Error: {ex.Message}";
+        }
+
+        StateHasChanged();
+    }
+
+    // Entry Reference Modal Methods
+    private async Task OpenReferenceModalForEntryAsync(int sourceEntryId)
+    {
+        if (group == null)
+            return;
+
+        selectedReferenceSourceId = sourceEntryId;
+        selectedReferenceTargetId = 0;
+        referenceExcerptText = string.Empty;
+        referenceErrorMessage = string.Empty;
+
+        // Load available diaries (excluding current entry)
+        availableDiaries = diaries?.Where(d => d.Id != sourceEntryId).ToList();
+
+        modalReference?.Open();
+    }
+
+    private async Task OpenReferenceModalWithSelectionAsync()
+    {
+        if (group == null)
+            return;
+
+        selectedReferenceTargetId = 0;
+        referenceErrorMessage = string.Empty;
+
+        // Try to get selected text from editor
+        try
+        {
+            var selectedText = await JS.InvokeAsync<string>("getEditorSelection");
+            referenceExcerptText = selectedText ?? string.Empty;
+        }
+        catch
+        {
+            referenceExcerptText = string.Empty;
+        }
+
+        // Load available diaries (excluding current entry if set)
+        availableDiaries = diaries?.Where(d => d.Id != selectedReferenceSourceId).ToList();
+
+        modalReference?.Open();
+    }
+
+    private void CloseReferenceModal()
+    {
+        modalReference?.Close();
+        selectedReferenceSourceId = 0;
+        selectedReferenceTargetId = 0;
+        referenceExcerptText = string.Empty;
+        referenceErrorMessage = string.Empty;
+        availableDiaries = null;
+    }
+
+    private async Task OnCreateReferenceAsync()
+    {
+        if (group == null || selectedReferenceSourceId == 0 || selectedReferenceTargetId == 0)
+        {
+            referenceErrorMessage = Localizator["PleaseSelectEntry"];
+            return;
+        }
+
+        referenceErrorMessage = string.Empty;
+
+        try
+        {
+            var request = new CreateEntryReferenceRequest
+            {
+                ReferencedEntryId = selectedReferenceTargetId,
+                ExcerptText = string.IsNullOrWhiteSpace(referenceExcerptText) ? null : referenceExcerptText.Trim()
+            };
+
+            var response = await ((CustomAuthenticationStateProvider)AuthProvider).AuthorizedRequestAsync(() =>
+                HttpClient.PostAsJsonAsync($"/diaries/{selectedReferenceSourceId}/references", request));
+
+            if (response.IsSuccessStatusCode)
+            {
+                CloseReferenceModal();
+                // Refresh diaries to show updated references
+                if (group != null)
+                {
+                    diaries = await DiaryClient.GetDiariesOfGroupAsync(group.Id);
+                }
+            }
+            else
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                referenceErrorMessage = $"Error: {content}";
+            }
+        }
+        catch (Exception ex)
+        {
+            referenceErrorMessage = $"Error: {ex.Message}";
+        }
+
+        StateHasChanged();
+    }
+
+    // Helper Methods
+    private bool CanAddCollaborator => !string.IsNullOrEmpty(newCollaboratorUsername);
+
+    private bool CanCreateReference => selectedReferenceTargetId > 0;
+
+    private async Task ExtractCurrentUserNameAsync()
+    {
+        try
+        {
+            var authState = await AuthProvider.GetAuthenticationStateAsync();
+            currentUserName = authState.User?.Identity?.Name ?? "Unknown";
+        }
+        catch
+        {
+            currentUserName = "Unknown";
+        }
+    }
+
+    private bool IsCurrentUserOwner()
+    {
+        return !string.IsNullOrEmpty(currentUserName) && group?.OwnerUserName == currentUserName;
+    }
+
+    private string GetRoleName(int role)
+    {
+        return role switch
+        {
+            0 => "Owner",
+            1 => "Editor",
+            2 => "Viewer",
+            _ => "Unknown"
+        };
     }
 
     private record MonthSummary(int Month, int Count);

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+	<data name="InvalidNameOrPswd" xml:space="preserve">
+    	<value>Nombre de usuario o contraseña inválido.</value>
+	</data>
+  	<data name="TokenNotEqual" xml:space="preserve">
+		<value>Los tokens no eran iguales.</value>
+	</data>
+  	<data name="TokenTimeExpired" xml:space="preserve">
+		<value>El tiempo ha expirado.</value>
+	</data>
+  	<data name="PasswordsNotEqual" xml:space="preserve">
+		<value>La contraseña es incorrecta. ¿Olvidó su contraseña?</value>
+	</data>
+	<data name="RefreshTokenError" xml:space="preserve">
+		<value>El tiempo del token de actualización ha expirado. Inicie sesión nuevamente para confirmar que es usted.</value>
+	</data>
+	<data name="OAuthLoginFailed" xml:space="preserve">
+		<value>El inicio de sesión OAuth falló. Intente de nuevo.</value>
+	</data>
+</root>

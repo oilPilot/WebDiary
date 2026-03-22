@@ -73,7 +73,10 @@ public static class GroupEndpoints
             }
 
             return Results.Ok(await dbContext.diaryGroups
-                .Where(diaryGroup => diaryGroup.UserId == userId && !diaryGroup.IsArchived)
+                .Where(diaryGroup => !diaryGroup.IsArchived &&
+                    (diaryGroup.UserId == userId ||
+                     dbContext.groupPermissions.Any(p => p.GroupId == diaryGroup.Id && p.UserId == userId)))
+                .Include(diaryGroup => diaryGroup.Owner)
                 .Select(diaryGroup => diaryGroup.toDTO())
                 .AsNoTracking()
                 .ToListAsync());

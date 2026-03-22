@@ -12,7 +12,13 @@
   	<data name="PasswordsNotEqual" xml:space="preserve">
 		<value>Das Passwort ist falsch. Haben Sie Ihr Passwort vergessen?</value>
 	</data>
-  	<data name="RefreshTokenError" xml:space="preserve">
+	<data name="RefreshTokenError" xml:space="preserve">
 		<value>Die Zeit für das Aktualisierungstoken ist abgelaufen. Bitte melden Sie sich erneut an, um zu bestätigen, dass Sie Sie sind.</value>
+	</data>
+	<data name="OAuthLoginFailed" xml:space="preserve">
+		<value>OAuth-Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut.</value>
+	</data>
+	<data name="OAuthProviderNotConfigured" xml:space="preserve">
+		<value>OAuth-Anbieter ist nicht konfiguriert. Bitte wenden Sie sich an den Administrator.</value>
 	</data>
 </root>

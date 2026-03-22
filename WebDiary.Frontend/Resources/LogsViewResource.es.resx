@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+	<data name="LogsTitle" xml:space="preserve">
+		<value>Registros del sistema</value>
+	</data>
+	<data name="LogsDescription" xml:space="preserve">
+		<value>Ver registros de actividad del sistema e información de diagnóstico.</value>
+	</data>
+	<data name="FilterByLevel" xml:space="preserve">
+		<value>Filtrar por nivel:</value>
+	</data>
+	<data name="FilterByDate" xml:space="preserve">
+		<value>Filtrar por fecha:</value>
+	</data>
+	<data name="SearchLogs" xml:space="preserve">
+		<value>Registros de búsqueda:</value>
+	</data>
+	<data name="ApplyFilters" xml:space="preserve">
+		<value>Aplicar filtros</value>
+	</data>
+	<data name="ClearFilters" xml:space="preserve">
+		<value>Borrar filtros</value>
+	</data>
+	<data name="Timestamp" xml:space="preserve">
+		<value>Marca de tiempo</value>
+	</data>
+	<data name="Level" xml:space="preserve">
+		<value>Nivel</value>
+	</data>
+	<data name="Message" xml:space="preserve">
+		<value>Mensaje</value>
+	</data>
+	<data name="NoLogsFound" xml:space="preserve">
+		<value>No se encontraron registros para los filtros seleccionados.</value>
+	</data>
+	<data name="LoadingLogs" xml:space="preserve">
+		<value>Cargando registros...</value>
+	</data>
+	<data name="LogsError" xml:space="preserve">
+		<value>Error al cargar los registros. Intente de nuevo más tarde.</value>
+	</data>
+	<data name="ExportLogsButton" xml:space="preserve">
+		<value>Exportar registros</value>
+	</data>
+	<data name="LevelInfo" xml:space="preserve">
+		<value>Información</value>
+	</data>
+	<data name="LevelWarning" xml:space="preserve">
+		<value>Advertencia</value>
+	</data>
+	<data name="LevelError" xml:space="preserve">
+		<value>Error</value>
+	</data>
+	<data name="LevelDebug" xml:space="preserve">
+		<value>Depuración</value>
+	</data>
+</root>

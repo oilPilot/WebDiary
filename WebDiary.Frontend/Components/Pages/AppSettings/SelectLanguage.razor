@@ -13,6 +13,8 @@
                      @bind-Value:after="OnCultureChangedAsync">
             <option value="en">@Localizator["LanguageEng"]</option>
             <option value="de">@Localizator["LanguageGer"]</option>
+            <option value="fr">@Localizator["LanguageFra"]</option>
+            <option value="es">@Localizator["LanguageSpa"]</option>
         </InputSelect>
     </div>
 </div>
@@ -26,6 +28,8 @@
         _cultureName = CultureInfo.CurrentCulture.TwoLetterISOLanguageName switch
         {
             "de" => "de",
+            "fr" => "fr",
+            "es" => "es",
             _ => DefaultCulture
         };
     }

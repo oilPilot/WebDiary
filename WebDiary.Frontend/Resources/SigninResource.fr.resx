@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+	<data name="SigninTitle" xml:space="preserve">
+		<value>S'inscrire</value>
+	</data>
+	<data name="FirstNameLabel" xml:space="preserve">
+		<value>Prénom :</value>
+	</data>
+	<data name="LastNameLabel" xml:space="preserve">
+		<value>Nom :</value>
+	</data>
+	<data name="EmailLabel" xml:space="preserve">
+		<value>E-mail :</value>
+	</data>
+	<data name="PasswordLabel" xml:space="preserve">
+		<value>Mot de passe :</value>
+	</data>
+	<data name="ConfirmPasswordLabel" xml:space="preserve">
+		<value>Confirmer le mot de passe :</value>
+	</data>
+	<data name="SigninButton" xml:space="preserve">
+		<value>Créer un compte</value>
+	</data>
+	<data name="HaveAccountText" xml:space="preserve">
+		<value>Vous avez déjà un compte?</value>
+	</data>
+	<data name="LoginLink" xml:space="preserve">
+		<value>Connectez-vous ici</value>
+	</data>
+	<data name="AgreementText" xml:space="preserve">
+		<value>J'accepte les conditions d'utilisation et la politique de confidentialité</value>
+	</data>
+	<data name="PasswordMismatch" xml:space="preserve">
+		<value>Les mots de passe ne correspondent pas.</value>
+	</data>
+	<data name="RegistrationFailed" xml:space="preserve">
+		<value>L'inscription a échoué. Veuillez réessayer.</value>
+	</data>
+	<data name="EmailTaken" xml:space="preserve">
+		<value>Cet e-mail est déjà enregistré.</value>
+	</data>
+</root>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+	<data name="ChatroomsTitle" xml:space="preserve">
+		<value>Chaträume</value>
+	</data>
+	<data name="ServerChatrooms" xml:space="preserve">
+		<value>Server-Chaträume</value>
+	</data>
+	<data name="ServerRoomsDescription" xml:space="preserve">
+		<value>Öffentliche/Admin-Räume werden vom Server unterstützt und speichern bis zu 150 Nachrichten aus den letzten 72 Stunden.</value>
+	</data>
+	<data name="PublicRooms" xml:space="preserve">
+		<value>Öffentlich</value>
+	</data>
+	<data name="AdminRooms" xml:space="preserve">
+		<value>Admin</value>
+	</data>
+	<data name="LocalChatrooms" xml:space="preserve">
+		<value>Lokale Chaträume</value>
+	</data>
+	<data name="LocalRoomsDescription" xml:space="preserve">
+		<value>Lokale Räume werden nur vom Client verwaltet. Zum Beitreten ist ein Raumname und ein außerhalb der App freigegebenes Geheimnis erforderlich.</value>
+	</data>
+	<data name="DeleteRoomButton" xml:space="preserve">
+		<value>Lokalen Raum löschen</value>
+	</data>
+	<data name="JoinRoomForm" xml:space="preserve">
+		<value>Lokalen Raum beitreten</value>
+	</data>
+	<data name="RoomNameLabel" xml:space="preserve">
+		<value>Raumname:</value>
+	</data>
+	<data name="RoomSecretLabel" xml:space="preserve">
+		<value>Raumgeheimnis:</value>
+	</data>
+	<data name="JoinButton" xml:space="preserve">
+		<value>Beitreten</value>
+	</data>
+	<data name="MessageInput" xml:space="preserve">
+		<value>Geben Sie Ihre Nachricht ein...</value>
+	</data>
+	<data name="SendButton" xml:space="preserve">
+		<value>Senden</value>
+	</data>
+	<data name="NoRoomsSelected" xml:space="preserve">
+		<value>Wählen Sie einen Raum aus, um Nachrichten anzuzeigen</value>
+	</data>
+	<data name="LoadingMessages" xml:space="preserve">
+		<value>Nachrichten werden geladen...</value>
+	</data>
+	<data name="ConnectionError" xml:space="preserve">
+		<value>Verbindungsfehler. Bitte versuchen Sie es später erneut.</value>
+	</data>
+</root>

@@ -1,4 +1,9 @@
+using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -27,7 +32,15 @@ builder.Services.AddDbContextPool<DiariesContext>(options =>
 });
 Log.Information("Configured DbContext with connection string" /*{ConnectionString}", connstring 'ONLY FOR DEVELOPERS'*/);
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+const string ExternalCookieScheme = "External";
+const string GoogleScheme = "Google";
+const string GitHubScheme = "GitHub";
+
+var authBuilder = builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
@@ -54,7 +67,110 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 return Task.CompletedTask;
             }
         };
+    })
+    .AddCookie(ExternalCookieScheme, options =>
+    {
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+        options.SlidingExpiration = false;
     });
+
+var googleClientId = builder.Configuration["Authentication:Google:ClientId"];
+var googleClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+if (!string.IsNullOrWhiteSpace(googleClientId) && !string.IsNullOrWhiteSpace(googleClientSecret))
+{
+    authBuilder.AddOAuth(GoogleScheme, options =>
+    {
+        options.ClientId = googleClientId;
+        options.ClientSecret = googleClientSecret;
+        options.SignInScheme = ExternalCookieScheme;
+        options.CallbackPath = "/signin-google";
+        options.AuthorizationEndpoint = "https://accounts.google.com/o/oauth2/v2/auth";
+        options.TokenEndpoint = "https://oauth2.googleapis.com/token";
+        options.UserInformationEndpoint = "https://openidconnect.googleapis.com/v1/userinfo";
+        options.Scope.Add("openid");
+        options.Scope.Add("profile");
+        options.Scope.Add("email");
+        options.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "sub");
+        options.ClaimActions.MapJsonKey(ClaimTypes.Name, "name");
+        options.ClaimActions.MapJsonKey(ClaimTypes.Email, "email");
+        options.SaveTokens = true;
+        options.Events = new OAuthEvents
+        {
+            OnCreatingTicket = async context =>
+            {
+                using var request = new HttpRequestMessage(HttpMethod.Get, context.Options.UserInformationEndpoint);
+                request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", context.AccessToken);
+
+                using var response = await context.Backchannel.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, context.HttpContext.RequestAborted);
+                response.EnsureSuccessStatusCode();
+
+                using var payload = JsonDocument.Parse(await response.Content.ReadAsStringAsync(context.HttpContext.RequestAborted));
+                context.RunClaimActions(payload.RootElement);
+            },
+            OnRemoteFailure = context =>
+            {
+                var failureRedirect = BuildOAuthFailureRedirect(context.Properties, builder.Configuration);
+                context.Response.Redirect(failureRedirect);
+                context.HandleResponse();
+                return Task.CompletedTask;
+            }
+        };
+    });
+}
+else
+{
+    Log.Warning("Google OAuth is not configured. Set Authentication:Google:ClientId and Authentication:Google:ClientSecret to enable it.");
+}
+
+var gitHubClientId = builder.Configuration["Authentication:GitHub:ClientId"];
+var gitHubClientSecret = builder.Configuration["Authentication:GitHub:ClientSecret"];
+if (!string.IsNullOrWhiteSpace(gitHubClientId) && !string.IsNullOrWhiteSpace(gitHubClientSecret))
+{
+    authBuilder.AddOAuth(GitHubScheme, options =>
+    {
+        options.ClientId = gitHubClientId;
+        options.ClientSecret = gitHubClientSecret;
+        options.SignInScheme = ExternalCookieScheme;
+        options.CallbackPath = "/signin-github";
+        options.AuthorizationEndpoint = "https://github.com/login/oauth/authorize";
+        options.TokenEndpoint = "https://github.com/login/oauth/access_token";
+        options.UserInformationEndpoint = "https://api.github.com/user";
+        options.Scope.Add("read:user");
+        options.Scope.Add("user:email");
+        options.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "id");
+        options.ClaimActions.MapJsonKey(ClaimTypes.Name, "login");
+        options.ClaimActions.MapJsonKey(ClaimTypes.Email, "email");
+        options.SaveTokens = true;
+        options.Events = new OAuthEvents
+        {
+            OnCreatingTicket = async context =>
+            {
+                using var request = new HttpRequestMessage(HttpMethod.Get, context.Options.UserInformationEndpoint);
+                request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", context.AccessToken);
+                request.Headers.UserAgent.Add(new ProductInfoHeaderValue("WebDiary", "1.0"));
+
+                using var response = await context.Backchannel.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, context.HttpContext.RequestAborted);
+                response.EnsureSuccessStatusCode();
+
+                using var payload = JsonDocument.Parse(await response.Content.ReadAsStringAsync(context.HttpContext.RequestAborted));
+                context.RunClaimActions(payload.RootElement);
+            },
+            OnRemoteFailure = context =>
+            {
+                var failureRedirect = BuildOAuthFailureRedirect(context.Properties, builder.Configuration);
+                context.Response.Redirect(failureRedirect);
+                context.HandleResponse();
+                return Task.CompletedTask;
+            }
+        };
+    });
+}
+else
+{
+    Log.Warning("GitHub OAuth is not configured. Set Authentication:GitHub:ClientId and Authentication:GitHub:ClientSecret to enable it.");
+}
 builder.Services.AddAuthorizationBuilder()
     .SetFallbackPolicy(new AuthorizationPolicyBuilder()
         .RequireAuthenticatedUser()
@@ -111,7 +227,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 Log.Information("Added Authentication and Authorization to app");
 
-var supportedCultures = new[] { "en", "de"};
+var supportedCultures = new[] { "en", "de", "fr", "es" };
 var localizationOptions = new RequestLocalizationOptions().
     SetDefaultCulture(supportedCultures[0]).AddSupportedCultures(supportedCultures).AddSupportedUICultures(supportedCultures);
 app.UseRequestLocalization(localizationOptions);
@@ -149,4 +265,23 @@ try
 catch (Exception Ex)
 {
     Log.Fatal("Catched exception upon opening app: {Exception}", Ex);
+}
+
+static string BuildOAuthFailureRedirect(AuthenticationProperties? properties, IConfiguration configuration)
+{
+    var returnUrl = GetOAuthReturnUrl(properties, configuration);
+    return $"/auth/oauth/failure?returnUrl={Uri.EscapeDataString(returnUrl)}";
+}
+
+static string GetOAuthReturnUrl(AuthenticationProperties? properties, IConfiguration configuration)
+{
+    if (properties?.Items != null && properties.Items.TryGetValue("returnUrl", out var stored) && !string.IsNullOrWhiteSpace(stored))
+    {
+        if (Uri.TryCreate(stored, UriKind.Absolute, out _))
+        {
+            return stored;
+        }
+    }
+
+    return configuration["FrontendUrl"] ?? "/";
 }

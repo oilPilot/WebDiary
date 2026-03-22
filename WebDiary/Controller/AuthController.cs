@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
@@ -71,6 +73,88 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
 
         Log.Information("Refreshing token for user name {Name}", user.UserName);
         return await CreatingTokens(user, false);
+    }
+
+    [AllowAnonymous]
+    [HttpGet("oauth/{provider}")]
+    public async Task<IActionResult> OAuthChallenge([FromRoute] string provider, [FromQuery] string? returnUrl)
+    {
+        var scheme = GetOAuthScheme(provider);
+        if (scheme == null)
+        {
+            return Redirect(BuildOAuthProviderUnavailableRedirect(returnUrl));
+        }
+
+        var schemeProvider = HttpContext.RequestServices.GetRequiredService<IAuthenticationSchemeProvider>();
+        var schemeInfo = await schemeProvider.GetSchemeAsync(scheme);
+        if (schemeInfo == null)
+        {
+            return Redirect(BuildOAuthProviderUnavailableRedirect(returnUrl));
+        }
+
+        var redirectUri = Url.Action(nameof(OAuthCallback), "Auth", new { provider }) ?? $"/auth/oauth/{provider}/callback";
+        var properties = new AuthenticationProperties
+        {
+            RedirectUri = redirectUri
+        };
+        properties.Items["returnUrl"] = GetSafeReturnUrl(returnUrl);
+
+        return Challenge(properties, scheme);
+    }
+
+    [AllowAnonymous]
+    [HttpGet("oauth/{provider}/callback")]
+    public async Task<IActionResult> OAuthCallback([FromRoute] string provider)
+    {
+        var scheme = GetOAuthScheme(provider);
+        if (scheme == null)
+        {
+            return Redirect(BuildOAuthProviderUnavailableRedirect(null));
+        }
+
+        var schemeProvider = HttpContext.RequestServices.GetRequiredService<IAuthenticationSchemeProvider>();
+        var schemeInfo = await schemeProvider.GetSchemeAsync(scheme);
+        if (schemeInfo == null)
+        {
+            return Redirect(BuildOAuthProviderUnavailableRedirect(null));
+        }
+
+        var result = await HttpContext.AuthenticateAsync("External");
+        if (!result.Succeeded || result.Principal == null)
+        {
+            await HttpContext.SignOutAsync("External");
+            return Redirect(BuildOAuthErrorRedirect(result.Properties));
+        }
+
+        var externalId = result.Principal.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrWhiteSpace(externalId))
+        {
+            await HttpContext.SignOutAsync("External");
+            return Redirect(BuildOAuthErrorRedirect(result.Properties));
+        }
+
+        var userName = BuildExternalUserName(provider, externalId);
+        var user = await dbContext.users.FirstOrDefaultAsync(u => u.UserName == userName);
+        if (user == null)
+        {
+            user = await CreateExternalUserAsync(userName, result.Principal, provider);
+        }
+
+        var tokens = await authService.CreatingTokens(user);
+        await HttpContext.SignOutAsync("External");
+
+        var returnUrl = ExtractReturnUrl(result.Properties);
+        var redirectUrl = AppendQuery(returnUrl, "token", tokens[0]);
+        redirectUrl = AppendQuery(redirectUrl, "refreshToken", tokens[1]);
+        return Redirect(redirectUrl);
+    }
+
+    [AllowAnonymous]
+    [HttpGet("oauth/failure")]
+    public IActionResult OAuthFailure([FromQuery] string? returnUrl)
+    {
+        var redirectUrl = AppendQuery(GetSafeReturnUrl(returnUrl), "ErrorMessage", localizer["OAuthLoginFailed"].Value);
+        return Redirect(redirectUrl);
     }
 
     private async Task<IActionResult> CreatingTokens(User user, bool populateExpire = true) {
@@ -276,6 +360,94 @@ public class AuthController (DiariesContext dbContext, IConfiguration config,
     [HttpPost("ValidateEmail")]
     public IActionResult ValidateEmailAsync(validateEmailModel ValidateEmailForm) {
         return Ok("Validated successfully"); // NO VALIDATION NEEDED ANYMORE
+    }
+
+    private static string? GetOAuthScheme(string provider)
+    {
+        var normalized = NormalizeProvider(provider);
+        return normalized switch
+        {
+            "google" => "Google",
+            "github" => "GitHub",
+            _ => null
+        };
+    }
+
+    private static string NormalizeProvider(string provider) =>
+        provider.Trim().ToLowerInvariant();
+
+    private static string BuildExternalUserName(string provider, string externalId)
+    {
+        var normalizedProvider = NormalizeProvider(provider);
+        using var sha = SHA256.Create();
+        var hash = sha.ComputeHash(Encoding.UTF8.GetBytes($"{normalizedProvider}:{externalId}"));
+        var shortHash = Convert.ToHexString(hash).ToLowerInvariant().Substring(0, 10);
+        return $"oauth_{normalizedProvider}_{shortHash}";
+    }
+
+    private async Task<User> CreateExternalUserAsync(string userName, ClaimsPrincipal principal, string provider)
+    {
+        var displayName = principal.FindFirstValue(ClaimTypes.Name)
+            ?? principal.FindFirstValue(ClaimTypes.Email)
+            ?? $"{NormalizeProvider(provider)} user";
+
+        var user = new User
+        {
+            UserName = userName,
+            Password = string.Empty,
+            Role = "Default",
+            Description = displayName,
+            CreatedAtUTC = DateTime.UtcNow,
+            LastLoginAtUTC = DateTime.UtcNow,
+            ActionToken = null,
+            ActionDateEnd = null,
+            IsValidated = true
+        };
+
+        var randomPassword = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
+        var hasher = new PasswordHasher<User>();
+        user.Password = hasher.HashPassword(user, randomPassword);
+
+        await dbContext.users.AddAsync(user);
+        await dbContext.SaveChangesAsync();
+        return user;
+    }
+
+    private string ExtractReturnUrl(AuthenticationProperties? properties)
+    {
+        if (properties?.Items != null && properties.Items.TryGetValue("returnUrl", out var stored))
+        {
+            return GetSafeReturnUrl(stored);
+        }
+
+        return GetSafeReturnUrl(null);
+    }
+
+    private string GetSafeReturnUrl(string? returnUrl)
+    {
+        if (!string.IsNullOrWhiteSpace(returnUrl) && Uri.TryCreate(returnUrl, UriKind.Absolute, out _))
+        {
+            return returnUrl;
+        }
+
+        return config["FrontendUrl"] ?? "/";
+    }
+
+    private string BuildOAuthErrorRedirect(AuthenticationProperties? properties)
+    {
+        var returnUrl = ExtractReturnUrl(properties);
+        return AppendQuery(returnUrl, "ErrorMessage", localizer["OAuthLoginFailed"].Value);
+    }
+
+    private string BuildOAuthProviderUnavailableRedirect(string? returnUrl)
+    {
+        return AppendQuery(GetSafeReturnUrl(returnUrl), "ErrorMessage", localizer["OAuthProviderNotConfigured"].Value);
+    }
+
+    private static string AppendQuery(string url, string key, string value)
+    {
+        var separator = url.Contains('?') ? '&' : '?';
+        return $"{url}{separator}{Uri.EscapeDataString(key)}={Uri.EscapeDataString(value)}";
     }
 
     private int? GetCurrentUserId()

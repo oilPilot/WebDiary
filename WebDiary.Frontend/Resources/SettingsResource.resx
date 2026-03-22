@@ -3,8 +3,14 @@
 	<data name="LanguageEng" xml:space="preserve">
 		<value>🇬🇧 English</value>
 	</data>
+	<data name="LanguageFra" xml:space="preserve">
+		<value>🇫🇷 Français</value>
+	</data>
 	<data name="LanguageGer" xml:space="preserve">
 		<value>🇩🇪 German</value>
+	</data>
+	<data name="LanguageSpa" xml:space="preserve">
+		<value>🇪🇸 Español</value>
 	</data>
 	<data name="LanguageText" xml:space="preserve">
 		<value>Language: </value>

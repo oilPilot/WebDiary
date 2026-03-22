@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+	<data name="ValidationErrorText" xml:space="preserve">
+    	<value>Algo salió mal. ¿Su tiempo no ha expirado?</value>
+	</data>
+  	<data name="RestorePasswordTitle" xml:space="preserve">
+		<value>Restaurar contraseña</value>
+	</data>
+	<data name="Email" xml:space="preserve">
+		<value>Correo electrónico:</value>
+	</data>
+	<data name="RestorePasswordSendEmail" xml:space="preserve">
+		<value>Enviar correo electrónico</value>
+	</data>
+	<data name="RestorePasswordError1" xml:space="preserve">
+		<value>Usuario no encontrado. Verifique si el correo electrónico es correcto.</value>
+	</data>
+	<data name="WrongOnBackend" xml:space="preserve">
+		<value>Algo salió mal en el backend. Contacte con el desarrollador.</value>
+	</data>
+	<data name="RestorePasswordSuccessSending" xml:space="preserve">
+		<value>El mensaje ha sido enviado. Verifique su correo electrónico, el mensaje puede llegar después de unos segundos o minutos.</value>
+	</data>
+	<data name="ResetPasswordTitle" xml:space="preserve">
+		<value>Restablecer contraseña</value>
+	</data>
+	<data name="ResetPasswordNew" xml:space="preserve">
+		<value>Nueva contraseña:</value>
+	</data>
+	<data name="ResetPasswordVerify" xml:space="preserve">
+		<value>Verificar contraseña:</value>
+	</data>
+	<data name="ResetPasswordChange" xml:space="preserve">
+		<value>Cambiar contraseña</value>
+	</data>
+	<data name="ResetPasswordError" xml:space="preserve">
+		<value>Algo salió mal durante la verificación. ¿Su tiempo de restablecimiento de contraseña no ha expirado?</value>
+	</data>
+	<data name="ManageAccountTitle" xml:space="preserve">
+		<value>Gestionar cuenta</value>
+	</data>
+	<data name="ManageAccountName" xml:space="preserve">
+		<value>Nombre de usuario:</value>
+	</data>
+	<data name="ManageAccountRole" xml:space="preserve">
+		<value>Rol:</value>
+	</data>
+	<data name="ManageAccountDesc" xml:space="preserve">
+		<value>Descripción:</value>
+	</data>
+</root>

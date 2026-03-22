@@ -114,15 +114,16 @@
             <BodyTemplate>
                 @if (diaries != null)
                 {
+                    var referenceEntries = availableDiaries ?? diaries;
                     <div class="reference-form">
                         <label class="form-label">Select entry to reference:</label>
                         <div class="reference-entries-list">
-                            @foreach (var sourceEntry in diaries.Where(d => d.Id != selectedReferenceSourceId).OrderByDescending(d => d.Date).ThenByDescending(d => d.Time))
+                            @foreach (var sourceEntry in referenceEntries.Where(d => d.Id != selectedReferenceSourceId).OrderByDescending(d => d.Date).ThenByDescending(d => d.Time))
                             {
                                 <div class="reference-entry-item">
                                     <input type="radio" name="referenceEntry" value="@sourceEntry.Id" @onchange="((ChangeEventArgs e) => selectedReferenceTargetId = int.Parse(e.Value?.ToString() ?? 0.ToString()))" id="ref_@sourceEntry.Id">
                                     <label for="ref_@sourceEntry.Id" class="ms-2">
-                                        @sourceEntry.Date.ToString("yyyy-MM-dd HH:mm") - @sourceEntry.mood
+                                        @(new DateTime(sourceEntry.Date, sourceEntry.Time).ToString("yyyy-MM-dd HH:mm")) - @sourceEntry.mood
                                         <span class="text-muted d-block small">@sourceEntry.OwnerUserName</span>
                                     </label>
                                 </div>
@@ -247,6 +248,38 @@
                                                                         }
                                                                     </div>
                                                                 }
+                                                                @if (entryReferences.TryGetValue(dayDiary.Id, out var references) && references.Count > 0)
+                                                                {
+                                                                    <div class="entry-references">
+                                                                        <div class="entry-references-title">References</div>
+                                                                        @foreach (var reference in references)
+                                                                        {
+                                                                            var referencedEntry = GetDiaryById(reference.ReferencedEntryId);
+                                                                            var referencedOwner = referencedEntry?.OwnerUserName ?? reference.ReferencedEntryOwner ?? "Unknown";
+                                                                            <div class="entry-reference-item">
+                                                                                <div class="entry-reference-meta">
+                                                                                    @if (referencedEntry != null)
+                                                                                    {
+                                                                                        <span class="entry-reference-time">@(new DateTime(referencedEntry.Date, referencedEntry.Time).ToString("yyyy-MM-dd HH:mm"))</span>
+                                                                                        @if (!string.IsNullOrWhiteSpace(referencedEntry.mood))
+                                                                                        {
+                                                                                            <span class="entry-reference-mood">@referencedEntry.mood</span>
+                                                                                        }
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <span class="entry-reference-time">Entry #@reference.ReferencedEntryId</span>
+                                                                                    }
+                                                                                    <span class="entry-reference-owner">by @referencedOwner</span>
+                                                                                </div>
+                                                                                @if (!string.IsNullOrWhiteSpace(reference.ExcerptText))
+                                                                                {
+                                                                                    <div class="entry-reference-excerpt">@reference.ExcerptText</div>
+                                                                                }
+                                                                            </div>
+                                                                        }
+                                                                    </div>
+                                                                }
                                                                 <div class="diary-text">@((MarkupString)dayDiary.Text)</div>
                                                                 <div class="diary-meta mt-2">
                                                                     <small class="text-muted">Written by: @dayDiary.OwnerUserName</small>
@@ -295,7 +328,7 @@
 
                             <div class="d-flex gap-2">
                                 <button class="btn btn-success send-btn" type="submit">@Localizator["MainPageButtonText"]</button>
-                                <button type="button" class="btn btn-outline-secondary" @onclick="OpenReferenceModalWithSelectionAsync" title="Add reference to another entry (select text first)">+ Add Reference</button>
+                                <button type="button" class="btn btn-outline-secondary" @onclick="async () => await OpenReferenceModalWithSelectionAsync()" title="Add reference to another entry (select text first)">+ Add Reference</button>
                             </div>
                         </div>
                     </EditForm>
@@ -412,6 +445,8 @@
             tagsInput = string.Empty;
 
             diaries = await DiaryClient.GetDiariesOfGroupAsync(group.Id);
+            RebuildDiaryIndex();
+            await LoadEntryReferencesAsync();
             selectedYearIndex = YearsWithDiaries.Count - 1;
             selectedMonth = null;
 
@@ -539,9 +574,14 @@
         diary.UtcOffsetMinutes = offset;
         diary.Tags = ParseTags(tagsInput);
 
-        await DiaryClient.AddDiaryAsync(diary!);
+        var createdDiary = await DiaryClient.AddDiaryAsync(diary!);
+        if (createdDiary != null && pendingReferences.Count > 0)
+        {
+            await CreatePendingReferencesAsync(createdDiary.Id);
+        }
         await localStorage.SetItemAsStringAsync("NewDiaryAutoSavedText", string.Empty);
         tagsInput = string.Empty;
+        pendingReferences.Clear();
         StateHasChanged();
         NavigationManager.Refresh(true);
     }
@@ -586,6 +626,10 @@
     private string referenceExcerptText = string.Empty;
     private string referenceErrorMessage = string.Empty;
     private List<Diary>? availableDiaries;
+    private bool isReferenceForNewEntry = false;
+    private readonly List<PendingReference> pendingReferences = new();
+    private readonly Dictionary<int, Diary> diaryById = new();
+    private readonly Dictionary<int, List<EntryReference>> entryReferences = new();
 
     // Collaboration Modal Methods
     private async Task OpenCollaborationModalAsync()
@@ -606,9 +650,9 @@
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
-                var result = JsonSerializer.Deserialize<CollaborationListResponse>(json,
-                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                collaborators = result?.Members ?? new List<GroupPermission>();
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                collaborators = JsonSerializer.Deserialize<List<GroupPermission>>(json, options)
+                    ?? new List<GroupPermission>();
             }
             else
             {
@@ -751,6 +795,7 @@
         if (group == null)
             return;
 
+        isReferenceForNewEntry = false;
         selectedReferenceSourceId = sourceEntryId;
         selectedReferenceTargetId = 0;
         referenceExcerptText = string.Empty;
@@ -767,6 +812,8 @@
         if (group == null)
             return;
 
+        isReferenceForNewEntry = true;
+        selectedReferenceSourceId = 0;
         selectedReferenceTargetId = 0;
         referenceErrorMessage = string.Empty;
 
@@ -782,7 +829,7 @@
         }
 
         // Load available diaries (excluding current entry if set)
-        availableDiaries = diaries?.Where(d => d.Id != selectedReferenceSourceId).ToList();
+        availableDiaries = diaries?.ToList();
 
         modalReference?.Open();
     }
@@ -790,6 +837,7 @@
     private void CloseReferenceModal()
     {
         modalReference?.Close();
+        isReferenceForNewEntry = false;
         selectedReferenceSourceId = 0;
         selectedReferenceTargetId = 0;
         referenceExcerptText = string.Empty;
@@ -799,33 +847,44 @@
 
     private async Task OnCreateReferenceAsync()
     {
-        if (group == null || selectedReferenceSourceId == 0 || selectedReferenceTargetId == 0)
+        if (group == null || selectedReferenceTargetId == 0)
         {
             referenceErrorMessage = Localizator["PleaseSelectEntry"];
             return;
         }
 
+        var excerpt = string.IsNullOrWhiteSpace(referenceExcerptText) ? null : referenceExcerptText.Trim();
         referenceErrorMessage = string.Empty;
+
+        if (isReferenceForNewEntry)
+        {
+            pendingReferences.Add(new PendingReference(selectedReferenceTargetId, excerpt));
+            CloseReferenceModal();
+            return;
+        }
+
+        if (selectedReferenceSourceId == 0)
+        {
+            referenceErrorMessage = Localizator["PleaseSelectEntry"];
+            return;
+        }
 
         try
         {
             var request = new CreateEntryReferenceRequest
             {
                 ReferencedEntryId = selectedReferenceTargetId,
-                ExcerptText = string.IsNullOrWhiteSpace(referenceExcerptText) ? null : referenceExcerptText.Trim()
+                ExcerptText = excerpt
             };
 
+            var sourceEntryId = selectedReferenceSourceId;
             var response = await ((CustomAuthenticationStateProvider)AuthProvider).AuthorizedRequestAsync(() =>
-                HttpClient.PostAsJsonAsync($"/diaries/{selectedReferenceSourceId}/references", request));
+                HttpClient.PostAsJsonAsync($"/diaries/{sourceEntryId}/references", request));
 
             if (response.IsSuccessStatusCode)
             {
                 CloseReferenceModal();
-                // Refresh diaries to show updated references
-                if (group != null)
-                {
-                    diaries = await DiaryClient.GetDiariesOfGroupAsync(group.Id);
-                }
+                await LoadEntryReferencesForEntryAsync(sourceEntryId);
             }
             else
             {
@@ -875,6 +934,89 @@
         };
     }
 
+    private void RebuildDiaryIndex()
+    {
+        diaryById.Clear();
+        if (diaries == null)
+        {
+            return;
+        }
+
+        foreach (var entry in diaries)
+        {
+            diaryById[entry.Id] = entry;
+        }
+    }
+
+    private Diary? GetDiaryById(int entryId)
+    {
+        return diaryById.TryGetValue(entryId, out var entry) ? entry : null;
+    }
+
+    private async Task LoadEntryReferencesAsync()
+    {
+        entryReferences.Clear();
+        if (diaries == null || diaries.Count == 0)
+        {
+            return;
+        }
+
+        var tasks = diaries.Select(entry => LoadEntryReferencesForEntryAsync(entry.Id));
+        await Task.WhenAll(tasks);
+    }
+
+    private async Task LoadEntryReferencesForEntryAsync(int entryId)
+    {
+        try
+        {
+            var response = await ((CustomAuthenticationStateProvider)AuthProvider).AuthorizedRequestAsync(() =>
+                HttpClient.GetAsync($"/diaries/{entryId}/references"));
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return;
+            }
+
+            var references = await response.Content.ReadFromJsonAsync<List<EntryReference>>() ?? new List<EntryReference>();
+            entryReferences[entryId] = references;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load references for entry {entryId}: {ex.Message}");
+        }
+    }
+
+    private async Task CreatePendingReferencesAsync(int sourceEntryId)
+    {
+        if (pendingReferences.Count == 0)
+        {
+            return;
+        }
+
+        var referencesToCreate = pendingReferences.ToList();
+        pendingReferences.Clear();
+
+        foreach (var pendingReference in referencesToCreate)
+        {
+            var request = new CreateEntryReferenceRequest
+            {
+                ReferencedEntryId = pendingReference.ReferencedEntryId,
+                ExcerptText = pendingReference.ExcerptText
+            };
+
+            var response = await ((CustomAuthenticationStateProvider)AuthProvider).AuthorizedRequestAsync(() =>
+                HttpClient.PostAsJsonAsync($"/diaries/{sourceEntryId}/references", request));
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Failed to create reference for entry {sourceEntryId}: {content}");
+            }
+        }
+
+        await LoadEntryReferencesForEntryAsync(sourceEntryId);
+    }
+
     private static List<string> ParseTags(string? raw)
     {
         if (string.IsNullOrWhiteSpace(raw))
@@ -891,6 +1033,8 @@
 
         return tags;
     }
+
+    private record PendingReference(int ReferencedEntryId, string? ExcerptText);
 
     private record MonthSummary(int Month, int Count);
 }

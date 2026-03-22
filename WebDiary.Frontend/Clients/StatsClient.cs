@@ -16,39 +16,87 @@ public class StatsClient(HttpClient httpClient, AuthenticationStateProvider auth
     }
 
     public async Task<int> GetNewUsersFromDate(DateOnly? startDate) {
-        var response = await ((CustomAuthenticationStateProvider)authenticationStateProvider).AuthorizedRequestAsync(() =>
-            httpClient.GetAsync($"stats/adminNewUsers?fromPeriod={startDate?.ToString("yyyy-MM-dd")}"));
-        return await response.Content.ReadFromJsonAsync<int>();
+        try {
+            var response = await ((CustomAuthenticationStateProvider)authenticationStateProvider).AuthorizedRequestAsync(() =>
+                httpClient.GetAsync($"stats/adminNewUsers?fromPeriod={startDate?.ToString("yyyy-MM-dd")}"));
+            if (!response.IsSuccessStatusCode) {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                return 0;
+            }
+            return await response.Content.ReadFromJsonAsync<int>();
+        } catch (Exception ex) {
+            return 0;
+        }
     }
 
     public async Task<int> GetNewEntriesFromDate(DateOnly? startDate) {
-        var response = await ((CustomAuthenticationStateProvider)authenticationStateProvider).AuthorizedRequestAsync(() =>
-            httpClient.GetAsync($"stats/adminNewEntries?fromPeriod={startDate?.ToString("yyyy-MM-dd")}"));
-        return await response.Content.ReadFromJsonAsync<int>();
+        try {
+            var response = await ((CustomAuthenticationStateProvider)authenticationStateProvider).AuthorizedRequestAsync(() =>
+                httpClient.GetAsync($"stats/adminNewEntries?fromPeriod={startDate?.ToString("yyyy-MM-dd")}"));
+            if (!response.IsSuccessStatusCode) {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                return 0;
+            }
+            return await response.Content.ReadFromJsonAsync<int>();
+        } catch (Exception ex) {
+            return 0;
+        }
     }
 
     public async Task<int> GetActiveUsersFromDate(DateOnly? startDate) {
-        var response = await ((CustomAuthenticationStateProvider)authenticationStateProvider).AuthorizedRequestAsync(() =>
-            httpClient.GetAsync($"stats/adminActiveUsers?fromPeriod={startDate?.ToString("yyyy-MM-dd")}"));
-        return await response.Content.ReadFromJsonAsync<int>();
+        try {
+            var response = await ((CustomAuthenticationStateProvider)authenticationStateProvider).AuthorizedRequestAsync(() =>
+                httpClient.GetAsync($"stats/adminActiveUsers?fromPeriod={startDate?.ToString("yyyy-MM-dd")}"));
+            if (!response.IsSuccessStatusCode) {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                return 0;
+            }
+            return await response.Content.ReadFromJsonAsync<int>();
+        } catch (Exception ex) {
+            return 0;
+        }
     }
 
     public async Task<List<User>> GetInactiveUsers() {
-        var response = await ((CustomAuthenticationStateProvider)authenticationStateProvider).AuthorizedRequestAsync(() =>
-            httpClient.GetAsync($"stats/adminInactiveUsers"));
-        return await response.Content.ReadFromJsonAsync<List<User>>() ?? new List<User>();
+        try {
+            var response = await ((CustomAuthenticationStateProvider)authenticationStateProvider).AuthorizedRequestAsync(() =>
+                httpClient.GetAsync($"stats/adminInactiveUsers"));
+            if (!response.IsSuccessStatusCode) {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                return new List<User>();
+            }
+            return await response.Content.ReadFromJsonAsync<List<User>>() ?? new List<User>();
+        } catch (Exception ex) {
+            return new List<User>();
+        }
     }
 
     public async Task<List<AdminStatsModel>> GetLast30DaysStats() {
-        var response = await ((CustomAuthenticationStateProvider)authenticationStateProvider).AuthorizedRequestAsync(() =>
-            httpClient.GetAsync($"stats/admin30DayStatistics"));
-        return await response.Content.ReadFromJsonAsync<List<AdminStatsModel>>()
-            ?? new List<AdminStatsModel>();
+        try {
+            var response = await ((CustomAuthenticationStateProvider)authenticationStateProvider).AuthorizedRequestAsync(() =>
+                httpClient.GetAsync($"stats/admin30DayStatistics"));
+            if (!response.IsSuccessStatusCode) {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                return new List<AdminStatsModel>();
+            }
+            return await response.Content.ReadFromJsonAsync<List<AdminStatsModel>>()
+                ?? new List<AdminStatsModel>();
+        } catch (Exception ex) {
+            return new List<AdminStatsModel>();
+        }
     }
 
     public async Task<List<UserActivity>> GetMostActiveUsers(int limit = 5) {
-        var response = await ((CustomAuthenticationStateProvider)authenticationStateProvider).AuthorizedRequestAsync(() =>
-            httpClient.GetAsync($"stats/adminMostActiveUsers?limit={limit}"));
-        return await response.Content.ReadFromJsonAsync<List<UserActivity>>() ?? new List<UserActivity>();
+        try {
+            var response = await ((CustomAuthenticationStateProvider)authenticationStateProvider).AuthorizedRequestAsync(() =>
+                httpClient.GetAsync($"stats/adminMostActiveUsers?limit={limit}"));
+            if (!response.IsSuccessStatusCode) {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                return new List<UserActivity>();
+            }
+            return await response.Content.ReadFromJsonAsync<List<UserActivity>>() ?? new List<UserActivity>();
+        } catch (Exception ex) {
+            return new List<UserActivity>();
+        }
     }
 }

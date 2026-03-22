@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+	<data name="ChatroomsTitle" xml:space="preserve">
+		<value>Salas de chat</value>
+	</data>
+	<data name="ServerChatrooms" xml:space="preserve">
+		<value>Salas de servidor</value>
+	</data>
+	<data name="ServerRoomsDescription" xml:space="preserve">
+		<value>Las salas públicas/administrador están respaldadas por el servidor y conservan hasta 150 mensajes de las últimas 72 horas.</value>
+	</data>
+	<data name="PublicRooms" xml:space="preserve">
+		<value>Público</value>
+	</data>
+	<data name="AdminRooms" xml:space="preserve">
+		<value>Administrador</value>
+	</data>
+	<data name="LocalChatrooms" xml:space="preserve">
+		<value>Salas locales</value>
+	</data>
+	<data name="LocalRoomsDescription" xml:space="preserve">
+		<value>Las salas locales son gestionadas solo por el cliente. Unirse requiere el nombre de la sala y un secreto compartido fuera de la aplicación.</value>
+	</data>
+	<data name="DeleteRoomButton" xml:space="preserve">
+		<value>Eliminar sala local</value>
+	</data>
+	<data name="JoinRoomForm" xml:space="preserve">
+		<value>Unirse a una sala local</value>
+	</data>
+	<data name="RoomNameLabel" xml:space="preserve">
+		<value>Nombre de la sala:</value>
+	</data>
+	<data name="RoomSecretLabel" xml:space="preserve">
+		<value>Secreto de la sala:</value>
+	</data>
+	<data name="JoinButton" xml:space="preserve">
+		<value>Unirse</value>
+	</data>
+	<data name="MessageInput" xml:space="preserve">
+		<value>Ingrese su mensaje...</value>
+	</data>
+	<data name="SendButton" xml:space="preserve">
+		<value>Enviar</value>
+	</data>
+	<data name="NoRoomsSelected" xml:space="preserve">
+		<value>Seleccione una sala para ver los mensajes</value>
+	</data>
+	<data name="LoadingMessages" xml:space="preserve">
+		<value>Cargando mensajes...</value>
+	</data>
+	<data name="ConnectionError" xml:space="preserve">
+		<value>Error de conexión. Intente de nuevo más tarde.</value>
+	</data>
+</root>

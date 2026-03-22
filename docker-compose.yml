@@ -35,6 +35,10 @@ services:
       Jwt__Issuer: ${JWT_ISSUER:-DiaryIssuer}
       Jwt__Audience: ${JWT_AUDIENCE:-PeopleFromIntelligentWorld}
       FrontendUrl: ${FRONTEND_URL:-http://localhost:5282}
+      Authentication__Google__ClientId: ${AUTHENTICATION__GOOGLE__CLIENTID:-}
+      Authentication__Google__ClientSecret: ${AUTHENTICATION__GOOGLE__CLIENTSECRET:-}
+      Authentication__GitHub__ClientId: ${AUTHENTICATION__GITHUB__CLIENTID:-}
+      Authentication__GitHub__ClientSecret: ${AUTHENTICATION__GITHUB__CLIENTSECRET:-}
       # Email features (experimental - in development)
       # EmailFromSend: ${EMAIL_FROM:-noreply@webdiary.local}
       # MAILGUN_API_KEY: ${MAILGUN_API_KEY:-}

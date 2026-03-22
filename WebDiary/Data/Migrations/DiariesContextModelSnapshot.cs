@@ -110,7 +110,6 @@ namespace WebDiary.Migrations
                         .HasColumnType("integer");
 
                     b.PrimitiveCollection<List<string>>("Tags")
-                        .IsRequired()
                         .HasColumnType("text[]");
 
                     b.Property<string>("Text")

@@ -18,14 +18,42 @@ public class UserClient
 
     virtual public async Task<List<User>> GetUsersAsync()
     {
-        var response = await AuthorizedRequestAsync(() => httpClient.GetAsync("users"));
-        return await response.Content.ReadFromJsonAsync<List<User>>() ?? new List<User>();
+        try
+        {
+            var response = await AuthorizedRequestAsync(() => httpClient.GetAsync("users"));
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"GetUsersAsync error: {response.StatusCode} - {errorContent}");
+                return new List<User>();
+            }
+            return await response.Content.ReadFromJsonAsync<List<User>>() ?? new List<User>();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"GetUsersAsync exception: {ex.Message}");
+            return new List<User>();
+        }
     }
         
     virtual public async Task<User> GetUserByIdAsync(int id)
     {
-        var response = await AuthorizedRequestAsync(() => httpClient.GetAsync($"users/{id}"));
-        return await response.Content.ReadFromJsonAsync<User>() ?? throw new Exception("User wasn't found");
+        try
+        {
+            var response = await AuthorizedRequestAsync(() => httpClient.GetAsync($"users/{id}"));
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Failed to get user: {response.StatusCode} - {errorContent}");
+            }
+            var user = await response.Content.ReadFromJsonAsync<User>();
+            return user ?? throw new Exception("User wasn't found");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"GetUserByIdAsync error: {ex.Message}");
+            throw;
+        }
     }
         
     //virtual public async Task<User> GetUserByEmailAsync(string email) =>

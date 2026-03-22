@@ -204,6 +204,51 @@
   	<data name="MoodPlaceholder" xml:space="preserve">
 		<value>Select mood</value>
 	</data>
+  	<data name="TagsLabel" xml:space="preserve">
+		<value>Tags</value>
+	</data>
+  	<data name="TagsPlaceholder" xml:space="preserve">
+		<value>Add tags (comma-separated)</value>
+	</data>
+  	<data name="SearchEntriesHeader" xml:space="preserve">
+		<value>Search entries</value>
+	</data>
+  	<data name="SearchFiltersTitle" xml:space="preserve">
+		<value>Filters</value>
+	</data>
+  	<data name="SearchResultsTitle" xml:space="preserve">
+		<value>Results</value>
+	</data>
+  	<data name="SearchButtonText" xml:space="preserve">
+		<value>Search</value>
+	</data>
+  	<data name="SearchClearButtonText" xml:space="preserve">
+		<value>Clear</value>
+	</data>
+  	<data name="SearchStartDateLabel" xml:space="preserve">
+		<value>From date</value>
+	</data>
+  	<data name="SearchEndDateLabel" xml:space="preserve">
+		<value>To date</value>
+	</data>
+  	<data name="SearchContentLabel" xml:space="preserve">
+		<value>Content contains</value>
+	</data>
+  	<data name="SearchContentPlaceholder" xml:space="preserve">
+		<value>Type words or phrases</value>
+	</data>
+  	<data name="SearchMoodAny" xml:space="preserve">
+		<value>All moods</value>
+	</data>
+  	<data name="SearchNoResults" xml:space="preserve">
+		<value>No entries match these filters.</value>
+	</data>
+  	<data name="SearchLoading" xml:space="preserve">
+		<value>Loading entries...</value>
+	</data>
+  	<data name="SearchUnauthorized" xml:space="preserve">
+		<value>Please sign in to search entries.</value>
+	</data>
   	<data name="ResizeHint" xml:space="preserve">
 		<value>You can resize this editor vertically.</value>
 	</data>

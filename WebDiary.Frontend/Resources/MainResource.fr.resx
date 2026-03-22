@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+  	<data name="404Title" xml:space="preserve">
+		<value>404 - Non trouvé</value>
+	</data>
+  	<data name="404Text" xml:space="preserve">
+		<value>La ressource que vous avez demandée n'a pas été trouvée.</value>
+	</data>
+  	<data name="LoadingDiaries" xml:space="preserve">
+		<value>Veuillez patienter, les journaux et groupes sont en cours de chargement...</value>
+	</data>
+  	<data name="MainPageButtonText" xml:space="preserve">
+		<value>Envoyer</value>
+	</data>
+  	<data name="NotValidatedTitle" xml:space="preserve">
+		<value>Non validé</value>
+	</data>
+  	<data name="NotValidatedText" xml:space="preserve">
+		<value>Votre e-mail n'est pas validé. Validez-le d'abord.</value>
+	</data>
+  	<data name="UnathorizedTitle" xml:space="preserve">
+		<value>Non autorisé</value>
+	</data>
+  	<data name="UnathorizedText" xml:space="preserve">
+		<value>Vous devez vous connecter pour voir cette page.</value>
+	</data>
+  	<data name="CollapseInMainPage" xml:space="preserve">
+		<value>Réduire</value>
+	</data>
+  	<data name="NotAuthPageText1" xml:space="preserve">
+		<value>Désolé, vous n'êtes pas autorisé à accéder à cette page.</value>
+	</data>
+  	<data name="NotAuthPageText2" xml:space="preserve">
+		<value>Vous devrez peut-être vous connecter en tant qu'utilisateur différent.</value>
+	</data>
+  	<data name="CreateGroupVar1" xml:space="preserve">
+		<value>Nom de votre groupe :</value>
+	</data>
+  	<data name="DeleteGroupPart1" xml:space="preserve">
+		<value>Êtes-vous sûr de vouloir supprimer le groupe "</value>
+	</data>
+  	<data name="DeleteGroupPart2" xml:space="preserve">
+		<value>" et ses journaux ?</value>
+	</data>
+  	<data name="CancelButtonText" xml:space="preserve">
+		<value>Annuler</value>
+	</data>
+  	<data name="DeleteButtonText" xml:space="preserve">
+		<value>Supprimer</value>
+	</data>
+  	<data name="SaveButtonText" xml:space="preserve">
+		<value>Enregistrer</value>
+	</data>
+  	<data name="ErrorTitle" xml:space="preserve">
+		<value>Erreur.</value>
+	</data>
+  	<data name="ErrorText" xml:space="preserve">
+		<value>Une erreur s'est produite lors du traitement de votre demande.</value>
+	</data>
+  	<data name="RequestID" xml:space="preserve">
+		<value>ID de la demande :</value>
+	</data>
+  	<data name="DevMode" xml:space="preserve">
+		<value>Mode développeur</value>
+	</data>
+  	<data name="Swapping" xml:space="preserve">
+		<value>Passage au </value>
+	</data>
+  	<data name="Dev" xml:space="preserve">
+		<value>Développement</value>
+	</data>
+  	<data name="Display" xml:space="preserve">
+		<value> l'environnement affichera plus de détails sur l'erreur qui s'est produite.</value>
+	</data>
+  	<data name="ErrorPageMainTextPart1" xml:space="preserve">
+		<value>L'environnement de développement ne doit pas être activé pour les applications déployées.</value>
+	</data>
+  	<data name="ErrorPageMainTextPart2" xml:space="preserve">
+		<value>Cela peut entraîner l'affichage d'informations sensibles du fil d'exception aux utilisateurs finaux.</value>
+	</data>
+  	<data name="ErrorPageMainTextPart3" xml:space="preserve">
+		<value>Pour le débogage local, activez l'</value>
+	</data>
+  	<data name="ErrorPageMainTextPart4" xml:space="preserve">
+		<value>environnement en définissant la variable d'environnement</value>
+	</data>
+  	<data name="ErrorPageMainTextPart5" xml:space="preserve">
+		<value> à </value>
+	</data>
+  	<data name="ErrorPageMainTextPart6" xml:space="preserve">
+		<value>et redémarrez l'application.</value>
+	</data>
+  	<data name="ChangePinGroup1" xml:space="preserve">
+		<value>Définir le code PIN de ce groupe (Avertissement : vous ne pourrez pas le modifier ultérieurement) :</value>
+	</data>
+  	<data name="ChangePinGroup2" xml:space="preserve">
+		<value>Confirmer le code PIN actuellement défini :</value>
+	</data>
+  	<data name="ChangePinGroup3" xml:space="preserve">
+		<value>Les codes PIN précédents sont différents. L'avez-vous correctement saisi ?</value>
+	</data>
+  	<data name="CheckPinGroup1" xml:space="preserve">
+		<value>Ce groupe a un code PIN, veuillez l'entrer pour voir le matériel.</value>
+	</data>
+  	<data name="EnterButtonText" xml:space="preserve">
+		<value>Essayer</value>
+	</data>
+  	<data name="HomeHeadAuth" xml:space="preserve">
+		<value>Bienvenue, </value>
+	</data>
+  	<data name="HomeHeadNonAuth" xml:space="preserve">
+		<value>Accueil</value>
+	</data>
+  	<data name="SettingsText" xml:space="preserve">
+		<value>Paramètres :</value>
+	</data>
+  	<data name="ExperimentalSettingsText" xml:space="preserve">
+		<value>Fonctionnalités et paramètres expérimentaux :</value>
+	</data>
+  	<data name="ExperimentalSettingsNonAuth" xml:space="preserve">
+		<value>Toutes les fonctionnalités expérimentales ne sont que pour les utilisateurs autorisés (aucune ne fonctionne sans autorisation).</value>
+	</data>
+  	<data name="AddPinHeader" xml:space="preserve">
+		<value>Ajouter un code PIN au groupe</value>
+	</data>
+  	<data name="IncorrectPinText" xml:space="preserve">
+		<value>Le code PIN est incorrect.</value>
+	</data>
+  	<data name="CheckPinHeader" xml:space="preserve">
+		<value>Vérifier le code PIN du groupe</value>
+	</data>
+  	<data name="AddThematicGroup" xml:space="preserve">
+		<value>Ajouter un groupe thématique</value>
+	</data>
+  	<data name="EditingGroupHeader" xml:space="preserve">
+		<value>Groupe d'édition </value>
+	</data>
+  	<data name="DeletingGroupHeader" xml:space="preserve">
+		<value>Suppression du groupe </value>
+	</data>
+  	<data name="StatisticsHeader" xml:space="preserve">
+		<value>Page des statistiques</value>
+	</data>
+  	<data name="DateRangePick" xml:space="preserve">
+		<value>Choisissez la plage de dates à partir de laquelle obtenir les statistiques :</value>
+	</data>
+  	<data name="LoadStatistics" xml:space="preserve">
+		<value>Charger les statistiques</value>
+	</data>
+  	<data name="StatisticsTableData1" xml:space="preserve">
+		<value>Statistiques pour les dates :</value>
+	</data>
+  	<data name="StatisticsTableData2" xml:space="preserve">
+		<value>Date</value>
+	</data>
+  	<data name="StatisticsTableData3" xml:space="preserve">
+		<value>Nombre d'entrées</value>
+	</data>
+  	<data name="StatisticsTableData4" xml:space="preserve">
+		<value>Nombre de symboles</value>
+	</data>
+  	<data name="StatisticsTableData5" xml:space="preserve">
+		<value>Symboles moyens par entrée</value>
+	</data>
+  	<data name="StatisticsTableData6" xml:space="preserve">
+		<value>Humeur totale de la journée</value>
+	</data>
+  	<data name="StatisticsTableData7" xml:space="preserve">
+		<value>Totaux :</value>
+	</data>
+  	<data name="NoData" xml:space="preserve">
+		<value>Aucune statistique trouvée pour la plage de dates sélectionnée.</value>
+	</data>
+  	<data name="NotEnoughDataForChart" xml:space="preserve">
+		<value>Pas assez de points de données pour générer un graphique significatif.</value>
+	</data>
+  	<data name="LoadChart" xml:space="preserve">
+		<value>Charger les statistiques sur le graphique</value>
+	</data>
+  	<data name="NoDiariesYet" xml:space="preserve">
+		<value>Pas encore de journal.</value>
+	</data>
+  	<data name="PreviousYear" xml:space="preserve">
+		<value>Année précédente</value>
+	</data>
+  	<data name="NextYear" xml:space="preserve">
+		<value>Année prochaine</value>
+	</data>
+  	<data name="DiariesCountInMonth" xml:space="preserve">
+		<value>Entrées : {0}</value>
+	</data>
+  	<data name="OpenMonth" xml:space="preserve">
+		<value>Afficher les entrées</value>
+	</data>
+  	<data name="BackToYearMonth" xml:space="preserve">
+		<value>Retour à l'année/mois</value>
+	</data>
+  	<data name="NoDiariesInMonth" xml:space="preserve">
+		<value>Pas d'entrées ce mois-ci.</value>
+	</data>
+  	<data name="MoodLabel" xml:space="preserve">
+		<value>Emoji d'humeur</value>
+	</data>
+  	<data name="MoodPlaceholder" xml:space="preserve">
+		<value>Choisir l'humeur</value>
+	</data>
+  	<data name="TagsLabel" xml:space="preserve">
+		<value>Tags</value>
+	</data>
+  	<data name="TagsPlaceholder" xml:space="preserve">
+		<value>Ajouter des tags (séparés par des virgules)</value>
+	</data>
+  	<data name="SearchEntriesHeader" xml:space="preserve">
+		<value>Entrées de recherche</value>
+	</data>
+  	<data name="SearchFiltersTitle" xml:space="preserve">
+		<value>Filtres</value>
+	</data>
+  	<data name="SearchResultsTitle" xml:space="preserve">
+		<value>Résultats</value>
+	</data>
+  	<data name="SearchButtonText" xml:space="preserve">
+		<value>Rechercher</value>
+	</data>
+  	<data name="SearchClearButtonText" xml:space="preserve">
+		<value>Réinitialiser</value>
+	</data>
+  	<data name="SearchStartDateLabel" xml:space="preserve">
+		<value>De la date</value>
+	</data>
+  	<data name="SearchEndDateLabel" xml:space="preserve">
+		<value>À la date</value>
+	</data>
+  	<data name="SearchContentLabel" xml:space="preserve">
+		<value>Le contenu contient</value>
+	</data>
+  	<data name="SearchContentPlaceholder" xml:space="preserve">
+		<value>Entrez des mots ou des phrases</value>
+	</data>
+  	<data name="SearchMoodAny" xml:space="preserve">
+		<value>Toutes les humeurs</value>
+	</data>
+  	<data name="SearchNoResults" xml:space="preserve">
+		<value>Aucune entrée ne correspond à ces filtres.</value>
+	</data>
+  	<data name="SearchLoading" xml:space="preserve">
+		<value>Les entrées sont en cours de chargement...</value>
+	</data>
+  	<data name="SearchUnauthorized" xml:space="preserve">
+		<value>Veuillez vous connecter pour rechercher des entrées.</value>
+	</data>
+  	<data name="ResizeHint" xml:space="preserve">
+		<value>Vous pouvez redimensionner l'éditeur verticalement.</value>
+	</data>
+</root>

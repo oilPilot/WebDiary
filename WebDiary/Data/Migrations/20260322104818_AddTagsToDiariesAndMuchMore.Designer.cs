@@ -13,8 +13,8 @@ using WebDiary.Data;
 namespace WebDiary.Migrations
 {
     [DbContext(typeof(DiariesContext))]
-    [Migration("20260322001943_AddDiaryTags")]
-    partial class AddDiaryTags
+    [Migration("20260322104818_AddTagsToDiariesAndMuchMore")]
+    partial class AddTagsToDiariesAndMuchMore
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -113,7 +113,6 @@ namespace WebDiary.Migrations
                         .HasColumnType("integer");
 
                     b.PrimitiveCollection<List<string>>("Tags")
-                        .IsRequired()
                         .HasColumnType("text[]");
 
                     b.Property<string>("Text")

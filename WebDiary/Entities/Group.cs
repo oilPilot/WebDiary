@@ -13,7 +13,7 @@ public class DiaryGroup
     public bool IsArchived { get; set; } = false;
     
     // Timestamps
-    public DateTime CreatedAtUtc { get; set; }
+    public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
     public DateTime? UpdatedAtUtc { get; set; }
     
     // Navigation properties for permissions

@@ -18,48 +18,131 @@ public class DiaryGroupClient
 
     virtual public async Task<List<DiaryGroup>> GetGroupsAsync()
     {
-        var response = await AuthorizedRequestAsync(() => httpClient.GetAsync("groups"));
-        return await response.Content.ReadFromJsonAsync<List<DiaryGroup>>() ?? new List<DiaryGroup>();
+        try
+        {
+            var response = await AuthorizedRequestAsync(() => httpClient.GetAsync("groups"));
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"API Error: {response.StatusCode} - {errorContent}");
+                return new List<DiaryGroup>();
+            }
+            return await response.Content.ReadFromJsonAsync<List<DiaryGroup>>() ?? new List<DiaryGroup>();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"GetGroupsAsync error: {ex.Message}");
+            return new List<DiaryGroup>();
+        }
     }
         
     virtual public async Task<List<DiaryGroup>> GetGroupsOfUserAsync(int userId)
     {
-        var response = await AuthorizedRequestAsync(() => httpClient.GetAsync($"groups/ofuser/{userId}"));
-        return await response.Content.ReadFromJsonAsync<List<DiaryGroup>>() ?? new List<DiaryGroup>();
+        try
+        {
+            var response = await AuthorizedRequestAsync(() => httpClient.GetAsync($"groups/ofuser/{userId}"));
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"API Error: {response.StatusCode} - {errorContent}");
+                return new List<DiaryGroup>();
+            }
+            return await response.Content.ReadFromJsonAsync<List<DiaryGroup>>() ?? new List<DiaryGroup>();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"GetGroupsOfUserAsync error: {ex.Message}");
+            return new List<DiaryGroup>();
+        }
     }
         
     virtual public async Task<List<DiaryGroup>> GetArchivedGroupsAsync(int userId)
     {
-        var response = await AuthorizedRequestAsync(() => httpClient.GetAsync("groups/archived"));
-        return await response.Content.ReadFromJsonAsync<List<DiaryGroup>>() ?? new List<DiaryGroup>();
+        try
+        {
+            var response = await AuthorizedRequestAsync(() => httpClient.GetAsync("groups/archived"));
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"API Error: {response.StatusCode} - {errorContent}");
+                return new List<DiaryGroup>();
+            }
+            return await response.Content.ReadFromJsonAsync<List<DiaryGroup>>() ?? new List<DiaryGroup>();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"GetArchivedGroupsAsync error: {ex.Message}");
+            return new List<DiaryGroup>();
+        }
     }
         
     virtual public async Task<DiaryGroup> GetGroupAsync(int id)
     {
-        var response = await AuthorizedRequestAsync(() => httpClient.GetAsync($"groups/{id}"));
-        return await response.Content.ReadFromJsonAsync<DiaryGroup>() ?? throw new Exception("Group wasn't found");
+        try
+        {
+            var response = await AuthorizedRequestAsync(() => httpClient.GetAsync($"groups/{id}"));
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Failed to get group: {response.StatusCode} - {errorContent}");
+            }
+            var group = await response.Content.ReadFromJsonAsync<DiaryGroup>();
+            return group ?? throw new Exception("Group wasn't found");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"GetGroupAsync error: {ex.Message}");
+            throw;
+        }
     }
 
     public async Task AddGroupAsync(DiaryGroup group) {
-        var response = await AuthorizedRequestAsync(() =>
-            httpClient.PostAsJsonAsync<DiaryGroup>("groups", group));
-        if(!response.IsSuccessStatusCode) {
-            throw new Exception();
+        try
+        {
+            var response = await AuthorizedRequestAsync(() =>
+                httpClient.PostAsJsonAsync<DiaryGroup>("groups", group));
+            if(!response.IsSuccessStatusCode) {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Failed to add group: {response.StatusCode} - {errorContent}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"AddGroupAsync error: {ex.Message}");
+            throw;
         }
     }
 
     public async Task UpdateGroupAsync(DiaryGroup newGroup) {
-        var response = await AuthorizedRequestAsync(() =>
-            httpClient.PutAsJsonAsync<DiaryGroup>($"groups/{newGroup.Id}", newGroup));
-        if(!response.IsSuccessStatusCode) {
-            throw new Exception();
+        try
+        {
+            var response = await AuthorizedRequestAsync(() =>
+                httpClient.PutAsJsonAsync<DiaryGroup>($"groups/{newGroup.Id}", newGroup));
+            if(!response.IsSuccessStatusCode) {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Failed to update group: {response.StatusCode} - {errorContent}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"UpdateGroupAsync error: {ex.Message}");
+            throw;
         }
     }
 
     public async Task DeleteGroupAsync(int id) {
-        var response = await AuthorizedRequestAsync(() => httpClient.DeleteAsync($"groups/{id}"));
-        if(!response.IsSuccessStatusCode) {
-            throw new Exception();
+        try
+        {
+            var response = await AuthorizedRequestAsync(() => httpClient.DeleteAsync($"groups/{id}"));
+            if(!response.IsSuccessStatusCode) {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Failed to delete group: {response.StatusCode} - {errorContent}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"DeleteGroupAsync error: {ex.Message}");
+            throw;
         }
     }
 

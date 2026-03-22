@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+	<data name="LogsTitle" xml:space="preserve">
+		<value>Systemprotokolle</value>
+	</data>
+	<data name="LogsDescription" xml:space="preserve">
+		<value>Systemaktivitätsprotokolle und Diagnoseinformationen anzeigen.</value>
+	</data>
+	<data name="FilterByLevel" xml:space="preserve">
+		<value>Nach Ebene filtern:</value>
+	</data>
+	<data name="FilterByDate" xml:space="preserve">
+		<value>Nach Datum filtern:</value>
+	</data>
+	<data name="SearchLogs" xml:space="preserve">
+		<value>Protokolle durchsuchen:</value>
+	</data>
+	<data name="ApplyFilters" xml:space="preserve">
+		<value>Filter anwenden</value>
+	</data>
+	<data name="ClearFilters" xml:space="preserve">
+		<value>Filter löschen</value>
+	</data>
+	<data name="Timestamp" xml:space="preserve">
+		<value>Zeitstempel</value>
+	</data>
+	<data name="Level" xml:space="preserve">
+		<value>Ebene</value>
+	</data>
+	<data name="Message" xml:space="preserve">
+		<value>Nachricht</value>
+	</data>
+	<data name="NoLogsFound" xml:space="preserve">
+		<value>Keine Protokolle für die ausgewählten Filter gefunden.</value>
+	</data>
+	<data name="LoadingLogs" xml:space="preserve">
+		<value>Protokolle werden geladen...</value>
+	</data>
+	<data name="LogsError" xml:space="preserve">
+		<value>Fehler beim Laden von Protokollen. Bitte versuchen Sie es später erneut.</value>
+	</data>
+	<data name="ExportLogsButton" xml:space="preserve">
+		<value>Protokolle exportieren</value>
+	</data>
+	<data name="LevelInfo" xml:space="preserve">
+		<value>Information</value>
+	</data>
+	<data name="LevelWarning" xml:space="preserve">
+		<value>Warnung</value>
+	</data>
+	<data name="LevelError" xml:space="preserve">
+		<value>Fehler</value>
+	</data>
+	<data name="LevelDebug" xml:space="preserve">
+		<value>Fehlerbeseitigung</value>
+	</data>
+</root>

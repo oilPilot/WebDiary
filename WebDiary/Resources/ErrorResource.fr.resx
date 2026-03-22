@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+	<data name="InvalidNameOrPswd" xml:space="preserve">
+    	<value>Nom d'utilisateur ou mot de passe invalide.</value>
+	</data>
+  	<data name="TokenNotEqual" xml:space="preserve">
+		<value>Les jetons n'étaient pas égaux.</value>
+	</data>
+  	<data name="TokenTimeExpired" xml:space="preserve">
+		<value>Le temps a expiré.</value>
+	</data>
+  	<data name="PasswordsNotEqual" xml:space="preserve">
+		<value>Le mot de passe est incorrect. Avez-vous oublié votre mot de passe ?</value>
+	</data>
+	<data name="RefreshTokenError" xml:space="preserve">
+		<value>Le délai du jeton d'actualisation a expiré. Veuillez vous reconnecter pour confirmer que vous êtes vous.</value>
+	</data>
+	<data name="OAuthLoginFailed" xml:space="preserve">
+		<value>La connexion OAuth a échoué. Veuillez réessayer.</value>
+	</data>
+</root>

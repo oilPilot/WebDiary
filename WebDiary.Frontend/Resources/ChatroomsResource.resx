@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+	<data name="ChatroomsTitle" xml:space="preserve">
+		<value>Chatrooms</value>
+	</data>
+	<data name="ServerChatrooms" xml:space="preserve">
+		<value>Server Chatrooms</value>
+	</data>
+	<data name="ServerRoomsDescription" xml:space="preserve">
+		<value>Public/Admin rooms are server-backed and keep up to 150 messages from the last 72 hours.</value>
+	</data>
+	<data name="PublicRooms" xml:space="preserve">
+		<value>Public</value>
+	</data>
+	<data name="AdminRooms" xml:space="preserve">
+		<value>Admin</value>
+	</data>
+	<data name="LocalChatrooms" xml:space="preserve">
+		<value>Local Chatrooms</value>
+	</data>
+	<data name="LocalRoomsDescription" xml:space="preserve">
+		<value>Local rooms are client-managed only. Join requires room name and secret shared outside the app.</value>
+	</data>
+	<data name="DeleteRoomButton" xml:space="preserve">
+		<value>Delete local room</value>
+	</data>
+	<data name="JoinRoomForm" xml:space="preserve">
+		<value>Join Local Room</value>
+	</data>
+	<data name="RoomNameLabel" xml:space="preserve">
+		<value>Room Name:</value>
+	</data>
+	<data name="RoomSecretLabel" xml:space="preserve">
+		<value>Room Secret:</value>
+	</data>
+	<data name="JoinButton" xml:space="preserve">
+		<value>Join</value>
+	</data>
+	<data name="MessageInput" xml:space="preserve">
+		<value>Enter your message...</value>
+	</data>
+	<data name="SendButton" xml:space="preserve">
+		<value>Send</value>
+	</data>
+	<data name="NoRoomsSelected" xml:space="preserve">
+		<value>Select a room to view messages</value>
+	</data>
+	<data name="LoadingMessages" xml:space="preserve">
+		<value>Loading messages...</value>
+	</data>
+	<data name="ConnectionError" xml:space="preserve">
+		<value>Connection error. Please try again later.</value>
+	</data>
+</root>

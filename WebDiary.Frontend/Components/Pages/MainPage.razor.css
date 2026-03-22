@@ -120,6 +120,54 @@
     border: 1px solid color-mix(in srgb, var(--bs-primary) 40%, transparent);
 }
 
+.entry-references {
+    margin-top: 0.6rem;
+    border: 1px solid var(--bs-border-color);
+    border-radius: 0.6rem;
+    padding: 0.6rem 0.75rem;
+    background: color-mix(in srgb, var(--bs-body-bg) 92%, var(--bs-primary) 8%);
+}
+
+.entry-references-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--bs-secondary-color);
+    margin-bottom: 0.4rem;
+}
+
+.entry-reference-item {
+    border-top: 1px dashed var(--bs-border-color-translucent);
+    padding-top: 0.4rem;
+    margin-top: 0.4rem;
+}
+
+.entry-reference-item:first-child {
+    border-top: none;
+    padding-top: 0;
+    margin-top: 0;
+}
+
+.entry-reference-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.6rem;
+    font-size: 0.85rem;
+    color: var(--bs-body-color);
+}
+
+.entry-reference-owner {
+    color: var(--bs-secondary-color);
+}
+
+.entry-reference-excerpt {
+    margin-top: 0.25rem;
+    font-style: italic;
+    color: var(--bs-secondary-color);
+    white-space: pre-wrap;
+}
+
 .editor-resize-wrap {
     min-height: 230px;
     max-height: 580px;

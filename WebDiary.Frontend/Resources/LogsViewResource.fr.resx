@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+	<data name="LogsTitle" xml:space="preserve">
+		<value>Journaux du système</value>
+	</data>
+	<data name="LogsDescription" xml:space="preserve">
+		<value>Afficher les journaux d'activité du système et les informations de diagnostic.</value>
+	</data>
+	<data name="FilterByLevel" xml:space="preserve">
+		<value>Filtrer par niveau :</value>
+	</data>
+	<data name="FilterByDate" xml:space="preserve">
+		<value>Filtrer par date :</value>
+	</data>
+	<data name="SearchLogs" xml:space="preserve">
+		<value>Journaux de recherche :</value>
+	</data>
+	<data name="ApplyFilters" xml:space="preserve">
+		<value>Appliquer les filtres</value>
+	</data>
+	<data name="ClearFilters" xml:space="preserve">
+		<value>Effacer les filtres</value>
+	</data>
+	<data name="Timestamp" xml:space="preserve">
+		<value>Horodatage</value>
+	</data>
+	<data name="Level" xml:space="preserve">
+		<value>Niveau</value>
+	</data>
+	<data name="Message" xml:space="preserve">
+		<value>Message</value>
+	</data>
+	<data name="NoLogsFound" xml:space="preserve">
+		<value>Aucun journal trouvé pour les filtres sélectionnés.</value>
+	</data>
+	<data name="LoadingLogs" xml:space="preserve">
+		<value>Chargement des journaux...</value>
+	</data>
+	<data name="LogsError" xml:space="preserve">
+		<value>Échec du chargement des journaux. Veuillez réessayer plus tard.</value>
+	</data>
+	<data name="ExportLogsButton" xml:space="preserve">
+		<value>Exporter les journaux</value>
+	</data>
+	<data name="LevelInfo" xml:space="preserve">
+		<value>Information</value>
+	</data>
+	<data name="LevelWarning" xml:space="preserve">
+		<value>Avertissement</value>
+	</data>
+	<data name="LevelError" xml:space="preserve">
+		<value>Erreur</value>
+	</data>
+	<data name="LevelDebug" xml:space="preserve">
+		<value>Débogage</value>
+	</data>
+</root>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+	<data name="AdminAction1" xml:space="preserve">
+		<value>Gérer les utilisateurs</value>
+	</data>
+	<data name="AdminAction2" xml:space="preserve">
+		<value>Gestion des groupes</value>
+	</data>
+	<data name="AdminAction3" xml:space="preserve">
+		<value>Modération des entrées</value>
+	</data>
+	<data name="AdminAction4" xml:space="preserve">
+		<value>Journaux</value>
+	</data>
+	<data name="AdminAction5" xml:space="preserve">
+		<value>Statistiques supplémentaires</value>
+	</data>
+	<data name="FilterSet1" xml:space="preserve">
+		<value>Filtre par nom d'utilisateur :</value>
+	</data>
+	<data name="FilterSet2" xml:space="preserve">
+		<value>Filtre par rôle :</value>
+	</data>
+	<data name="FilterSet3" xml:space="preserve">
+		<value>Filtrer la table</value>
+	</data>
+	<data name="GiveAdminRightsDialogue1" xml:space="preserve">
+		<value>Donner les droits d'administrateur</value>
+	</data>
+	<data name="GiveAdminRightsDialogue2" xml:space="preserve">
+		<value>Vous allez donner les droits d'administrateur à </value>
+	</data>
+	<data name="GiveAdminRightsDialogue3" xml:space="preserve">
+		<value>, êtes-vous sûr ?</value>
+	</data>
+	<data name="ContinueButton" xml:space="preserve">
+		<value>Oui, continuer</value>
+	</data>
+	<data name="CancelButtonText" xml:space="preserve">
+		<value>Annuler</value>
+	</data>
+	<data name="DeleteUserDialogue1" xml:space="preserve">
+		<value>Suppression de l'utilisateur</value>
+	</data>
+	<data name="DeleteUserDialogue2" xml:space="preserve">
+		<value>Vous allez supprimer l'utilisateur </value>
+	</data>
+	<data name="DeleteUserDialogue3" xml:space="preserve">
+		<value> avec tous ses journaux, vous serez responsable après cela, êtes-vous sûr ?</value>
+	</data>
+</root>

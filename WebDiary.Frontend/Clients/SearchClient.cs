@@ -36,7 +36,13 @@ public class SearchClient(HttpClient httpClient, AuthenticationStateProvider aut
         {
             var response = await ((CustomAuthenticationStateProvider)authenticationStateProvider).AuthorizedRequestAsync(() =>
                 httpClient.GetAsync("search/moods"));
-            
+
+            if (!response.IsSuccessStatusCode)
+            {
+                Log.Error("Get moods request failed with status: {StatusCode}", response.StatusCode);
+                return new List<string>();
+            }
+
             return await response.Content.ReadFromJsonAsync<List<string>>() ?? new List<string>();
         }
         catch (Exception ex)
@@ -52,7 +58,13 @@ public class SearchClient(HttpClient httpClient, AuthenticationStateProvider aut
         {
             var response = await ((CustomAuthenticationStateProvider)authenticationStateProvider).AuthorizedRequestAsync(() =>
                 httpClient.GetAsync("search/tags"));
-            
+
+            if (!response.IsSuccessStatusCode)
+            {
+                Log.Error("Get tags request failed with status: {StatusCode}", response.StatusCode);
+                return new List<string>();
+            }
+
             return await response.Content.ReadFromJsonAsync<List<string>>() ?? new List<string>();
         }
         catch (Exception ex)

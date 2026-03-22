@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+	<data name="LogsTitle" xml:space="preserve">
+		<value>System Logs</value>
+	</data>
+	<data name="LogsDescription" xml:space="preserve">
+		<value>View system activity logs and diagnostics information.</value>
+	</data>
+	<data name="FilterByLevel" xml:space="preserve">
+		<value>Filter by level:</value>
+	</data>
+	<data name="FilterByDate" xml:space="preserve">
+		<value>Filter by date:</value>
+	</data>
+	<data name="SearchLogs" xml:space="preserve">
+		<value>Search logs:</value>
+	</data>
+	<data name="ApplyFilters" xml:space="preserve">
+		<value>Apply filters</value>
+	</data>
+	<data name="ClearFilters" xml:space="preserve">
+		<value>Clear filters</value>
+	</data>
+	<data name="Timestamp" xml:space="preserve">
+		<value>Timestamp</value>
+	</data>
+	<data name="Level" xml:space="preserve">
+		<value>Level</value>
+	</data>
+	<data name="Message" xml:space="preserve">
+		<value>Message</value>
+	</data>
+	<data name="NoLogsFound" xml:space="preserve">
+		<value>No logs found for the selected filters.</value>
+	</data>
+	<data name="LoadingLogs" xml:space="preserve">
+		<value>Loading logs...</value>
+	</data>
+	<data name="LogsError" xml:space="preserve">
+		<value>Failed to load logs. Please try again later.</value>
+	</data>
+	<data name="ExportLogsButton" xml:space="preserve">
+		<value>Export logs</value>
+	</data>
+	<data name="LevelInfo" xml:space="preserve">
+		<value>Info</value>
+	</data>
+	<data name="LevelWarning" xml:space="preserve">
+		<value>Warning</value>
+	</data>
+	<data name="LevelError" xml:space="preserve">
+		<value>Error</value>
+	</data>
+	<data name="LevelDebug" xml:space="preserve">
+		<value>Debug</value>
+	</data>
+</root>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+	<data name="ChatroomsTitle" xml:space="preserve">
+		<value>Salons de discussion</value>
+	</data>
+	<data name="ServerChatrooms" xml:space="preserve">
+		<value>Salons de serveur</value>
+	</data>
+	<data name="ServerRoomsDescription" xml:space="preserve">
+		<value>Les salons publics/administrateur sont soutenus par le serveur et conservent jusqu'à 150 messages au cours des 72 dernières heures.</value>
+	</data>
+	<data name="PublicRooms" xml:space="preserve">
+		<value>Public</value>
+	</data>
+	<data name="AdminRooms" xml:space="preserve">
+		<value>Administrateur</value>
+	</data>
+	<data name="LocalChatrooms" xml:space="preserve">
+		<value>Salons locaux</value>
+	</data>
+	<data name="LocalRoomsDescription" xml:space="preserve">
+		<value>Les salons locaux sont gérés uniquement par le client. La participation nécessite un nom de salon et un secret partagé en dehors de l'application.</value>
+	</data>
+	<data name="DeleteRoomButton" xml:space="preserve">
+		<value>Supprimer le salon local</value>
+	</data>
+	<data name="JoinRoomForm" xml:space="preserve">
+		<value>Rejoindre un salon local</value>
+	</data>
+	<data name="RoomNameLabel" xml:space="preserve">
+		<value>Nom du salon :</value>
+	</data>
+	<data name="RoomSecretLabel" xml:space="preserve">
+		<value>Secret du salon :</value>
+	</data>
+	<data name="JoinButton" xml:space="preserve">
+		<value>Rejoindre</value>
+	</data>
+	<data name="MessageInput" xml:space="preserve">
+		<value>Entrez votre message...</value>
+	</data>
+	<data name="SendButton" xml:space="preserve">
+		<value>Envoyer</value>
+	</data>
+	<data name="NoRoomsSelected" xml:space="preserve">
+		<value>Sélectionnez un salon pour afficher les messages</value>
+	</data>
+	<data name="LoadingMessages" xml:space="preserve">
+		<value>Chargement des messages...</value>
+	</data>
+	<data name="ConnectionError" xml:space="preserve">
+		<value>Erreur de connexion. Veuillez réessayer plus tard.</value>
+	</data>
+</root>

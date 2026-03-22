@@ -126,6 +126,15 @@
 	<data name="AskPassword" xml:space="preserve">
 		<value>Password</value>
 	</data>
+	<data name="OrContinueWith" xml:space="preserve">
+		<value>or continue with</value>
+	</data>
+	<data name="ContinueWithGoogle" xml:space="preserve">
+		<value>Continue with Google</value>
+	</data>
+	<data name="ContinueWithGitHub" xml:space="preserve">
+		<value>Continue with GitHub</value>
+	</data>
 	<data name="SignInTextRedirect" xml:space="preserve">
 		<value>Have no account? You can signin </value>
 	</data>

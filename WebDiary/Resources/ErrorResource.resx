@@ -12,7 +12,13 @@
   	<data name="PasswordsNotEqual" xml:space="preserve">
 		<value>Password isn't correct. Do you forget your password?</value>
 	</data>
-  	<data name="RefreshTokenError" xml:space="preserve">
+	<data name="RefreshTokenError" xml:space="preserve">
 		<value>Refresh token time has expired. Please, relogin to confirm that you is you.</value>
+	</data>
+	<data name="OAuthLoginFailed" xml:space="preserve">
+		<value>OAuth login failed. Please try again.</value>
+	</data>
+	<data name="OAuthProviderNotConfigured" xml:space="preserve">
+		<value>OAuth provider is not configured. Please contact the administrator.</value>
 	</data>
 </root>

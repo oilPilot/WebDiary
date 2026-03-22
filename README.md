@@ -15,6 +15,7 @@ WebDiary is a comprehensive digital diary platform for personal journaling and m
 - Password hashing using identity framework hashing
 - Master password support for enhanced security
 - PIN codes for secure group access
+- OAuth2 integration (Google, GitHub accounts)
 
 **Diary Management**
 - Create and manage unlimited personal diary entries
@@ -38,7 +39,7 @@ WebDiary is a comprehensive digital diary platform for personal journaling and m
 - Export statistics and analytics reports
 
 **Localization**
-- Full support for English and German languages
+- Full support for few languages, including English, German, Spanish, French.
 - Localized error messages and resources
 - Multi-language UI components
 
@@ -288,6 +289,6 @@ This project demonstrates:
 
 ---
 
-**Version**: 1.4.0
+**Version**: 1.4.8
 **Last Updated**: March 2026  
-**Status**: Active Development
+**Status**: Development is suspended

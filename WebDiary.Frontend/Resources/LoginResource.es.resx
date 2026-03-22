@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+	<data name="LoginTitle" xml:space="preserve">
+		<value>Iniciar sesión</value>
+	</data>
+	<data name="EmailLabel" xml:space="preserve">
+		<value>Correo electrónico:</value>
+	</data>
+	<data name="PasswordLabel" xml:space="preserve">
+		<value>Contraseña:</value>
+	</data>
+	<data name="LoginButton" xml:space="preserve">
+		<value>Iniciar sesión</value>
+	</data>
+	<data name="RememberMeLabel" xml:space="preserve">
+		<value>Recuérdame</value>
+	</data>
+	<data name="ForgotPassword" xml:space="preserve">
+		<value>¿Olvidó su contraseña?</value>
+	</data>
+	<data name="NoAccountText" xml:space="preserve">
+		<value>¿No tiene una cuenta?</value>
+	</data>
+	<data name="RegisterLink" xml:space="preserve">
+		<value>Registrese aquí</value>
+	</data>
+	<data name="InvalidCredentials" xml:space="preserve">
+		<value>Correo electrónico o contraseña inválido.</value>
+	</data>
+	<data name="LoginFailed" xml:space="preserve">
+		<value>El inicio de sesión falló. Intente de nuevo.</value>
+	</data>
+</root>

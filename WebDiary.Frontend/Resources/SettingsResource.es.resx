@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+	<data name="LanguageEng" xml:space="preserve">
+		<value>🇬🇧 Inglés</value>
+	</data>
+	<data name="LanguageFra" xml:space="preserve">
+		<value>🇫🇷 Francés</value>
+	</data>
+	<data name="LanguageGer" xml:space="preserve">
+		<value>🇩🇪 Alemán</value>
+	</data>
+	<data name="LanguageSpa" xml:space="preserve">
+		<value>🇪🇸 Español</value>
+	</data>
+	<data name="LanguageText" xml:space="preserve">
+		<value>Idioma: </value>
+	</data>
+	<data name="SavePDFText" xml:space="preserve">
+		<value>Guardando como grupo PDF (sin formato enriquecido):</value>
+	</data>
+	<data name="MainSavePDFOption" xml:space="preserve">
+		<value>Todos los grupos en uno (los grupos están unidos)</value>
+	</data>
+	<data name="SavePDFButton" xml:space="preserve">
+		<value>Guardar como PDF</value>
+	</data>
+</root>

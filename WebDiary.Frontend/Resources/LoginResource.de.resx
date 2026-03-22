@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+	<data name="LoginTitle" xml:space="preserve">
+		<value>Anmeldung</value>
+	</data>
+	<data name="EmailLabel" xml:space="preserve">
+		<value>E-Mail:</value>
+	</data>
+	<data name="PasswordLabel" xml:space="preserve">
+		<value>Passwort:</value>
+	</data>
+	<data name="LoginButton" xml:space="preserve">
+		<value>Anmelden</value>
+	</data>
+	<data name="RememberMeLabel" xml:space="preserve">
+		<value>Anmeldedaten merken</value>
+	</data>
+	<data name="ForgotPassword" xml:space="preserve">
+		<value>Passwort vergessen?</value>
+	</data>
+	<data name="NoAccountText" xml:space="preserve">
+		<value>Haben Sie noch kein Konto?</value>
+	</data>
+	<data name="RegisterLink" xml:space="preserve">
+		<value>Hier registrieren</value>
+	</data>
+	<data name="InvalidCredentials" xml:space="preserve">
+		<value>Ungültige E-Mail oder Passwort.</value>
+	</data>
+	<data name="LoginFailed" xml:space="preserve">
+		<value>Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut.</value>
+	</data>
+</root>

@@ -3,10 +3,25 @@
 	<data name="LanguageEng" xml:space="preserve">
 		<value>🇬🇧 Englisch</value>
 	</data>
+	<data name="LanguageFra" xml:space="preserve">
+		<value>🇫🇷 Französisch</value>
+	</data>
 	<data name="LanguageGer" xml:space="preserve">
 		<value>🇩🇪 Deutsch</value>
 	</data>
+	<data name="LanguageSpa" xml:space="preserve">
+		<value>🇪🇸 Spanisch</value>
+	</data>
 	<data name="LanguageText" xml:space="preserve">
-		<value>Spreche: </value>
+		<value>Sprache: </value>
+	</data>
+	<data name="SavePDFText" xml:space="preserve">
+		<value>Als PDF-Gruppe speichern (keine Rich-Formatierung):</value>
+	</data>
+	<data name="MainSavePDFOption" xml:space="preserve">
+		<value>Alle Gruppen in einem (Gruppen sind vereint)</value>
+	</data>
+	<data name="SavePDFButton" xml:space="preserve">
+		<value>Als PDF speichern</value>
 	</data>
 </root>

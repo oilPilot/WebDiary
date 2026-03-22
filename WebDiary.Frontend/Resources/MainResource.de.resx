@@ -189,6 +189,51 @@
   	<data name="MoodPlaceholder" xml:space="preserve">
 		<value>Stimmung wahlen</value>
 	</data>
+  	<data name="TagsLabel" xml:space="preserve">
+		<value>Tags</value>
+	</data>
+  	<data name="TagsPlaceholder" xml:space="preserve">
+		<value>Tags hinzufugen (durch Kommas getrennt)</value>
+	</data>
+  	<data name="SearchEntriesHeader" xml:space="preserve">
+		<value>Eintrage suchen</value>
+	</data>
+  	<data name="SearchFiltersTitle" xml:space="preserve">
+		<value>Filter</value>
+	</data>
+  	<data name="SearchResultsTitle" xml:space="preserve">
+		<value>Ergebnisse</value>
+	</data>
+  	<data name="SearchButtonText" xml:space="preserve">
+		<value>Suchen</value>
+	</data>
+  	<data name="SearchClearButtonText" xml:space="preserve">
+		<value>Zurucksetzen</value>
+	</data>
+  	<data name="SearchStartDateLabel" xml:space="preserve">
+		<value>Von Datum</value>
+	</data>
+  	<data name="SearchEndDateLabel" xml:space="preserve">
+		<value>Bis Datum</value>
+	</data>
+  	<data name="SearchContentLabel" xml:space="preserve">
+		<value>Inhalt enthalt</value>
+	</data>
+  	<data name="SearchContentPlaceholder" xml:space="preserve">
+		<value>Worter oder Phrasen eingeben</value>
+	</data>
+  	<data name="SearchMoodAny" xml:space="preserve">
+		<value>Alle Stimmungen</value>
+	</data>
+  	<data name="SearchNoResults" xml:space="preserve">
+		<value>Keine Eintrage entsprechen diesen Filtern.</value>
+	</data>
+  	<data name="SearchLoading" xml:space="preserve">
+		<value>Eintrage werden geladen...</value>
+	</data>
+  	<data name="SearchUnauthorized" xml:space="preserve">
+		<value>Bitte anmelden, um Eintrage zu suchen.</value>
+	</data>
   	<data name="ResizeHint" xml:space="preserve">
 		<value>Sie konnen den Editor vertikal skalieren.</value>
 	</data>

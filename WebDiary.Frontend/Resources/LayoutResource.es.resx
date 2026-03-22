@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+	<data name="ErrorOccured" xml:space="preserve">
+    	<value>Ha ocurrido un error no controlado.</value>
+	</data>
+  	<data name="Reload" xml:space="preserve">
+		<value>Recargar</value>
+	</data>
+	<data name="LanguageEng" xml:space="preserve">
+		<value>🇬🇧 Inglés</value>
+	</data>
+	<data name="LanguageGer" xml:space="preserve">
+		<value>🇩🇪 Alemán</value>
+	</data>
+	<data name="HomeTitle" xml:space="preserve">
+		<value>Inicio</value>
+	</data>
+	<data name="ManageTitle" xml:space="preserve">
+		<value>Gestionar cuenta</value>
+	</data>
+	<data name="LogoutTitle" xml:space="preserve">
+		<value>Cerrar sesión</value>
+	</data>
+	<data name="AdminPanelTitle" xml:space="preserve">
+		<value>Administrador</value>
+	</data>
+	<data name="StatisticsTitle" xml:space="preserve">
+		<value>Estadísticas</value>
+	</data>
+	<data name="SearchEntriesTitle" xml:space="preserve">
+		<value>Buscar entradas</value>
+	</data>
+	<data name="NewDiaryGroupTitle" xml:space="preserve">
+		<value>Crear nuevo grupo de diario</value>
+	</data>
+	<data name="SigninTitle" xml:space="preserve">
+		<value>Registrarse</value>
+	</data>
+	<data name="LoginTitle" xml:space="preserve">
+		<value>Iniciar sesión</value>
+	</data>
+	<data name="Loading" xml:space="preserve">
+		<value>Cargando...</value>
+	</data>
+	<data name="LanguageText" xml:space="preserve">
+		<value>Idioma: </value>
+	</data>
+	<data name="CookieAgreeTitle" xml:space="preserve">
+		<value>Uso de cookies</value>
+	</data>
+</root>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+	<data name="SigninTitle" xml:space="preserve">
+		<value>Registrierung</value>
+	</data>
+	<data name="FirstNameLabel" xml:space="preserve">
+		<value>Vorname:</value>
+	</data>
+	<data name="LastNameLabel" xml:space="preserve">
+		<value>Nachname:</value>
+	</data>
+	<data name="EmailLabel" xml:space="preserve">
+		<value>E-Mail:</value>
+	</data>
+	<data name="PasswordLabel" xml:space="preserve">
+		<value>Passwort:</value>
+	</data>
+	<data name="ConfirmPasswordLabel" xml:space="preserve">
+		<value>Passwort bestätigen:</value>
+	</data>
+	<data name="SigninButton" xml:space="preserve">
+		<value>Konto erstellen</value>
+	</data>
+	<data name="HaveAccountText" xml:space="preserve">
+		<value>Haben Sie bereits ein Konto?</value>
+	</data>
+	<data name="LoginLink" xml:space="preserve">
+		<value>Hier anmelden</value>
+	</data>
+	<data name="AgreementText" xml:space="preserve">
+		<value>Ich stimme den Nutzungsbedingungen und der Datenschutzrichtlinie zu</value>
+	</data>
+	<data name="PasswordMismatch" xml:space="preserve">
+		<value>Passwörter stimmen nicht überein.</value>
+	</data>
+	<data name="RegistrationFailed" xml:space="preserve">
+		<value>Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut.</value>
+	</data>
+	<data name="EmailTaken" xml:space="preserve">
+		<value>Diese E-Mail ist bereits registriert.</value>
+	</data>
+</root>

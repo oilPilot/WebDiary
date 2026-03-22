@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+	<data name="LoginTitle" xml:space="preserve">
+		<value>Login</value>
+	</data>
+	<data name="EmailLabel" xml:space="preserve">
+		<value>Email:</value>
+	</data>
+	<data name="PasswordLabel" xml:space="preserve">
+		<value>Password:</value>
+	</data>
+	<data name="LoginButton" xml:space="preserve">
+		<value>Login</value>
+	</data>
+	<data name="RememberMeLabel" xml:space="preserve">
+		<value>Remember me</value>
+	</data>
+	<data name="ForgotPassword" xml:space="preserve">
+		<value>Forgot your password?</value>
+	</data>
+	<data name="NoAccountText" xml:space="preserve">
+		<value>Don't have an account?</value>
+	</data>
+	<data name="RegisterLink" xml:space="preserve">
+		<value>Register here</value>
+	</data>
+	<data name="InvalidCredentials" xml:space="preserve">
+		<value>Invalid email or password.</value>
+	</data>
+	<data name="LoginFailed" xml:space="preserve">
+		<value>Login failed. Please try again.</value>
+	</data>
+</root>

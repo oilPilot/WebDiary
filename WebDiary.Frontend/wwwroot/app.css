@@ -3,6 +3,10 @@
 [data-bs-theme="dark"] .bg-light {
     background-color: var(--wd-surface-1) !important;
 }
+[data-bs-theme="light"] .btn-outline-light {
+    color: var(--wd-ink-1) !important;
+    border-color: var(--wd-border) !important;
+}
 
 :root {
     --wd-font-sans: "Space Grotesk", "Segoe UI", Tahoma, sans-serif;

@@ -26,7 +26,7 @@ public class Diary
     public required string mood { get; set; }
     
     // Tags for categorization and filtering
-    public List<string> Tags { get; set; } = new List<string>();
+    public List<string>? Tags { get; set; } = new List<string>();
     
     // Navigation properties for entry references
     public ICollection<EntryReference> ReferencesFromThisEntry { get; set; } = new List<EntryReference>();

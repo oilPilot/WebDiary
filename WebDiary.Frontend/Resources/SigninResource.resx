@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+	<data name="SigninTitle" xml:space="preserve">
+		<value>Sign In</value>
+	</data>
+	<data name="FirstNameLabel" xml:space="preserve">
+		<value>First Name:</value>
+	</data>
+	<data name="LastNameLabel" xml:space="preserve">
+		<value>Last Name:</value>
+	</data>
+	<data name="EmailLabel" xml:space="preserve">
+		<value>Email:</value>
+	</data>
+	<data name="PasswordLabel" xml:space="preserve">
+		<value>Password:</value>
+	</data>
+	<data name="ConfirmPasswordLabel" xml:space="preserve">
+		<value>Confirm Password:</value>
+	</data>
+	<data name="SigninButton" xml:space="preserve">
+		<value>Create Account</value>
+	</data>
+	<data name="HaveAccountText" xml:space="preserve">
+		<value>Already have an account?</value>
+	</data>
+	<data name="LoginLink" xml:space="preserve">
+		<value>Login here</value>
+	</data>
+	<data name="AgreementText" xml:space="preserve">
+		<value>I agree to the Terms of Service and Privacy Policy</value>
+	</data>
+	<data name="PasswordMismatch" xml:space="preserve">
+		<value>Passwords do not match.</value>
+	</data>
+	<data name="RegistrationFailed" xml:space="preserve">
+		<value>Registration failed. Please try again.</value>
+	</data>
+	<data name="EmailTaken" xml:space="preserve">
+		<value>This email is already registered.</value>
+	</data>
+</root>

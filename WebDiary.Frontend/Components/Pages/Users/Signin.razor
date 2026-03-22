@@ -63,6 +63,21 @@
                                 </button>
                             </div>
                         </EditForm>
+                        <div class="my-4 d-flex align-items-center">
+                            <div class="flex-grow-1 border-top"></div>
+                            <span class="px-3 text-muted small">@Localizator["OrContinueWith"]</span>
+                            <div class="flex-grow-1 border-top"></div>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="button" class="btn btn-outline-danger btn-lg" @onclick="() => BeginOAuth(google)">
+                                <i class="bi bi-google me-2"></i>
+                                @Localizator["ContinueWithGoogle"]
+                            </button>
+                            <button type="button" class="btn btn-outline-light btn-lg" @onclick="() => BeginOAuth(github)">
+                                <i class="bi bi-github me-2"></i>
+                                @Localizator["ContinueWithGitHub"]
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -97,11 +112,19 @@
                 <ValidationMessage For="() => user.Email" />
             </div>
     */
+    private string google = "google";
+    private string github = "github";
     [SupplyParameterFromForm]
     public User? user { get; set; }
-    private string ErrorMessage = "";
+    [SupplyParameterFromQuery(Name = "token")]
+    private string? OAuthToken { get; set; }
+    [SupplyParameterFromQuery(Name = "refreshToken")]
+    private string? OAuthRefreshToken { get; set; }
+    [SupplyParameterFromQuery]
+    private string ErrorMessage { get; set; } = "";
     private string Message = "";
     private string ButtonDisabled = "";
+    private bool OAuthLoginHandled = false;
     
     public async Task SignIn() {
         ButtonDisabled = "disabled";
@@ -129,6 +152,35 @@
             UserName = "",
             Password = ""
         };
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(!firstRender || OAuthLoginHandled)
+            return;
+        if(string.IsNullOrWhiteSpace(OAuthToken) || string.IsNullOrWhiteSpace(OAuthRefreshToken))
+            return;
+
+        try
+        {
+            await ((CustomAuthenticationStateProvider)AuthStateProvider).LoginUserAsync(OAuthToken, OAuthRefreshToken);
+            OAuthLoginHandled = true;
+            NavigationManager.NavigateTo("/", true);
+        }
+        catch (InvalidOperationException)
+        {
+            // JS interop isn't available during prerender; try again after interactive render.
+        }
+    }
+
+    private void BeginOAuth(string provider)
+    {
+        var apiBase = HttpClient.BaseAddress ?? new Uri(NavigationManager.BaseUri);
+        var returnUrl = NavigationManager.ToAbsoluteUri(NavigationManager.Uri).ToString();
+        var culture = CultureInfo.CurrentCulture.Name;
+        var oauthUri = new Uri(apiBase, $"auth/oauth/{provider}");
+        var oauthUrl = $"{oauthUri}?returnUrl={Uri.EscapeDataString(returnUrl)}&culture={Uri.EscapeDataString(culture)}";
+        NavigationManager.NavigateTo(oauthUrl, true);
     }
 
 }

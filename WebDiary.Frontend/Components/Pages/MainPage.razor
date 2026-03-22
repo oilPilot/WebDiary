@@ -238,6 +238,15 @@
                                                                         </button>
                                                                     }
                                                                 </summary>
+                                                                @if (dayDiary.Tags is { Count: > 0 })
+                                                                {
+                                                                    <div class="diary-tags">
+                                                                        @foreach (var tag in dayDiary.Tags)
+                                                                        {
+                                                                            <span class="tag-pill">#@tag</span>
+                                                                        }
+                                                                    </div>
+                                                                }
                                                                 <div class="diary-text">@((MarkupString)dayDiary.Text)</div>
                                                                 <div class="diary-meta mt-2">
                                                                     <small class="text-muted">Written by: @dayDiary.OwnerUserName</small>
@@ -274,6 +283,11 @@
                                 <option value="(^▽^)">(^▽^)</option>
                                 <option value="<&lt;3">(&lt;3</option>
                             </select>
+                            <label class="form-label" for="tagsInput">@Localizator["TagsLabel"]</label>
+                            <InputText id="tagsInput"
+                                       class="form-control tags-input"
+                                       @bind-Value="tagsInput"
+                                       placeholder="@Localizator["TagsPlaceholder"]" />
 
                             <div class="editor-resize-wrap" title="@Localizator["ResizeHint"]">
                                 <div id="editor" @ref="richEditor"></div>
@@ -315,6 +329,7 @@
     private DiaryGroup? group;
     public string? PageTitle;
     private bool isValidated;
+    private string tagsInput = string.Empty;
 
     private int selectedYearIndex = 0;
     private int? selectedMonth;
@@ -361,6 +376,7 @@
             Text = "",
             GroupId = id!.Value
         };
+        tagsInput = string.Empty;
 
         await base.OnInitializedAsync();
 
@@ -393,6 +409,7 @@
                 Text = "",
                 GroupId = id!.Value
             };
+            tagsInput = string.Empty;
 
             diaries = await DiaryClient.GetDiariesOfGroupAsync(group.Id);
             selectedYearIndex = YearsWithDiaries.Count - 1;
@@ -520,9 +537,11 @@
         diary!.Text = await JS.InvokeAsync<string>("getQuillContent");
         diary.CreatedUtc = utc;
         diary.UtcOffsetMinutes = offset;
+        diary.Tags = ParseTags(tagsInput);
 
         await DiaryClient.AddDiaryAsync(diary!);
         await localStorage.SetItemAsStringAsync("NewDiaryAutoSavedText", string.Empty);
+        tagsInput = string.Empty;
         StateHasChanged();
         NavigationManager.Refresh(true);
     }
@@ -854,6 +873,23 @@
             2 => "Viewer",
             _ => "Unknown"
         };
+    }
+
+    private static List<string> ParseTags(string? raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw))
+        {
+            return new List<string>();
+        }
+
+        var separators = new[] { ',', ';', '\n', '\r', '\t' };
+        var tags = raw.Split(separators, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Select(tag => tag.Trim().TrimStart('#'))
+            .Where(tag => !string.IsNullOrWhiteSpace(tag))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        return tags;
     }
 
     private record MonthSummary(int Month, int Count);

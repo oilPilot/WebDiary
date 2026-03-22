@@ -10,6 +10,7 @@ public record class DiaryDTO
     public TimeOnly Time { get; set; }
     public int GroupId { get; set; }
     public required string mood { get; set; }
+    public List<string> Tags { get; set; } = new List<string>();
     public int OwnerId { get; set; }
     public string? OwnerUserName { get; set; }
 }
@@ -22,6 +23,7 @@ public record class CreateDiaryDTO
     public int GroupId { get; set; } = 1;
     [Required]
     public required string mood { get; set; }
+    public List<string> Tags { get; set; } = new List<string>();
     [Required]
     public DateTime CreatedUtc { get; set; }
     [Required]

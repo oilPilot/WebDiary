@@ -17,11 +17,6 @@ Updated March 22, 2026.
 
 ## Planned Features (Next Phases)
 
-### Phase 2: Advanced Search & Discovery
-- Elastic search integration for advanced full-text search
-- Search filters by date, mood, and tags
-- Full-text diary content search
-
 ### Phase 3: Authentication Enhancements
 - OAuth2 integration (Google, GitHub accounts)
 

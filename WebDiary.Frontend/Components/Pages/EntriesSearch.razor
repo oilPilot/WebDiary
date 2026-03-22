@@ -1,0 +1,229 @@
+@page "/EntriesSearch"
+@using WebDiary.Frontend.Models
+@inject SearchClient SearchClient
+@inject IStringLocalizer<Resources.MainResource> Localizator
+
+<PageTitle>@Localizator["SearchEntriesHeader"]</PageTitle>
+
+<AuthorizeView>
+    <Authorized>
+        <section class="entries-search container-fluid py-4">
+            <header class="search-header mb-3">
+                <h1 class="h3 mb-1">@Localizator["SearchEntriesHeader"]</h1>
+            </header>
+
+            <div class="card search-filters">
+                <div class="card-body">
+                    <div class="text-uppercase text-muted small mb-3">@Localizator["SearchFiltersTitle"]</div>
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label">@Localizator["SearchStartDateLabel"]</label>
+                            <InputDate class="form-control" @bind-Value="startDate" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">@Localizator["SearchEndDateLabel"]</label>
+                            <InputDate class="form-control" @bind-Value="endDate" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">@Localizator["MoodLabel"]</label>
+                            <select class="form-select" @bind="selectedMood">
+                                <option value="">@Localizator["SearchMoodAny"]</option>
+                                @foreach (var mood in availableMoods)
+                                {
+                                    <option value="@mood">@mood</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mt-0">
+                        <div class="col-md-6">
+                            <label class="form-label">@Localizator["TagsLabel"]</label>
+                            <InputText class="form-control"
+                                       @bind-Value="tagsInput"
+                                       placeholder="@Localizator["TagsPlaceholder"]" />
+                            @if (availableTags.Count > 0)
+                            {
+                                <div class="tag-suggestions">
+                                    @foreach (var tag in availableTags)
+                                    {
+                                        <button type="button" class="btn btn-sm btn-outline-secondary tag-suggestion" @onclick="() => AddTagToFilter(tag)">
+                                            #@tag
+                                        </button>
+                                    }
+                                </div>
+                            }
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">@Localizator["SearchContentLabel"]</label>
+                            <InputText class="form-control"
+                                       @bind-Value="contentInput"
+                                       placeholder="@Localizator["SearchContentPlaceholder"]" />
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2 mt-3">
+                        <button class="btn btn-primary" type="button" @onclick="RunSearchAsync" disabled="@isLoading">
+                            @Localizator["SearchButtonText"]
+                        </button>
+                        <button class="btn btn-outline-secondary" type="button" @onclick="ClearFiltersAsync" disabled="@isLoading">
+                            @Localizator["SearchClearButtonText"]
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="search-results mt-4">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h2 class="h5 mb-0">@Localizator["SearchResultsTitle"]</h2>
+                    <span class="text-muted">@searchResults.Count</span>
+                </div>
+
+                @if (isLoading)
+                {
+                    <p class="text-muted">@Localizator["SearchLoading"]</p>
+                }
+                else if (!string.IsNullOrWhiteSpace(errorMessage))
+                {
+                    <p class="text-danger">@errorMessage</p>
+                }
+                else if (searchResults.Count == 0)
+                {
+                    <p class="text-muted">@Localizator["SearchNoResults"]</p>
+                }
+                else
+                {
+                    <div class="results-list">
+                        @foreach (var entry in searchResults)
+                        {
+                            <details class="result-card">
+                                <summary>
+                                    <span class="result-date">@entry.Date.ToString("yyyy-MM-dd")</span>
+                                    <span class="result-time">@entry.Time.ToString("HH:mm")</span>
+                                    <span class="result-mood">@entry.mood</span>
+                                    <span class="result-meta">Group #@entry.GroupId</span>
+                                    <span class="result-meta">By @(string.IsNullOrWhiteSpace(entry.OwnerUserName) ? "Unknown" : entry.OwnerUserName)</span>
+                                </summary>
+                                <div class="result-body">
+                                    @if (entry.Tags is { Count: > 0 })
+                                    {
+                                        <div class="result-tags">
+                                            @foreach (var tag in entry.Tags)
+                                            {
+                                                <span class="tag-pill">#@tag</span>
+                                            }
+                                        </div>
+                                    }
+                                    <div class="result-text">@((MarkupString)entry.Text)</div>
+                                </div>
+                            </details>
+                        }
+                    </div>
+                }
+            </div>
+        </section>
+    </Authorized>
+    <NotAuthorized>
+        <div class="container-fluid py-4">
+            <p class="text-muted">@Localizator["SearchUnauthorized"]</p>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private DateOnly? startDate;
+    private DateOnly? endDate;
+    private string selectedMood = string.Empty;
+    private string tagsInput = string.Empty;
+    private string contentInput = string.Empty;
+
+    private List<Diary> searchResults = new();
+    private List<string> availableMoods = new();
+    private List<string> availableTags = new();
+    private bool isLoading;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadFiltersAsync();
+        await RunSearchAsync();
+    }
+
+    private async Task LoadFiltersAsync()
+    {
+        availableMoods = await SearchClient.GetMoodsAsync();
+        availableTags = await SearchClient.GetTagsAsync();
+    }
+
+    private async Task RunSearchAsync()
+    {
+        errorMessage = null;
+        isLoading = true;
+
+        try
+        {
+            var filter = BuildFilter();
+            searchResults = await SearchClient.SearchEntriesAsync(filter);
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+            searchResults = new List<Diary>();
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task ClearFiltersAsync()
+    {
+        startDate = null;
+        endDate = null;
+        selectedMood = string.Empty;
+        tagsInput = string.Empty;
+        contentInput = string.Empty;
+        await RunSearchAsync();
+    }
+
+    private SearchFilter BuildFilter()
+    {
+        var tags = ParseTags(tagsInput);
+        return new SearchFilter
+        {
+            StartDate = startDate,
+            EndDate = endDate,
+            Mood = string.IsNullOrWhiteSpace(selectedMood) ? null : selectedMood,
+            Tags = tags.Count == 0 ? null : tags,
+            Content = string.IsNullOrWhiteSpace(contentInput) ? null : contentInput.Trim()
+        };
+    }
+
+    private void AddTagToFilter(string tag)
+    {
+        var tags = ParseTags(tagsInput);
+        if (!tags.Any(existing => string.Equals(existing, tag, StringComparison.OrdinalIgnoreCase)))
+        {
+            tags.Add(tag);
+        }
+
+        tagsInput = string.Join(", ", tags);
+    }
+
+    private static List<string> ParseTags(string? raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw))
+        {
+            return new List<string>();
+        }
+
+        var separators = new[] { ',', ';', '\n', '\r', '\t' };
+        var tags = raw.Split(separators, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Select(tag => tag.Trim().TrimStart('#'))
+            .Where(tag => !string.IsNullOrWhiteSpace(tag))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        return tags;
+    }
+}

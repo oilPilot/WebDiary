@@ -67,6 +67,7 @@ builder.Services.AddScoped<IStatsService, StatsService>();
 builder.Services.AddScoped<IExportService, ExportService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IEmailSenderService, EmailSenderService>();
+builder.Services.AddScoped<ISearchService, SearchService>();
 
 Log.Information("Added Authentication, Authorization, Controllers and Localization to services");
 /*

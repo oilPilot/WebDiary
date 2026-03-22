@@ -1,0 +1,80 @@
+.entries-search {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.search-filters {
+    border-radius: 0.85rem;
+    border: 1px solid var(--bs-border-color);
+}
+
+.tag-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+}
+
+.tag-suggestion {
+    border-radius: 999px;
+}
+
+.results-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.result-card {
+    border: 1px solid var(--bs-border-color);
+    border-radius: 0.85rem;
+    padding: 0.75rem 0.9rem;
+    background: color-mix(in srgb, var(--bs-body-bg) 92%, var(--bs-primary) 8%);
+}
+
+.result-card summary {
+    cursor: pointer;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-items: center;
+    font-weight: 600;
+}
+
+.result-meta {
+    font-size: 0.85rem;
+    color: var(--bs-secondary-color);
+}
+
+.result-body {
+    margin-top: 0.6rem;
+}
+
+.result-text {
+    margin-top: 0.5rem;
+    line-height: 1.5;
+    white-space: normal;
+}
+
+.result-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+}
+
+.tag-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.1rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    background: color-mix(in srgb, var(--bs-primary) 15%, var(--bs-body-bg));
+    color: var(--bs-body-color);
+    border: 1px solid color-mix(in srgb, var(--bs-primary) 40%, transparent);
+}
+
+@media (max-width: 768px) {
+    .result-card summary {
+        gap: 0.4rem;
+    }
+}

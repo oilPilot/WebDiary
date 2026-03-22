@@ -16,4 +16,5 @@ public class Diary
     public int OwnerId { get; set; }
     public string? OwnerUserName { get; set; }
     public string? mood { get; set; }
+    public List<string> Tags { get; set; } = new List<string>();
 }

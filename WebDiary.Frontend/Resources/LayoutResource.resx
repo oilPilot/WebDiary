@@ -27,6 +27,9 @@
 	<data name="StatisticsTitle" xml:space="preserve">
 		<value>Statistics</value>
 	</data>
+	<data name="SearchEntriesTitle" xml:space="preserve">
+		<value>Search entries</value>
+	</data>
 	<data name="NewDiaryGroupTitle" xml:space="preserve">
 		<value>Create new diary group</value>
 	</data>

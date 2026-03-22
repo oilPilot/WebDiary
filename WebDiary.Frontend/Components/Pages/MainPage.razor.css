@@ -97,6 +97,29 @@
     margin-bottom: 0.75rem;
 }
 
+.tags-input {
+    max-width: 360px;
+    margin-bottom: 0.75rem;
+}
+
+.diary-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 0.5rem;
+}
+
+.tag-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.1rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    background: color-mix(in srgb, var(--bs-primary) 15%, var(--bs-body-bg));
+    color: var(--bs-body-color);
+    border: 1px solid color-mix(in srgb, var(--bs-primary) 40%, transparent);
+}
+
 .editor-resize-wrap {
     min-height: 230px;
     max-height: 580px;

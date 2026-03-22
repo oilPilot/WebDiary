@@ -22,7 +22,8 @@ public static class Diaries
             CreatedUtc = diaryDTO.CreatedUtc,
             UtcOffsetMinutes = diaryDTO.UtcOffsetMinutes,
             GroupId = diaryDTO.GroupId,
-            mood = diaryDTO.mood ?? ""
+            mood = diaryDTO.mood ?? "",
+            Tags = diaryDTO.Tags ?? new List<string>()
         };
     }
     public static DiaryDTO ToDTO(this Diary diary) {
@@ -33,6 +34,7 @@ public static class Diaries
             Time = diary.Time,
             GroupId = diary.GroupId,
             mood = diary.mood,
+            Tags = diary.Tags ?? new List<string>(),
             OwnerId = diary.OwnerId,
             OwnerUserName = diary.Owner?.UserName ?? "Unknown"
         };

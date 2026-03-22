@@ -9,5 +9,6 @@ public static class AddEndpoints
         app.AddGroupsEndpoints();
         app.AddUsersEndpoint();
         app.AddLogsEndpoint();
+        app.AddSearchEndpoints();
     }
 }

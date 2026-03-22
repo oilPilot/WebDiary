@@ -22,6 +22,8 @@ WebDiary is a comprehensive digital diary platform for personal journaling and m
 - Organize entries by thematic groups (sports, ideas, etc.)
 - Entries with timestamps and comprehensive metadata
 - Full CRUD operations with permission-based access control
+- Possibility to archivate diaries
+- Page for searching diaries by content, tag, date, mood
 
 **Mood & Analytics**
 - Mood tracking with visual mood entries
@@ -219,15 +221,8 @@ dotnet publish -c Release -o ./publish
 - Password hashing using ASP.NET Core Identity hashing
 - Master password support for sensitive data access
 - HTTPS enforcement in production
-- CORS configuration
 - Secure cookie handling
 - User secrets management
-
-**Planned**
-- Multi-factor authentication (MFA)
-- Two-factor authentication (2FA)
-- Rate limiting
-- Request signing
 
 ## Development Status
 
@@ -293,6 +288,6 @@ This project demonstrates:
 
 ---
 
-**Version**: 1.0.0  
+**Version**: 1.4.0
 **Last Updated**: March 2026  
 **Status**: Active Development

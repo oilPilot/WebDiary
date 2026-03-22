@@ -60,6 +60,12 @@
                         </NavLink>
                     </div>
                     <div class="nav-item">
+                        <NavLink class="nav-link" href="/EntriesSearch" Match="NavLinkMatch.All">
+                            <i class="bi bi-search nav-icon" aria-hidden="true"></i>
+                            <span>@LocalizatorLayout["SearchEntriesTitle"]</span>
+                        </NavLink>
+                    </div>
+                    <div class="nav-item">
                         <NavLink class="nav-link" href="/Chatrooms" Match="NavLinkMatch.All">
                             <i class="bi bi-chat-dots nav-icon" aria-hidden="true"></i>
                             <span>Chatrooms</span>
@@ -260,7 +266,7 @@
     }
 
     // Methods of Modals
-    DiaryGroup group { get; set; } = new() {Name = "", PinCode = ""};
+    DiaryGroup group { get; set; } = new() {Name = "", PinCode = "", OwnerUserName = ""};
     private bool firstPinExists;
     private string? writedFirstPin;
     private string ErrorMessage = "";

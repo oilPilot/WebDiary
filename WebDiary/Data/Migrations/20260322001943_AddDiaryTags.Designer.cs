@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WebDiary.Data;
@@ -12,9 +13,11 @@ using WebDiary.Data;
 namespace WebDiary.Migrations
 {
     [DbContext(typeof(DiariesContext))]
-    partial class DiariesContextModelSnapshot : ModelSnapshot
+    [Migration("20260322001943_AddDiaryTags")]
+    partial class AddDiaryTags
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
